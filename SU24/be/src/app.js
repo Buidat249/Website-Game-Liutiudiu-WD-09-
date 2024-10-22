@@ -14,13 +14,23 @@ app.use(cors());
 app.use(morgan("tiny"));
 
 
+<<<<<<< HEAD
 
 
 // connect database
 connectDB("mongodb://0.0.0.0:27017/GAME_LIUTIUDIU");
+=======
+=======
+// connect database
+connectDB("mongodb://0.0.0.0:27017/GAME_LIUTIUDIU");
+app.use('/auth', AuthRouter);
+>>>>>>> c9d9ef80ed9cdfc4160143252cc3cdb6e97929f3
 app.use("", gameRouter);
 app.use("", brandRouter);
 app.use("", categoryRouter);
 app.use("", authRouter);
 export const viteNodeApp = app;
+<<<<<<< HEAD
 
+=======
+>>>>>>> c9d9ef80ed9cdfc4160143252cc3cdb6e97929f3
