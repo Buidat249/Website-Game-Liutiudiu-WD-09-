@@ -14,14 +14,12 @@ app.use(cors());
 app.use(morgan("tiny"));
 
 
-<<<<<<< HEAD
-app.use("", gameRouter);
-app.use("", brandRouter);
-app.use("", categoryRouter);
-export const viteNodeApp = app;
 =======
 // connect database
 connectDB("mongodb://0.0.0.0:27017/GAME_LIUTIUDIU");
-app.use('/auth', AuthRouter)
+app.use('/auth', AuthRouter);
+app.use("", gameRouter);
+app.use("", brandRouter);
+app.use("", categoryRouter);
 export const viteNodeApp = app;
 >>>>>>> 6c270a0f4baf48bb281ab4f8271bba2ddab5567d
