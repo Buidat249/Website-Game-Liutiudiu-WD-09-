@@ -3,7 +3,7 @@ import Game from "../models/game";
  // GET / games
  export const getAllGames = async (req, res) => {
     try {
-        const games = await Game.find();
+        const games = await Game.find().populate('brand_id').populate('category_id');
         return res.status(200).json({
             message: "Get All Games Done",
             data: games,
@@ -16,7 +16,7 @@ import Game from "../models/game";
  // GET /games/ : id
 export const getGameDetail = async (req, res) => {
     try {
-        const game = await Game.findById(req.params.id);
+        const game = await Game.findById(req.params.id).populate('brand_id').populate('category_id');
         if (!game) {
             return res.status(404).json({
                 message: "Game Not Found",
