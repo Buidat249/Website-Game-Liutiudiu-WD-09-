@@ -22,4 +22,3 @@ app.use("", gameRouter);
 app.use("", brandRouter);
 app.use("", categoryRouter);
 export const viteNodeApp = app;
->>>>>>> 6c270a0f4baf48bb281ab4f8271bba2ddab5567d
