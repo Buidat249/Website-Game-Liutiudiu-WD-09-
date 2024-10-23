@@ -27,10 +27,24 @@ const gameSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
-    discount: Number,
-    platform: String,
-    rating: Number,
-    image: String,
+    discount: {
+        type: Number,
+        required: true,
+    },
+    platform: {
+        type: String,
+        required: true,
+    },
+    rating: {
+        type: Number,
+        required: true,
+        min: 1, // Tối thiểu 1
+        max: 10, // Tối đa 10
+    },
+    image: {
+        type: String,
+        required: true,
+    },
 }, { timestamps: true });
 
 export default mongoose.model("Game", gameSchema);

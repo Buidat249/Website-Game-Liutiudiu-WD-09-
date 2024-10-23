@@ -6,7 +6,10 @@ import { connectDB } from "./config/db";
 import cors from "cors";
 import dotenv from "dotenv";
 import morgan from "morgan";
-import authRouter from "./routers/auth";
+import userRouter from "./routers/user";
+import orderRouter from "./routers/order";
+import payment_methodRouter from "./routers/payment_method";
+import order_detailRouter from "./routers/order_detail";
 const app = express();
 // middleware
 app.use(express.json());
@@ -14,23 +17,14 @@ app.use(cors());
 app.use(morgan("tiny"));
 
 
-<<<<<<< HEAD
-
-
 // connect database
 connectDB("mongodb://0.0.0.0:27017/GAME_LIUTIUDIU");
-=======
-=======
-// connect database
-connectDB("mongodb://0.0.0.0:27017/GAME_LIUTIUDIU");
-app.use('/auth', AuthRouter);
->>>>>>> c9d9ef80ed9cdfc4160143252cc3cdb6e97929f3
+
 app.use("", gameRouter);
 app.use("", brandRouter);
 app.use("", categoryRouter);
-app.use("", authRouter);
+app.use("", userRouter);
+app.use("", orderRouter);
+app.use("", payment_methodRouter);
+app.use("", order_detailRouter);
 export const viteNodeApp = app;
-<<<<<<< HEAD
-
-=======
->>>>>>> c9d9ef80ed9cdfc4160143252cc3cdb6e97929f3

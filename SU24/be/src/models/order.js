@@ -10,15 +10,18 @@ const orderSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.Number,
         ref: "User", // Tham chiếu đến mô hình User
         required: true,
+        unique: true,
     },
     payment_method_id: {
         type: mongoose.Schema.Types.Number,
         ref: "payment_method", // Tham chiếu đến mô hình PaymentMethod
         required: true,
+        unique: true,
     },
     total_price: {
         type: Number,
         required: true,
+        min: 0, // Tổng giá tiền không được âm
     },
     status: {
         type: String,
@@ -28,6 +31,7 @@ const orderSchema = new mongoose.Schema({
     quantity: {
         type: Number,
         required: true,
+        min: 1, // Số lượng ít nhất là 1
     },
 }, { timestamps: true });
 

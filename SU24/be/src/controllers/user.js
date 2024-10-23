@@ -1,4 +1,4 @@
-import User from "../models/auth";
+import User from "../models/user";
 import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
 
@@ -38,7 +38,7 @@ export const getUserDetail = async (req, res) => {
 export const Register = async(req, res) => {
     try {
         const body = req.body;
-        body.password = await bcryptjs.hash(body.password, 8);
+        body.password = await bcryptjs.hash(body.password, 6);
         const userModel = new User(body);
         const user = await userModel.save();
         res.status(201).send({ user: user, message: "Đăng ký thành công" });
