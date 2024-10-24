@@ -18,7 +18,7 @@ import Payment_Method from "../models/payment_method";
  // GET /payment_methods/ : id
  export const getPayment_methodDetail = async (req, res) => {
     try {
-        const payment_method = await Payment_Method.findById(req.params.id);
+        const payment_method = await Payment_Method.findOne({payment_method_id : req.params.id});
         if (!payment_method) {
             return res.status(404).json({
                 message: "Payment_Method Not Found",
@@ -54,7 +54,7 @@ export const addPayment_method = async (req, res) => {
 
 export const updatePayment_method = async (req, res) => {
     try {
-        const payment_method = await Payment_Method.findByIdAndUpdate(req.params.id, req.body, {
+        const payment_method = await Payment_Method.findOneAndUpdate({payment_method_id : req.params.id}, req.body, {
             new: true,
         });
         if (!payment_method) {
@@ -76,7 +76,7 @@ export const updatePayment_method = async (req, res) => {
 
 export const removePayment_method = async (req, res) => {
     try {
-        const payment_method = await Payment_Method.findByIdAndDelete(req.params.id);
+        const payment_method = await Payment_Method.findOneAndDelete({payment_method_id : req.params.id});
         if (!payment_method) {
             return res.status(404).json({
                 message: "Payment_method Not Found",

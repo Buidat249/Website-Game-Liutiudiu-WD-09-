@@ -3,7 +3,7 @@ import Order from "../models/order"
  // GET / orders
  export const getAllOrders = async (req, res) => {
     try {
-        const orders = await Order.find().populate('user_id').populate('payment_method_id');
+        const orders = await Order.find();
         return res.status(200).json({
             message: "Get All Orders Done",
             data: orders,
@@ -16,7 +16,7 @@ import Order from "../models/order"
  // GET /orders/ : id
  export const getOrderDetail = async (req, res) => {
     try {
-        const order = await Order.findById(req.params.id).populate('user_id').populate('payment_method_id');
+        const order = await Order.findOne({order_id:req.params.id});
         if (!order) {
             return res.status(404).json({
                 message: "Order Not Found",
@@ -49,7 +49,7 @@ import Order from "../models/order"
 
 export const updateOrder = async (req, res) => {
     try {
-        const order = await Order.findByIdAndUpdate(req.params.id, req.body, {
+        const order = await Order.findOneAndUpdate({order_id:req.params.id}, req.body, {
             new: true,
         });
         if (!order) {
@@ -70,7 +70,7 @@ export const updateOrder = async (req, res) => {
 
 export const removeOrder = async (req, res) => {
     try {
-        const order = await Order.findByIdAndDelete(req.params.id);
+        const order = await Order.findOneAndDelete({order_id:req.params.id});
         if (!order) {
             return res.status(404).json({
                 message: "Order Not Found",

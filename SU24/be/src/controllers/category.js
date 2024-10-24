@@ -17,7 +17,7 @@ import Category from "../models/category";
  // GET /categories/ : id
 export const getCategoryDetail = async (req, res) => {
     try {
-        const category = await Category.findById(req.params.id);
+        const category = await Category.findOne({category_id:req.params.id});
         if (!category) {
             return res.status(404).json({
                 message: "Category Not Found",
@@ -50,7 +50,7 @@ export const addCategory = async (req, res) => {
 
  export const updateCategory = async (req, res) => {
     try {
-        const category = await Category.findByIdAndUpdate(req.params.id, req.body, {
+        const category = await Category.findOneAndUpdate({category_id:req.params.id}, req.body, {
             new: true,
         });
         if (!category) {
@@ -71,7 +71,7 @@ export const addCategory = async (req, res) => {
 
 export const removeCategory = async (req, res) => {
     try {
-        const category = await Category.findByIdAndDelete(req.params.id);
+        const category = await Category.findOneAndDelete({category_id:req.params.id});
         if (!category) {
             return res.status(404).json({
                 message: "Category Not Found",

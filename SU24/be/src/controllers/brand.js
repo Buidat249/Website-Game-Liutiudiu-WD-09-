@@ -16,7 +16,7 @@ import Brand from "../models/brand";
  // GET /brands/ : id
 export const getBrandDetail = async (req, res) => {
     try {
-        const brand = await Brand.findById(req.params.id);
+        const brand = await Brand.findOne({brand_id:req.params.id});
         if (!brand) {
             return res.status(404).json({
                 message: "Brand Not Found",
@@ -49,7 +49,7 @@ export const addBrand = async (req, res) => {
 
  export const updateBrand = async (req, res) => {
     try {
-        const brand = await Brand.findByIdAndUpdate(req.params.id, req.body, {
+        const brand = await Brand.findOneAndUpdate({brand_id:req.params.id}, req.body, {
             new: true,
         });
         if (!brand) {
@@ -70,7 +70,7 @@ export const addBrand = async (req, res) => {
 
 export const removeBrand = async (req, res) => {
     try {
-        const brand = await Brand.findByIdAndDelete(req.params.id);
+        const brand = await Brand.findOneAndDelete({brand_id:req.params.id});
         if (!brand) {
             return res.status(404).json({
                 message: "Brand Not Found",

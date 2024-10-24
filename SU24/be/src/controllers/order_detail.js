@@ -3,7 +3,7 @@ import Order_Detail from "../models/order_detail";
  // GET / order_details
  export const getAllOrder_Details = async (req, res) => {
     try {
-        const order_details = await Order_Detail.find().populate('order_id').populate('game_id');
+        const order_details = await Order_Detail.find();
         return res.status(200).json({
             message: "Get All Order_Details Done",
             data: order_details,
@@ -16,7 +16,7 @@ import Order_Detail from "../models/order_detail";
  // GET /order_details/ : id
  export const getOrder_DetailDetail = async (req, res) => {
     try {
-        const order_detail = await Order_Detail.findById(req.params.id).populate('order_id').populate('game_id');
+        const order_detail = await Order_Detail.findOne({order_detail_id:req.params.id});
         if (!order_detail) {
             return res.status(404).json({
                 message: "Order_Detail Not Found",
@@ -49,7 +49,7 @@ import Order_Detail from "../models/order_detail";
 
  export const updateOrder_Detail = async (req, res) => {
     try {
-        const order_detail = await Order_Detail.findByIdAndUpdate(req.params.id, req.body, {
+        const order_detail = await Order_Detail.findOneAndUpdate({order_detail_id:req.params.id}, req.body, {
             new: true,
         });
         if (!order_detail) {
@@ -70,7 +70,7 @@ import Order_Detail from "../models/order_detail";
 
 export const removeOrder_Detail = async (req, res) => {
     try {
-        const order_detail = await Order_Detail.findByIdAndDelete(req.params.id);
+        const order_detail = await Order_Detail.findOneAndDelete({order_detail_id:req.params.id});
         if (!order_detail) {
             return res.status(404).json({
                 message: "Order_Detail Not Found",

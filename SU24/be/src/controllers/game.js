@@ -3,7 +3,7 @@ import Game from "../models/game";
  // GET / games
  export const getAllGames = async (req, res) => {
     try {
-        const games = await Game.find().populate('brand_id').populate('category_id');
+        const games = await Game.find();
         return res.status(200).json({
             message: "Get All Games Done",
             data: games,
@@ -16,7 +16,7 @@ import Game from "../models/game";
  // GET /games/ : id
 export const getGameDetail = async (req, res) => {
     try {
-        const game = await Game.findById(req.params.id).populate('brand_id').populate('category_id');
+        const game = await Game.findOne({game_id:req.params.id});
         if (!game) {
             return res.status(404).json({
                 message: "Game Not Found",
@@ -49,7 +49,7 @@ export const addGame = async (req, res) => {
 
  export const updateGame = async (req, res) => {
     try {
-        const game = await Game.findByIdAndUpdate(req.params.id, req.body, {
+        const game = await Game.findOneAndUpdate({game_id:req.params.id}, req.body, {
             new: true,
         });
         if (!game) {
@@ -70,7 +70,7 @@ export const addGame = async (req, res) => {
 
 export const removeGame = async (req, res) => {
     try {
-        const game = await Game.findByIdAndDelete(req.params.id);
+        const game = await Game.findOneAndDelete({game_id:req.params.id});
         if (!game) {
             return res.status(404).json({
                 message: "Game Not Found",

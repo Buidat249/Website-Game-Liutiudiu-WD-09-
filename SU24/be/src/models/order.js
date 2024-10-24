@@ -14,7 +14,7 @@ const orderSchema = new mongoose.Schema({
     },
     payment_method_id: {
         type: mongoose.Schema.Types.Number,
-        ref: "payment_method", // Tham chiếu đến mô hình PaymentMethod
+        ref: "Payment_Method", // Tham chiếu đến mô hình PaymentMethod
         required: true,
         unique: true,
     },
