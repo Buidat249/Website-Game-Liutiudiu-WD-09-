@@ -19,8 +19,7 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true, // Đảm bảo rằng email là duy nhất
         match: /.+\@.+\..+/, // Biểu thức chính quy để kiểm tra định dạng email
-    },
-    
+    }, 
     phone: {
         type: Number,
         required: true,

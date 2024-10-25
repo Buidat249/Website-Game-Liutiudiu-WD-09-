@@ -11,6 +11,8 @@ import payment_methodRouter from "./routers/payment_method";
 import order_detailRouter from "./routers/order_detail";
 import reviewRouter from "./routers/review";
 import gameRouter from "./routers/game";
+import cartRouter from "./routers/cart";
+import cart_itemRouter from "./routers/cart_item";
 
 const app = express();
 // middleware
@@ -30,4 +32,6 @@ app.use("", orderRouter);
 app.use("", payment_methodRouter);
 app.use("", order_detailRouter);
 app.use("", reviewRouter);
+app.use("", cartRouter);
+app.use("", cart_itemRouter);
 export const viteNodeApp = app;

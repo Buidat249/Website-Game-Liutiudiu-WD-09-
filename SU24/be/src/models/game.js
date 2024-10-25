@@ -9,13 +9,13 @@ const gameSchema = new mongoose.Schema({
     brand_id: {
         type: mongoose.Schema.Types.Number,
         required: true,
-        ref: 'brand', // Tham chiếu đến model Brand
+        ref: 'Brand', // Tham chiếu đến model Brand
         unique: true,
     },
     category_id: {
         type: mongoose.Schema.Types.Number,
         required: true,
-        ref: 'category', // Tham chiếu đến model Category
+        ref: 'Category', // Tham chiếu đến model Category
         unique: true,
     },
     title: {

@@ -9,13 +9,13 @@ const reviewSchema = new mongoose.Schema({
     user_id: {
         type: mongoose.Schema.Types.Number,
         required: true,
-        ref: 'user', // Tham chiếu đến model User
+        ref: 'User', // Tham chiếu đến model User
         unique: true,
     },
     game_id: {
         type: mongoose.Schema.Types.Number,
         required: true,
-        ref: 'game', // Tham chiếu đến model Game
+        ref: 'Game', // Tham chiếu đến model Game
         unique: true,
     },
     title: {
