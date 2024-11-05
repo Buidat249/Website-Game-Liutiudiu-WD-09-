@@ -20,6 +20,12 @@ app.use(express.json());
 app.use(cors());
 app.use(morgan("tiny"));
 
+const PORT = 8080; // Đặt cổng cho backend
+
+app.use(cors({
+    origin: 'http://localhost:5173', // Thay đổi thành địa chỉ frontend của bạn
+}));
+
 
 // connect database
 connectDB("mongodb://0.0.0.0:27017/GAME_LIUTIUDIU");
@@ -35,3 +41,7 @@ app.use("", reviewRouter);
 app.use("", cartRouter);
 app.use("", cart_itemRouter);
 export const viteNodeApp = app;
+
+app.listen(PORT, () => {
+    console.log(`Backend server running on http://localhost:${PORT}`);
+});

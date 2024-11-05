@@ -3,6 +3,7 @@ import {
     DesktopOutlined,
     FileOutlined,
     PieChartOutlined,
+    TagsOutlined,
     TeamOutlined,
     UploadOutlined,
     UserOutlined,
@@ -53,8 +54,18 @@ const LayoutAdmin: React.FC = () => {
                         {
                             key: "2",
                             icon: <VideoCameraOutlined />,
-                            label: <NavLink to="/admin/products">Sản phẩm</NavLink>,
+                            label: <NavLink to="/admin/games">Quản lý game</NavLink>,
                         },
+                        {
+                            key: "3",
+                            icon: <VideoCameraOutlined />,
+                            label: <NavLink to="/admin/categories">Quản lý danh mục</NavLink>,
+                        },
+                        {
+                            key: "4",
+                            icon: <TagsOutlined />,
+                            label: <NavLink to="/admin/brands">Quản lý thương hiệu</NavLink>,
+                        }
                     ]}
                 />
             </Sider>
@@ -62,7 +73,7 @@ const LayoutAdmin: React.FC = () => {
                 <Header style={{ padding: 0, background: colorBgContainer }} />
                 <Content style={{ margin: "0 16px" }}>
                     <Breadcrumb style={{ margin: "16px 0" }}>
-                        <Breadcrumb.Item>User</Breadcrumb.Item>
+                        <Breadcrumb.Item>Games</Breadcrumb.Item>
                         <Breadcrumb.Item>Bill</Breadcrumb.Item>
                     </Breadcrumb>
                     <div

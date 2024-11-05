@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 const brandSchema = new mongoose.Schema({
     brand_id: {
         type: Number,
-        required: true,
         unique: true,
     },
     name: {

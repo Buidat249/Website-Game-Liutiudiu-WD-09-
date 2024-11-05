@@ -34,14 +34,25 @@ export const getCategoryDetail = async (req, res) => {
 
  // POST /categories
 export const addCategory = async (req, res) => {
-    console.log(req.body);
+     console.log("Received data:", req.body);
     try {
-        const category = await Category.create(req.body);
+        // Tìm danh mục cuối cùng để lấy category_id
+        const lastCategory = await Category.findOne({}, {}, { sort: { category_id: -1 } });
+        const newCategoryId = lastCategory ? lastCategory.category_id + 1 : 1;
+
+         // Thêm category_id vào dữ liệu trước khi tạo
+        const categoryData = {
+            category_id: newCategoryId,
+            ...req.body // Chứa các trường khác từ frontend
+        };
+
+        const category = await Category.create(categoryData);
         return res.status(201).json({
             message: "Create Category Done",
             data: category,   
         });
     } catch (error) {
+        console.error("Error creating Category:", error); // Ghi log lỗi
         return res.status(500).json({ message: error.message });
     }
 };

@@ -31,16 +31,27 @@ export const getBrandDetail = async (req, res) => {
     }
 };
 
- // POST /brands
+// POST /brands
 export const addBrand = async (req, res) => {
-    console.log(req.body);
+    console.log("Received data:", req.body); // Kiểm tra dữ liệu nhận được
     try {
-        const brand = await Brand.create(req.body);
+        // Tìm thương hiệu cuối cùng để lấy brand_id
+        const lastBrand = await Brand.findOne({}, {}, { sort: { brand_id: -1 } });
+        const newBrandId = lastBrand ? lastBrand.brand_id + 1 : 1;
+
+        // Thêm brand_id vào dữ liệu trước khi tạo
+        const brandData = {
+            brand_id: newBrandId,
+            ...req.body // Chứa các trường khác từ frontend
+        };
+
+        const brand = await Brand.create(brandData);
         return res.status(201).json({
             message: "Create Brand Done",
-            data: brand,   
+            data: brand,
         });
     } catch (error) {
+        console.error("Error creating brand:", error); // Ghi log lỗi
         return res.status(500).json({ message: error.message });
     }
 };

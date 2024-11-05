@@ -12,9 +12,9 @@ import { AxiosResponse } from 'axios'
 //     }
 // }
 // // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const getAllProducts = async (params?: any): Promise<AxiosResponse<any>> => {
+export const getAllGames = async (params?: any): Promise<AxiosResponse<any>> => {
     try {
-        const response = await instance.get('/products', { params })
+        const response = await instance.get('/games', { params })
         return response;
     } catch (error) {
         return {
