@@ -202,14 +202,14 @@ const GameAddPage: React.FC = () => {
         </Form.Item>
 
         <Form.Item<FieldType>
-          label="Nền tang"
+          label="Tên nền tảng"
           name="platform_id"
-          rules={[{ required: true, message: "Vui lòng chọn nền tảng" }]}
+          rules={[{ required: true, message: "Vui lòng chọn tên nền tảng" }]}
         >
           {isLoading ? (
-            <Spin  indicator={<Loading3QuartersOutlined spin />} />
+            <Spin indicator={<Loading3QuartersOutlined spin />} />
           ) : (
-            <Select mode="multiple" placeholder="Chọn nền tảng">
+            <Select mode="multiple" placeholder="Chọn tên nền tảng">
               {platformList.map((platform: any) => (
                 <Select.Option
                   key={platform.platform_id}

@@ -36,28 +36,30 @@ const CategoryPage = () => {
 
   const columns = [
     { key: "category_id", title: "Category ID", dataIndex: "category_id" },
-    { key: "name", title: "Tên danh mục", dataIndex: "name" },
+    { key: "name", title: "Tên thể loại", dataIndex: "name" },
     {
       key: "action",
       title: "Action",
       render: (_: any, category: any) => {
         return (
           <>
-            <Popconfirm
-              title="Delete the task"
-              description="Bạn có chắc muốn xóa không?"
-              onConfirm={() => {
-                console.log("Deleting category with ID:", category.category_id); // kiểm tra category_id
-                mutate(category.category_id);
-              }}
-              okText="Yes"
-              cancelText="No"
-            >
-              <Button danger>Xóa</Button>
-            </Popconfirm>
-            <Link to={`/admin/categories/${category.category_id}/edit`}>
-              <Button>Cập nhật</Button>
-            </Link>
+            <div className="flex gap-2">
+              <Popconfirm
+                title="Delete the task"
+                description="Bạn có chắc muốn xóa không?"
+                onConfirm={() => {
+                  console.log("Deleting category with ID:", category.category_id); // kiểm tra category_id
+                  mutate(category.category_id);
+                }}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button danger>Xóa</Button>
+              </Popconfirm>
+              <Link to={`/admin/categories/${category.category_id}/edit`}>
+                <Button>Cập nhật</Button>
+              </Link>
+            </div>
           </>
         );
       },
@@ -68,10 +70,10 @@ const CategoryPage = () => {
     <div>
       {contextHolder}
       <div className="flex items-center justify-between mb-5">
-        <h1 className="text-2xl font-semibold">Quản lý danh mục</h1>
+        <h1 className="text-2xl font-semibold">Quản lý thể loại</h1>
         <Button type="primary">
           <Link to="/admin/categories/add">
-            <PlusCircleFilled /> Thêm danh mục
+            <PlusCircleFilled /> Thêm thể loại
           </Link>
         </Button>
       </div>

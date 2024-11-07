@@ -1,27 +1,19 @@
-import instance from "@/configs/axios";
-import {
-  BackwardFilled,
-  Loading3QuartersOutlined,
-  PlusOutlined,
-} from "@ant-design/icons";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import React, { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Button,
-  Checkbox,
   Form,
-  FormProps,
   Input,
   InputNumber,
   Select,
-  Spin,
   Upload,
   message,
+  Spin,
 } from "antd";
+import { PlusOutlined, Loading3QuartersOutlined, BackwardFilled } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
-import axios from "axios";
-import { options } from "joi";
-import React from "react";
 import { Link, useParams } from "react-router-dom";
+import axios from "axios";
 
 type FieldType = {
   game_id?: number;
@@ -36,28 +28,16 @@ type FieldType = {
   description?: string;
 };
 
-type Brands = {
-  brand_id: number;
-  name: string;
-  image: string;
-};
-
-type Categories = {
-  category_id: number;
-  name: string;
-};
-
-type Platforms = {
-  platform_id: number;
-  name: string;
-};
+const CLOUD_NAME = "dlcxulvmu"; // Thay bằng cloud name của bạn
+const UPLOAD_PRESET = "DATNWD-09"; // Thay bằng upload preset của bạn
 
 const GameEditPage: React.FC = () => {
   const { game_id } = useParams();
   const [messageApi, contextHolder] = message.useMessage();
   const queryClient = useQueryClient();
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
 
-  // Lấy dữ liệu cụ thể
+  // Fetch game data
   const { data, isLoading, error } = useQuery({
     queryKey: ["games", game_id],
     queryFn: () =>
@@ -66,6 +46,7 @@ const GameEditPage: React.FC = () => {
         .then((response) => response.data),
   });
 
+  // Mutation for updating game
   const { mutate } = useMutation({
     mutationFn: (game: any) =>
       axios.put(`http://localhost:8080/games/${game_id}`, game),
@@ -74,12 +55,35 @@ const GameEditPage: React.FC = () => {
       messageApi.success("Cập nhật game thành công");
     },
     onError: (error) => {
-      messageApi.open({
-        type: "error",
-        content: error.message,
-      });
+      messageApi.error(error.message);
     },
   });
+
+  const handleImageUpload = async (file: any) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", UPLOAD_PRESET);
+
+    try {
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+      if (data.secure_url) {
+        setImageUrl(data.secure_url);
+        message.success("Ảnh đã được tải lên thành công!");
+      } else {
+        message.error("Không thể tải ảnh lên. Vui lòng thử lại.");
+      }
+    } catch (error) {
+      message.error("Không thể tải ảnh lên. Vui lòng thử lại.");
+    }
+  };
 
   const normFile = (e: any) => {
     if (Array.isArray(e)) {
@@ -88,62 +92,42 @@ const GameEditPage: React.FC = () => {
     return e?.fileList;
   };
 
+  const onFinish = (values: FieldType) => {
+    const gameData = { ...values, image: imageUrl };
+    mutate(gameData);
+  };
+
+  //
   const { data: brands = { data: [] } } = useQuery({
     queryKey: ["brands"],
     queryFn: () =>
       axios.get("http://localhost:8080/brands").then((res) => res.data),
   });
 
-  console.log("Brands:", brands);
-
+  console.log("Categories:", brands);
   const brandList = Array.isArray(brands.data) ? brands.data : [];
 
-  const { data: categories = { data: [] } } = useQuery({
+  //
+
+   const { data: categories = { data: [] } } = useQuery({
     queryKey: ["categories"],
     queryFn: () =>
       axios.get("http://localhost:8080/categories").then((res) => res.data),
   });
 
   console.log("Categories:", categories);
+const categoriesList = Array.isArray(categories.data) ? categories.data : [];
 
-  const categoryList = Array.isArray(categories.data) ? categories.data : [];
+//
 
-  const { data: platforms = { data: [] } } = useQuery({
-    queryKey: ["platforms"],
-    queryFn: () =>
-      axios.get("http://localhost:8080/platforms").then((res) => res.data),
-  });
+const { data: platforms = { data: [] } } = useQuery({
+  queryKey: ["platforms"],
+  queryFn: () =>
+    axios.get("http://localhost:8080/platforms").then((res) => res.data),
+});
 
-  console.log("Platforms:", platforms);
-
-  const platformList = Array.isArray(platforms.data) ? platforms.data : [];
-
-  // Kiểm tra dữ liệu nhận được
-  const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
-    const imageFile =
-      values.image && values.image[0]
-        ? (values.image[0] as any).thumbUrl || (values.image[0] as any).name
-        : undefined;
-
-    const gameData = {
-      ...values,
-      image: imageFile, // Gắn ảnh vào `gameData`
-    };
-
-    console.log("Sending data:", gameData); // Kiểm tra dữ liệu trước khi gửi
-    mutate(gameData); // Gửi dữ liệu game với ảnh
-    console.log("Sending data:", values);
-    mutate(values);
-  };
-
-  const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
-    errorInfo
-  ) => {
-    console.log("Thất bại", errorInfo);
-  };
-
-  // Kiểm tra cấu trúc dữ liệu
-  console.log("Category data:", data); // Kiểm tra dữ liệu
+console.log("platforms:", platforms);
+const platformsList = Array.isArray(platforms.data) ? platforms.data : [];
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading brand: {error.message}</div>;
@@ -152,7 +136,7 @@ const GameEditPage: React.FC = () => {
     <>
       {contextHolder}
       <div className="flex items-center justify-between mb-5">
-        <h1 className="text-2xl font-semibold"> Cập nhật game</h1>
+        <h1 className="text-2xl font-semibold">Cập nhật game</h1>
         <Button type="primary">
           <Link to="/admin/games">
             <BackwardFilled /> Quay lại
@@ -165,12 +149,20 @@ const GameEditPage: React.FC = () => {
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
         style={{ maxWidth: 600 }}
-        initialValues={{ name: data?.data?.name || "" }} // Đảm bảo truy cập đúng trường
+        initialValues={{
+          name: data?.data?.name || "",
+          brand_id: data?.data?.brand_id || [],
+          category_id: data?.data?.category_id || [],
+          platform_id: data?.data?.platform_id || [],
+          price: data?.data?.price || 0,
+          discount: data?.data?.discount || 0,
+          image: data?.data?.image || "",
+          description: data?.data?.description || "",
+        }}
         onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
-        <Form.Item<FieldType>
+        <Form.Item
           label="Tên game"
           name="name"
           rules={[{ required: true, message: "Không được bỏ trống" }]}
@@ -178,12 +170,10 @@ const GameEditPage: React.FC = () => {
           <Input />
         </Form.Item>
 
-        <Form.Item<FieldType>
+        <Form.Item
           label="Tên hãng phát triển"
           name="brand_id"
-          rules={[
-            { required: true, message: "Vui lòng chọn tên hãng phát triển" },
-          ]}
+          rules={[{ required: true, message: "Vui lòng chọn tên hãng phát triển" }]}
         >
           {isLoading ? (
             <Spin indicator={<Loading3QuartersOutlined spin />} />
@@ -198,7 +188,7 @@ const GameEditPage: React.FC = () => {
           )}
         </Form.Item>
 
-        <Form.Item<FieldType>
+        <Form.Item
           label="Tên danh mục"
           name="category_id"
           rules={[{ required: true, message: "Vui lòng chọn tên danh mục" }]}
@@ -206,12 +196,9 @@ const GameEditPage: React.FC = () => {
           {isLoading ? (
             <Spin indicator={<Loading3QuartersOutlined spin />} />
           ) : (
-            <Select placeholder="Chọn tên danh mục">
-              {categoryList.map((category: any) => (
-                <Select.Option
-                  key={category.category_id}
-                  value={category.category_id}
-                >
+            <Select mode="multiple" placeholder="Chọn tên danh mục">
+              {categoriesList.map((category: any) => (
+                <Select.Option key={category.category_id} value={category.id}>
                   {category.name}
                 </Select.Option>
               ))}
@@ -219,20 +206,17 @@ const GameEditPage: React.FC = () => {
           )}
         </Form.Item>
 
-        <Form.Item<FieldType>
-          label="Nền tang"
+        <Form.Item
+          label="Nền tảng"
           name="platform_id"
           rules={[{ required: true, message: "Vui lòng chọn nền tảng" }]}
         >
           {isLoading ? (
             <Spin indicator={<Loading3QuartersOutlined spin />} />
           ) : (
-            <Select placeholder="Chọn nền tảng">
-              {platformList.map((platform: any) => (
-                <Select.Option
-                  key={platform.platform_id}
-                  value={platform.platform_id}
-                >
+            <Select mode="multiple" placeholder="Chọn nền tảng">
+              {platformsList.map((platform: any) => (
+                <Select.Option key={platform.platform_id} value={platform.platform_id}>
                   {platform.name}
                 </Select.Option>
               ))}
@@ -240,32 +224,21 @@ const GameEditPage: React.FC = () => {
           )}
         </Form.Item>
 
-        <Form.Item<FieldType>
+        <Form.Item
           label="Giá game"
           name="price"
           rules={[
             { required: true, message: "Không được bỏ trống" },
-            {
-              type: "number",
-              min: 0,
-              message: "Giá sản phẩm phải là số dương",
-            },
+            { type: "number", min: 0, message: "Giá sản phẩm phải là số dương" },
           ]}
         >
           <InputNumber />
         </Form.Item>
 
-        <Form.Item<FieldType>
+        <Form.Item
           label="Giảm giá"
           name="discount"
-          rules={[
-            {
-              type: "number",
-              min: 0,
-              max: 100,
-              message: "Giảm giá phải từ 0 đến 100",
-            },
-          ]}
+          rules={[{ type: "number", min: 0, max: 100, message: "Giảm giá phải từ 0 đến 100" }]}
         >
           <InputNumber addonAfter="%" />
         </Form.Item>
@@ -276,15 +249,27 @@ const GameEditPage: React.FC = () => {
           valuePropName="fileList"
           getValueFromEvent={normFile}
         >
-          <Upload action="/upload.do" listType="picture-card">
+          <Upload
+            beforeUpload={handleImageUpload}
+            showUploadList={false}
+          >
             <button style={{ border: 0, background: "none" }} type="button">
               <PlusOutlined />
               <div style={{ marginTop: 8 }}>Upload</div>
             </button>
           </Upload>
+
+          {/* Hiển thị ảnh đã có từ dữ liệu */}
+          {imageUrl || data?.data?.image ? (
+            <img
+              src={imageUrl || data?.data?.image}
+              alt="Uploaded"
+              style={{ width: "20%", marginTop: 10 }}
+            />
+          ) : null}
         </Form.Item>
 
-        <Form.Item<FieldType> label="Mô tả game" name="description">
+        <Form.Item label="Mô tả game" name="description">
           <TextArea rows={5} />
         </Form.Item>
 
@@ -294,6 +279,7 @@ const GameEditPage: React.FC = () => {
           </Button>
         </Form.Item>
       </Form>
+
     </>
   );
 };
