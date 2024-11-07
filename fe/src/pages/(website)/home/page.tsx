@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../../../styles/style.scss";
 import wkong from "../../../components/public/external/back wk.png";
+import { Link } from "react-router-dom";
 
 interface Game {
   game_id: number;
@@ -66,11 +67,14 @@ const HomePage = () => {
             {featuredGames.length > 0 ? (
               featuredGames.map((game) => (
                 <div key={game.game_id} className="game">
-                  <img src={game.image} alt={game.name} />
-                  <p>{game.name}</p>
-                  <p>Giá: {game.price}</p>
-                  <p>Mô tả: {game.description}</p>
-                  <p>Flatform: {game.platform}</p>
+                  {/* Đặt Link bao bọc toàn bộ nội dung sản phẩm */}
+                  <Link to={`/games/${game.game_id}`}>
+                    <img src={game.image} alt={game.name} />
+                    <p>{game.name}</p>
+                    <p>Giá: {game.price}</p>
+                    <p>Mô tả: {game.description}</p>
+                    <p>Flatform: {game.platform}</p>
+                  </Link>
                 </div>
               ))
             ) : (

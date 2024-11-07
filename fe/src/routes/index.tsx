@@ -12,6 +12,9 @@ import LayoutAdmin from "@/pages/(dashboard)/layout";
 import PlatFormAddPage from "@/pages/(dashboard)/platform/add/page";
 import PlatformEditPage from "@/pages/(dashboard)/platform/edit/page";
 import PlatformPage from "@/pages/(dashboard)/platform/page";
+import HomePage from "@/pages/(website)/home/page";
+import ProductDetail from "@/pages/(website)/home/ProductDetail";
+import Layout from "@/pages/(website)/layout";
 import { Route, Routes } from "react-router-dom";
 
 const Router = () => {
@@ -39,6 +42,10 @@ const Router = () => {
             element={<PlatformEditPage />}
           />
         </Route>
+      </Routes>
+      <Routes>
+        <Route path="/" index element={<HomePage/>}/>
+        <Route path="games/:game_id" element={<ProductDetail/>}/>
       </Routes>
     </>
   );
