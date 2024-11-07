@@ -2,7 +2,7 @@ import { IBrand } from "@/common/types/brand";
 import instance from "@/configs/axios";
 import { PlusCircleFilled } from "@ant-design/icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Button, message, Popconfirm, Skeleton, Table } from "antd";
+import { Button, Image, message, Popconfirm, Skeleton, Table } from "antd";
 import axios from "axios";
 import { Loader2Icon } from "lucide-react";
 import React from "react";
@@ -37,7 +37,13 @@ const BrandPage = () => {
     
     const columns = [
     { key: "brand_id", title: "Brand ID", dataIndex: "brand_id" },
-    { key: "name", title: "Name", dataIndex: "name" },
+    { key: "name", title: "Tên hãng phát triển", dataIndex: "name" },
+    {
+        key: "image", title: "Ảnh hãng phát triển", 
+        render: (_: any, brand: any) => (
+            <Image src={brand.image} width={200} height={200} />
+        ),
+    },
     {
         key: "action", title: "Action", 
         render: (_: any, brand: any) => {
@@ -64,10 +70,6 @@ const BrandPage = () => {
     },
 ];
 
-    
-    
-
-    if (isLoading) return <div>...Loading</div>;
 
     return (
         <div>

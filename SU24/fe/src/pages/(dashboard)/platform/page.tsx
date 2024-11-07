@@ -6,27 +6,27 @@ import { Loader2Icon } from "lucide-react";
 import React from "react";
 import { Link } from "react-router-dom";
 
-const CategoryPage = () => {
+const PlatformPage = () => {
   const [ messageApi, contextHolder ] = message.useMessage();
     const queryClient = useQueryClient();
     const { mutate } = useMutation({
-        mutationFn: (category_id:number) => axios.delete(`http://localhost:8080/categories/${category_id}`),
+        mutationFn: (platform_id:number) => axios.delete(`http://localhost:8080/platforms/${platform_id}`),
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ['categories'],
+                queryKey: ['platforms'],
             });
             messageApi.success('Xóa thành công');
         },
     });
 
     const { data, isLoading, error } = useQuery({
-      queryKey: ['categories'],
+      queryKey: ['platforms'],
       queryFn: async () => {
-          const {data} = await axios.get(`http://localhost:8080/categories`);
+          const {data} = await axios.get(`http://localhost:8080/platforms`);
           console.log(data); // Kiểm tra lại cấu trúc dữ liệu
-          return data.data.map((category: any) => ({
-              key: category.category_id,
-              ...category,
+          return data.data.map((platform: any) => ({
+              key: platform.platform_id,
+              ...platform,
           }));            
       },
   });
@@ -34,26 +34,26 @@ const CategoryPage = () => {
   if (error) return <div>Error: {error.message}</div>;
 
   const columns = [
-    { key: "category_id", title: "Category ID", dataIndex: "category_id" },
-    { key: "name", title: "Tên danh mục", dataIndex: "name" },
+    { key: "platform_id", title: "Platform ID", dataIndex: "platform_id" },
+    { key: "name", title: "Tên nền tảng", dataIndex: "name" },
     {
         key: "action", title: "Action", 
-        render: (_: any, category: any) => {
+        render: (_: any, platform: any) => {
             return (
                 <>
                     <Popconfirm 
                         title="Delete the task" 
                         description="Bạn có chắc muốn xóa không?" 
                         onConfirm={() => {
-                            console.log("Deleting category with ID:", category.category_id); // kiểm tra category_id
-                            mutate(category.category_id);
+                            console.log("Deleting category with ID:", platform.platform_id); // kiểm tra category_id
+                            mutate(platform.platform_id);
                         }}
                         okText="Yes" 
                         cancelText="No"
                     >
                         <Button danger>Xóa</Button>
                     </Popconfirm>  
-                    <Link to={`/admin/categories/${category.category_id}/edit`}>
+                    <Link to={`/admin/platforms/${platform.platform_id}/edit`}>
                         <Button>Cập nhật</Button>
                     </Link>
                 </>
@@ -66,10 +66,10 @@ const CategoryPage = () => {
     <div>
     {contextHolder}
     <div className="flex items-center justify-between mb-5">
-        <h1 className="text-2xl font-semibold">Quản lý danh mục</h1>
+        <h1 className="text-2xl font-semibold">Quản lý nền tảng</h1>
         <Button type="primary">
-            <Link to="/admin/categories/add">
-                <PlusCircleFilled /> Thêm danh mục
+            <Link to="/admin/platforms/add">
+                <PlusCircleFilled /> Thêm nền tảng
             </Link>
         </Button>
     </div>
@@ -80,4 +80,4 @@ const CategoryPage = () => {
   );
 };
 
-export default CategoryPage
+export default PlatformPage

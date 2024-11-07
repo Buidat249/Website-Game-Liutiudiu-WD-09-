@@ -3,7 +3,7 @@ const userSchema = new mongoose.Schema({
     user_id: {
         type: Number,
         required: true,
-        unique: true,
+        unique: false,
     },
     username: {
         type: String,
@@ -17,7 +17,7 @@ const userSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
-        unique: true, // Đảm bảo rằng email là duy nhất
+        unique: false, // Đảm bảo rằng email là duy nhất
         match: /.+\@.+\..+/, // Biểu thức chính quy để kiểm tra định dạng email
     }, 
     phone: {

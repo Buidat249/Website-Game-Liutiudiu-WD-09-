@@ -4,19 +4,19 @@ const orderSchema = new mongoose.Schema({
     order_id: {
         type: Number,
         required: true,
-        unique: true,
+        unique: false,
     },
     user_id: {
         type: mongoose.Schema.Types.Number,
         ref: "User", // Tham chiếu đến mô hình User
         required: true,
-        unique: true,
+        unique: false,
     },
     payment_method_id: {
         type: mongoose.Schema.Types.Number,
         ref: "Payment_Method", // Tham chiếu đến mô hình PaymentMethod
         required: true,
-        unique: true,
+        unique: false,
     },
     total_price: {
         type: Number,

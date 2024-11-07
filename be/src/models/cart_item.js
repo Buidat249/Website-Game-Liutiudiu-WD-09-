@@ -4,19 +4,19 @@ const cart_itemSchema = new mongoose.Schema({
     cart_item_id: {
         type: Number,
         required: true,
-        unique: true,
+        unique: false,
     },
     cart_id: {
         type: mongoose.Schema.Types.Number,
         required: true,
         ref: 'Cart', // Tham chiếu đến model Cart
-        unique: true,
+        unique: false,
     },
     game_id: {
         type: mongoose.Schema.Types.Number,
         required: true,
         ref: 'Game', // Tham chiếu đến model Game
-        unique: true,
+        unique: false,
     },
     quantity: {
         type: Number,

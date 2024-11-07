@@ -31,19 +31,30 @@ export const getGameDetail = async (req, res) => {
     }
 };
 
- // POST /games
 export const addGame = async (req, res) => {
-    console.log(req.body);
+    console.log("Received data:", req.body); // Kiểm tra dữ liệu nhận được
     try {
-        const game = await Game.create(req.body);
+        // Tìm thương hiệu cuối cùng để lấy brand_id
+        const lastGame = await Game.findOne({}, {}, { sort: { game_id: -1 } });
+        const newGameId = lastGame ? lastGame.game_id + 1 : 1;
+
+        const gameData = {
+            game_id: newGameId,
+            ...req.body // Chứa các trường khác từ frontend
+        };
+
+        const game = await Game.create(gameData);
         return res.status(201).json({
             message: "Create Game Done",
-            data: game,   
+            data: game,
         });
     } catch (error) {
+        console.error("Error creating game:", error); // Ghi log lỗi
         return res.status(500).json({ message: error.message });
     }
 };
+
+
 
  // PUT / games / :id
 

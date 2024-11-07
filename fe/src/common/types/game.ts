@@ -5,6 +5,7 @@ export interface IGame {
     name?: string,
     description?: string
     price?: number,
+    brand_ids: [(number)],
     discount?: number,
     platform?: string,
     rating?: number,
