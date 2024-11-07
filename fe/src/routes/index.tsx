@@ -15,6 +15,7 @@ import PlatformPage from "@/pages/(dashboard)/platform/page";
 import NotFoundPage from "@/pages/(website)/404/page";
 import HomePage from "@/pages/(website)/home/page";
 import LayoutWebsite from "@/pages/(website)/layout";
+import ProductDetail from "@/pages/(website)/ProductDetail";
 import { Route, Routes } from "react-router-dom";
 
 const Router = () => {
@@ -23,6 +24,7 @@ const Router = () => {
             <Routes>
                 <Route path="/" element={<LayoutWebsite />}>
                     <Route path="products"  element={<HomePage />} />
+                    <Route path="products/:id" element={<ProductDetail/>}/>
                 </Route>
                 <Route path="admin/" element={<LayoutAdmin />}>
                     <Route index element={<DashboardPage />} />
