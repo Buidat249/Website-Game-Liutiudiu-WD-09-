@@ -43,21 +43,23 @@ const PlatformPage = () => {
       render: (_: any, platform: any) => {
         return (
           <>
-            <Popconfirm
-              title="Delete the task"
-              description="Bạn có chắc muốn xóa không?"
-              onConfirm={() => {
-                console.log("Deleting platform with ID:", platform.platform_id); // kiểm tra platform_id
-                mutate(platform.platform_id);
-              }}
-              okText="Yes"
-              cancelText="No"
-            >
-              <Button danger>Xóa</Button>
-            </Popconfirm>
-            <Link to={`/admin/platforms/${platform.platform_id}/edit`}>
-              <Button>Cập nhật</Button>
-            </Link>
+            <div className="flex gap-2">
+              <Popconfirm
+                title="Delete the task"
+                description="Bạn có chắc muốn xóa không?"
+                onConfirm={() => {
+                  console.log("Deleting platform with ID:", platform.platform_id); // kiểm tra platform_id
+                  mutate(platform.platform_id);
+                }}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button danger>Xóa</Button>
+              </Popconfirm>
+              <Link to={`/admin/platforms/${platform.platform_id}/edit`}>
+                <Button>Cập nhật</Button>
+              </Link>
+            </div>
           </>
         );
       },

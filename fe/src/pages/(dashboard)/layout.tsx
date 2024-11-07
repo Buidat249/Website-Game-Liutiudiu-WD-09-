@@ -63,7 +63,7 @@ const LayoutAdmin: React.FC = () => {
             {
               key: "3",
               icon: <VideoCameraOutlined />,
-              label: <NavLink to="/admin/categories">Quản lý danh mục</NavLink>,
+              label: <NavLink to="/admin/categories">Quản lý thể loại</NavLink>,
             },
             {
               key: "4",

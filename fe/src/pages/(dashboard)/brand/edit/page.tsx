@@ -2,7 +2,7 @@ import { Link, useParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button, Form, FormProps, Input, Upload, message } from "antd";
 import axios from "axios";
-import React from "react";
+import React, { useState } from "react";
 import { BackwardFilled, PlusOutlined } from "@ant-design/icons";
 
 type FieldType = {
@@ -11,10 +11,15 @@ type FieldType = {
   image?: string;
 };
 
+const CLOUD_NAME = "dlcxulvmu"; // Thay bằng cloud name của bạn
+const UPLOAD_PRESET = "DATNWD-09"; // Thay bằng upload preset của bạn
+
+
 const BrandEditPage: React.FC = () => {
   const { brand_id } = useParams();
   const [messageApi, contextHolder] = message.useMessage();
   const queryClient = useQueryClient();
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
 
   // Lấy dữ liệu hãng phát triển cụ thể
   const { data, isLoading, error } = useQuery({
@@ -40,6 +45,32 @@ const BrandEditPage: React.FC = () => {
     },
   });
 
+  const handleImageUpload = async (file: any) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", UPLOAD_PRESET);
+
+    try {
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+      if (data.secure_url) {
+        setImageUrl(data.secure_url);
+        message.success("Ảnh đã được tải lên thành công!");
+      } else {
+        message.error("Không thể tải ảnh lên. Vui lòng thử lại.");
+      }
+    } catch (error) {
+      message.error("Không thể tải ảnh lên. Vui lòng thử lại.");
+    }
+  };
+
   const normFile = (e: any) => {
     if (Array.isArray(e)) {
       return e;
@@ -48,15 +79,10 @@ const BrandEditPage: React.FC = () => {
   };
 
   const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
-    // Kiểm tra xem values.image có phải là một mảng chứa đối tượng hình ảnh không
-    const imageFile =
-      values.image && values.image[0]
-        ? (values.image[0] as any).thumbUrl || (values.image[0] as any).name
-        : undefined;
 
     const brandData = {
       ...values,
-      image: imageFile, // Gắn ảnh vào `brandData`
+      image: imageUrl, // Gắn ảnh vào `brandData`
     };
 
     console.log("Sending data:", brandData); // Kiểm tra dữ liệu trước khi gửi
@@ -89,7 +115,10 @@ const BrandEditPage: React.FC = () => {
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
         style={{ maxWidth: 600 }}
-        initialValues={{ name: data?.data?.name || "" }} // Đảm bảo truy cập đúng trường
+        initialValues={{
+          name: data?.data?.name || "",
+          image: data?.data?.image || "",
+        }} // Đảm bảo truy cập đúng trường
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
@@ -108,12 +137,24 @@ const BrandEditPage: React.FC = () => {
           valuePropName="fileList"
           getValueFromEvent={normFile}
         >
-          <Upload action="/upload.do" listType="picture-card">
+          <Upload
+            beforeUpload={handleImageUpload}
+            showUploadList={false}
+          >
             <button style={{ border: 0, background: "none" }} type="button">
               <PlusOutlined />
               <div style={{ marginTop: 8 }}>Upload</div>
             </button>
           </Upload>
+
+          {/* Hiển thị ảnh đã có từ dữ liệu */}
+          {imageUrl || data?.data?.image ? (
+            <img
+              src={imageUrl || data?.data?.image}
+              alt="Uploaded"
+              style={{ width: "20%", marginTop: 10 }}
+            />
+          ) : null}
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>

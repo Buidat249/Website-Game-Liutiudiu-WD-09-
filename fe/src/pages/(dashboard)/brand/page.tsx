@@ -42,7 +42,7 @@ const BrandPage = () => {
       key: "image",
       title: "Ảnh hãng phát triển",
       render: (_: any, brand: any) => (
-        <Image src={brand.image} width={200} height={200} />
+        <Image src={brand.image} width={400} height={200} />
       ),
     },
     {
@@ -51,21 +51,23 @@ const BrandPage = () => {
       render: (_: any, brand: any) => {
         return (
           <>
-            <Popconfirm
-              title="Delete the task"
-              description="Bạn có chắc muốn xóa không?"
-              onConfirm={() => {
-                console.log("Deleting brand with ID:", brand.brand_id); // kiểm tra brand_id
-                mutate(brand.brand_id);
-              }}
-              okText="Yes"
-              cancelText="No"
-            >
-              <Button danger>Xóa</Button>
-            </Popconfirm>
-            <Link to={`/admin/brands/${brand.brand_id}/edit`}>
-              <Button>Cập nhật</Button>
-            </Link>
+            <div className="flex gap-2">
+              <Popconfirm
+                title="Delete the task"
+                description="Bạn có chắc muốn xóa không?"
+                onConfirm={() => {
+                  console.log("Deleting brand with ID:", brand.brand_id); // kiểm tra brand_id
+                  mutate(brand.brand_id);
+                }}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button danger>Xóa</Button>
+              </Popconfirm>
+              <Link to={`/admin/brands/${brand.brand_id}/edit`}>
+                <Button>Cập nhật</Button>
+              </Link>
+            </div>
           </>
         );
       },
