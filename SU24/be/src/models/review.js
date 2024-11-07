@@ -4,19 +4,19 @@ const reviewSchema = new mongoose.Schema({
     review_id: {
         type: Number,
         required: true,
-        unique: true,
+        unique: false,
     },
     user_id: {
         type: mongoose.Schema.Types.Number,
         required: true,
         ref: 'User', // Tham chiếu đến model User
-        unique: true,
+        unique: false,
     },
     game_id: {
         type: mongoose.Schema.Types.Number,
         required: true,
         ref: 'Game', // Tham chiếu đến model Game
-        unique: true,
+        unique: false,
     },
     title: {
         type: String,

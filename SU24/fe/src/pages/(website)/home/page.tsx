@@ -1,126 +1,128 @@
-import React from 'react'
-import Banner from './_components/Banner'
-import '../../../styles/style.scss'
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import '../../../styles/style.scss';
 import wkong from '../../../components/public/external/back wk.png';
 
-type Props = {}
+interface Game {
+  game_id: number;
+  brand_id: number;
+  category_id: number;
+  name: string;
+  price: number; // Đảm bảo price là số
+  image: string;
+  title: string;
+  description: string;
+  platform: string;
+}
 
-const HomePage = (props: Props) => {
+const HomePage = () => {
+  const [games, setGames] = useState<Game[]>([]);
+
+  useEffect(() => {
+    axios.get('http://localhost:8080/games') // URL trỏ tới backend
+      .then((response) => {
+        setGames(response.data.data);
+      })
+      .catch((error) => {
+        console.error('Error fetching products:', error);
+      });
+  }, []);
+
+  // Lọc các sản phẩm có giá cao nhất
+  const featuredGames = [...games]
+    .sort((a, b) => b.price - a.price) // Sắp xếp theo giá từ cao đến thấp
+    .slice(0, 5); // Lấy 5 sản phẩm có giá cao nhất
+
+  // Các sản phẩm cho aside-left và aside-right
+  const leftGames = games.slice(0, 3);
+  const rightGames = games.slice(1, 4);
+
   return (
-    <div>
+    <>
       <div className="main">
         <div className="banner">
           <div className="aside-left">
             <div>
-              <img
-                src={wkong}
-                alt="Black Myth Wukong Banner"
-              />
+              <img src={wkong} alt="Black Myth Wukong Banner" />
             </div>
             <div className="aside-left-small">
-              <img
-                src={wkong}
-                alt="Black Myth Wukong Banner"
-              />
-              <img
-                src={wkong}
-                alt="Black Myth Wukong Banner"
-              />
-              <img
-                src={wkong}
-                alt="Black Myth Wukong Banner"
-              />
+              {leftGames.map((game) => (
+                <img key={game.game_id} src={game.image} alt={game.title} />
+              ))}
             </div>
-
           </div>
 
           <div className="aside-right">
-            <img
-              src={wkong}
-              alt="Black Myth Wukong Banner"
-            />
-            <img
-              src={wkong}
-              alt="Black Myth Wukong Banner"
-            />
-            <img
-              src={wkong}
-              alt="Black Myth Wukong Banner"
-            />
+            {rightGames.map((game) => (
+              <img key={game.game_id} src={game.image} alt={game.title} />
+            ))}
           </div>
         </div>
 
-        <div className="ad-section">
-          <div className="ad">
-            <p>Steam Nạp thẻ wallet</p>
-          </div>
-          <div className="ad">
-            <p>Phần mềm thiết kế</p>
-          </div>
-          <div className="ad">
-            <p>Phần mềm diệt Virus</p>
-          </div>
-          <div className="ad">
-            <p>Microsoft Office bản quyền</p>
-          </div>
-        </div>
-
-        <section className="products">
+        <section className="games">
           <h2>Sản phẩm nổi bật</h2>
-          <div className="product-grid">
-            <div className="product">
-              <img
-                src="https://via.placeholder.com/200"
-                alt="Black Myth Wukong"
-              />
-              <p>Black Myth Wukong - 1 Ngày</p>
-              <p>Giá: 40.000đ</p>
-            </div>
-            <div className="product">
-              <img src="https://via.placeholder.com/200" alt="Netflix" />
-              <p>Netflix Premium - 1 Tháng</p>
-              <p>Giá: 79.000đ</p>
-            </div>
-            <div className="product">
-              <img src="https://via.placeholder.com/200" alt="Spotify" />
-              <p>Spotify Premium 1 năm</p>
-              <p>Giá: 329.000đ</p>
-            </div>
-            <div className="product">
-              <img src="https://via.placeholder.com/200" alt="Zoom" />
-              <p>Zoom Pro ~ 1 tháng</p>
-              <p>Giá: 210.000đ</p>
-            </div>
-            <div className="product">
-              <img src="https://via.placeholder.com/200" alt="Windows 10" />
-              <p>Windows 10 Pro</p>
-              <p>Giá: 290.000đ</p>
-            </div>
-            <div className="product">
-              <img src="https://via.placeholder.com/200" alt="YouTube" />
-              <p>YouTube Premium - 1 Năm</p>
-              <p>Giá: 499.000đ</p>
-            </div>
-            <div className="product">
-              <img src="https://via.placeholder.com/200" alt="YouTube" />
-              <p>YouTube Premium - 1 Năm</p>
-              <p>Giá: 499.000đ</p>
-            </div>
-            <div className="product">
-              <img src="https://via.placeholder.com/200" alt="YouTube" />
-              <p>YouTube Premium - 1 Năm</p>
-              <p>Giá: 499.000đ</p>
-            </div>
-            <div className="product">
-              <img src="https://via.placeholder.com/200" alt="YouTube" />
-              <p>YouTube Premium - 1 Năm</p>
-              <p>Giá: 499.000đ</p>
-            </div>
+          <div className="game-grid">
+            {featuredGames.length > 0 ? (
+              featuredGames.map((game) => (
+                <div key={game.game_id} className="game">
+                  <img src={game.image} alt={game.name} />
+                  <p>{game.name}</p>
+                  <p>Giá: {game.price}</p>
+                  <p>Mô tả: {game.description}</p>
+                  <p>Flatform: {game.platform}</p>
+                </div>
+              ))
+            ) : (
+              <p>Không có sản phẩm nổi bật nào.</p>
+            )}
           </div>
         </section>
-      </div>
-    </div>
-  )
-}
 
-export default HomePage
+        <div>
+          <section className="games">
+            <h2>Sản phẩm bán chạy</h2>
+            <div className="game-grid">
+              {games.length > 0 ? (
+                games.map((game) => (
+                  <div key={game.game_id} className="game">
+                    <img src={game.image} alt={game.name} />
+                    <p>{game.name}</p>
+                    <p>Giá: {game.price}</p>
+                    <p>Mô tả {game.description}</p>
+<p>Flatform {game.platform}</p>
+                  </div>
+                ))
+              ) : (
+                <p>Không có sản phẩm nổi bật nào.</p>
+              )}
+            </div>
+          </section>
+        </div>
+        <div>
+          <section className="games">
+            <h2>Sản phẩm free</h2>
+            <div className="game-grid">
+              {games.length > 0 ? (
+                games.map((game) => (
+                  <div key={game.game_id} className="game">
+                    <img src={game.image} alt={game.name} />
+                    <p>{game.name}</p>
+                    <p>Giá: {game.price}</p>
+                    <p>Mô tả {game.description}</p>
+                    <p>Flatform {game.platform}</p>
+                  </div>
+                ))
+              ) : (
+                <p>Không có sản phẩm nổi bật nào.</p>
+              )}
+            </div>
+          </section>
+        </div>
+
+        {/* Các phần còn lại */}
+      </div>
+    </>
+  );
+};
+
+export default HomePage;

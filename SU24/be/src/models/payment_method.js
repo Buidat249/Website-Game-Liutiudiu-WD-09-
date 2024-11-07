@@ -3,7 +3,7 @@ const payment_MethodSchema = new mongoose.Schema({
     payment_method_id: {
         type: Number, 
         required: true,
-        unique: true, 
+        unique: false,
     },
     name: {
         type: String,

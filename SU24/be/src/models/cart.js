@@ -4,13 +4,13 @@ const cartSchema = new mongoose.Schema({
     cart_id: {
         type: Number,
         required: true,
-        unique: true,
+        unique: false,
     },
     user_id: {
         type: mongoose.Schema.Types.Number,
         required: true,
         ref: 'User', // Tham chiếu đến model User
-        unique: true,
+        unique: false,
     },
     total_price: {
         type: Number,

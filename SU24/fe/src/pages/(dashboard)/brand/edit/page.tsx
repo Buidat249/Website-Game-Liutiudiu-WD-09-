@@ -1,13 +1,14 @@
 import { Link, useParams } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Button, Form, Input, message } from 'antd';
+import { Button, Form, FormProps, Input, Upload, message } from 'antd';
 import axios from 'axios';
 import React from 'react';
-import { BackwardFilled } from '@ant-design/icons';
+import { BackwardFilled, PlusOutlined } from '@ant-design/icons';
 
 type FieldType = {
   brand_id?: number,
   name?: string;
+  image?: string;
 };
 
 const BrandEditPage: React.FC = () => {
@@ -35,10 +36,27 @@ const BrandEditPage: React.FC = () => {
     },
   });
 
-  const onFinish = (values: FieldType) => {
-    console.log("Sending data:", values);
-    mutate(values);
+  const normFile = (e: any) => {
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e?.fileList;
   };
+
+  const onFinish: FormProps<FieldType>['onFinish'] = (values) => {
+    // Kiểm tra xem values.image có phải là một mảng chứa đối tượng hình ảnh không
+    const imageFile = values.image && values.image[0] 
+        ? (values.image[0] as any).thumbUrl || (values.image[0] as any).name 
+        : undefined;
+
+    const brandData = {
+        ...values,
+        image: imageFile, // Gắn ảnh vào `brandData`
+    };
+
+    console.log("Sending data:", brandData); // Kiểm tra dữ liệu trước khi gửi
+    mutate(brandData); // Gửi dữ liệu brand với ảnh
+};
 
   const onFinishFailed = (errorInfo: any) => {
     console.log('Thất bại', errorInfo);
@@ -77,6 +95,15 @@ const BrandEditPage: React.FC = () => {
           rules={[{ required: true, message: 'Không được bỏ trống' }]}
         >
           <Input />
+        </Form.Item>
+
+        <Form.Item label="Tải ảnh lên" name="image" valuePropName="fileList" getValueFromEvent={normFile}>
+          <Upload action="/upload.do" listType="picture-card">
+            <button style={{ border: 0, background: 'none' }} type="button">
+              <PlusOutlined />
+              <div style={{ marginTop: 8 }}>Upload</div>
+            </button>
+          </Upload>
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>

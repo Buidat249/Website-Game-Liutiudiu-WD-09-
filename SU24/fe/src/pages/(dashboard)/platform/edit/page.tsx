@@ -6,26 +6,26 @@ import React from 'react';
 import { BackwardFilled } from '@ant-design/icons';
 
 type FieldType = {
-  category_id?: number,
+  platform_id?: number,
   name?: string;
 };
 
-const CategoryEditPage: React.FC = () => {
-  const { category_id } = useParams();
-  const [messageApi, contextHolder] = message.useMessage();
-  const queryClient = useQueryClient();
+const PlatformEditPage: React.FC = () => {
+    const { platform_id } = useParams();
+    const [messageApi, contextHolder] = message.useMessage();
+    const queryClient = useQueryClient();
 
   // Lấy dữ liệu hãng phát triển cụ thể
   const { data, isLoading, error } = useQuery({
-    queryKey: ['categories', category_id],
-    queryFn: () => axios.get(`http://localhost:8080/categories/${category_id}`).then(response => response.data),
+    queryKey: ['platforms', platform_id],
+    queryFn: () => axios.get(`http://localhost:8080/platforms/${platform_id}`).then(response => response.data),
   });
 
   const { mutate } = useMutation({
-    mutationFn: (category: any) => axios.put(`http://localhost:8080/categories/${category_id}`, category),
+    mutationFn: (platform: any) => axios.put(`http://localhost:8080/categories/${platform_id}`, platform),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['categories'] });
-      messageApi.success('Cập nhật danh mục thành công');
+      queryClient.invalidateQueries({ queryKey: ['platforms'] });
+      messageApi.success('Cập nhật nền tảng thành công');
     },
     onError: (error) => {
       messageApi.open({
@@ -45,7 +45,7 @@ const CategoryEditPage: React.FC = () => {
   };
 
     // Kiểm tra cấu trúc dữ liệu
-    console.log("Category data:", data); // Kiểm tra dữ liệu
+    console.log("Platform data:", data); // Kiểm tra dữ liệu
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading brand: {error.message}</div>;
@@ -54,9 +54,9 @@ const CategoryEditPage: React.FC = () => {
     <>
       {contextHolder}
       <div className="flex items-center justify-between mb-5">
-        <h1 className="text-2xl font-semibold">Cập nhật danh mục</h1>
+        <h1 className="text-2xl font-semibold">Cập nhật nền tảng</h1>
         <Button type="primary">
-          <Link to="/admin/categories">
+          <Link to="/admin/platforms">
             <BackwardFilled /> Quay lại
           </Link>
         </Button>
@@ -72,7 +72,7 @@ const CategoryEditPage: React.FC = () => {
         autoComplete='off'
       >
         <Form.Item<FieldType>
-          label='Tên danh mục '
+          label='Tên nền tảng '
           name='name'
           rules={[{ required: true, message: 'Không được bỏ trống' }]}
         >
@@ -81,7 +81,7 @@ const CategoryEditPage: React.FC = () => {
 
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
           <Button type='primary' htmlType='submit'>
-            Cập nhật tên danh mục
+            Cập nhật tên nền tảng
           </Button>
         </Form.Item>
       </Form>
@@ -89,4 +89,4 @@ const CategoryEditPage: React.FC = () => {
   );
 };
 
-export default CategoryEditPage
+export default PlatformEditPage

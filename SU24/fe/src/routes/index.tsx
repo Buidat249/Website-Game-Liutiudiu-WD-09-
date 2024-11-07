@@ -9,6 +9,9 @@ import GameAddPage from "@/pages/(dashboard)/game/add/page";
 import GameEditPage from "@/pages/(dashboard)/game/edit/page";
 import GamePage from "@/pages/(dashboard)/game/page";
 import LayoutAdmin from "@/pages/(dashboard)/layout";
+import PlatformAddPage from "@/pages/(dashboard)/platform/add/page";
+import PlatformEditPage from "@/pages/(dashboard)/platform/edit/page";
+import PlatformPage from "@/pages/(dashboard)/platform/page";
 import NotFoundPage from "@/pages/(website)/404/page";
 import HomePage from "@/pages/(website)/home/page";
 import LayoutWebsite from "@/pages/(website)/layout";
@@ -26,6 +29,9 @@ const Router = () => {
                     <Route path="games" element={<GamePage />} />
                     <Route path="games/add" element={<GameAddPage />} />
                     <Route path="games/:game_id/edit" element={<GameEditPage />} />
+                    <Route path="platforms" element={<PlatformPage />} />
+                    <Route path="platforms/add" element={<PlatformAddPage />} />
+                    <Route path="platforms/:platform_id/edit" element={<PlatformEditPage />} />
                     <Route path="categories" element={<CategoryPage/>}/>
                     <Route path="categories/add" element={<CategoryAddPage/>}/>
                     <Route path="categories/:category_id/edit" element={<CategoryEditPage/>}/>

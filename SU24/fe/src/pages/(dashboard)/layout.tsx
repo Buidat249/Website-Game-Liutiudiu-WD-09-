@@ -64,7 +64,12 @@ const LayoutAdmin: React.FC = () => {
                         {
                             key: "4",
                             icon: <TagsOutlined />,
-                            label: <NavLink to="/admin/brands">Quản lý thương hiệu</NavLink>,
+                            label: <NavLink to="/admin/brands">Quản lý hãng phát triển</NavLink>,
+                        },
+                        {
+                            key: "5",
+                            icon: <TagsOutlined />,
+                            label: <NavLink to="/admin/platforms">Quản lý nền tảng</NavLink>,
                         }
                     ]}
                 />

@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 
-const brandSchema = new mongoose.Schema({
-    brand_id: {
+const platformSchema = new mongoose.Schema({
+
+    platform_id: {
         type: Number,
         unique: false,
     },
@@ -9,9 +10,6 @@ const brandSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    image: {
-        type: String,
-    }
 }, { timestamps: true });
 
-export default mongoose.model("Brand", brandSchema);
+export default mongoose.model("Platform", platformSchema);
