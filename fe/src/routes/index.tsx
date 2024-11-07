@@ -22,7 +22,7 @@ const Router = () => {
         <>
             <Routes>
                 <Route path="/" element={<LayoutWebsite />}>
-                    <Route index element={<HomePage />} />
+                    <Route path="products"  element={<HomePage />} />
                 </Route>
                 <Route path="admin/" element={<LayoutAdmin />}>
                     <Route index element={<DashboardPage />} />

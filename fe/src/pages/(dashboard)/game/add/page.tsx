@@ -1,3 +1,4 @@
+<<<<<<< HEAD:SU24/fe/src/pages/(dashboard)/game/add/page.tsx
 import instance from "@/configs/axios";
 import { BackwardFilled, Loading3QuartersOutlined, PlusOutlined } from "@ant-design/icons";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -30,6 +31,34 @@ type FieldType = {
   rating?: number;
   image?: string;
   description?: string;
+=======
+import instance from '@/configs/axios';
+import { BackwardFilled, Loading3QuartersOutlined } from '@ant-design/icons';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Button, Form, FormProps, Input, InputNumber, Select, Spin, message } from 'antd';
+import TextArea from 'antd/es/input/TextArea';
+import axios from 'axios';
+import { date } from 'joi';
+import React from 'react';
+import { Link } from 'react-router-dom';
+
+type FieldType = {
+  game_id?: number,
+  brand_id?: number,
+  category_id?: number,
+  name?: string,
+  description?: string,
+  price?: number,
+  discount?: number,
+  platform?: string,
+  rating?: number,
+  image?: string,
+};
+
+type Brands = {
+  _id: string;
+  name: string;
+>>>>>>> 8945871364a09ab53a05d16112c270eda58ddd50:fe/src/pages/(dashboard)/game/add/page.tsx
 };
 
 type Brands = {
@@ -51,7 +80,20 @@ type Platforms = {
 const GameAddPage: React.FC = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const queryClient = useQueryClient();
+<<<<<<< HEAD:SU24/fe/src/pages/(dashboard)/game/add/page.tsx
   const [form] = Form.useForm();
+=======
+
+  // Fetch brands from backend
+  const { data: brands = { data: [] }, isLoading } = useQuery({
+    queryKey: ['brands'],
+    queryFn: () => axios.get('http://localhost:8080/brands').then(res => res.data),
+  });
+
+  console.log("Brands:", brands);
+
+
+>>>>>>> 8945871364a09ab53a05d16112c270eda58ddd50:fe/src/pages/(dashboard)/game/add/page.tsx
   const { mutate } = useMutation({
     mutationFn: (game: any) => axios.post(`http://localhost:8080/games`, game),
     onSuccess: () => {
@@ -135,6 +177,8 @@ const GameAddPage: React.FC = () => {
     console.log("Thất bại", errorInfo);
   };
 
+  const brandList = Array.isArray(brands.data) ? brands.data : [];
+
   return (
     <>
       {contextHolder}
@@ -146,6 +190,7 @@ const GameAddPage: React.FC = () => {
                     </Link>
                 </Button>
       </div>
+<<<<<<< HEAD:SU24/fe/src/pages/(dashboard)/game/add/page.tsx
       <Form name='basic' labelCol={{span: 8}} wrapperCol={{span: 16}} style={{maxWidth: 600}} onFinish={onFinish} onFinishFailed={onFinishFailed} autoComplete='off'>
           <Form.Item<FieldType>
             label="Tên hãng phát triển"
@@ -164,6 +209,25 @@ const GameAddPage: React.FC = () => {
               </Select>
             )}
           </Form.Item>
+=======
+
+      <Form
+        name="basic"
+        labelCol={{ span: 8 }}
+        wrapperCol={{ span: 16 }}
+        style={{ maxWidth: 600 }}
+        onFinish={onFinish}
+        onFinishFailed={onFinishFailed}
+        autoComplete="off"
+      >
+        <Form.Item<FieldType>
+          label="Tên game"
+          name="name"
+          rules={[{ required: true, message: 'Không được bỏ trống' }]}
+        >
+          <Input />
+        </Form.Item>
+>>>>>>> 8945871364a09ab53a05d16112c270eda58ddd50:fe/src/pages/(dashboard)/game/add/page.tsx
 
           <Form.Item<FieldType>
             label="Tên danh mục"
@@ -202,6 +266,7 @@ const GameAddPage: React.FC = () => {
           </Form.Item>
 
 
+<<<<<<< HEAD:SU24/fe/src/pages/(dashboard)/game/add/page.tsx
           <Form.Item<FieldType>
             label="Tên game"
             name="name"
@@ -209,6 +274,25 @@ const GameAddPage: React.FC = () => {
           >
             <Input/>
           </Form.Item>
+=======
+        <Form.Item<FieldType>
+          label="Nền tảng"
+          name="platform"
+          rules={[{ required: true, message: 'Vui lòng chọn nền tảng' }]}
+        >
+          {isLoading ? (
+            <Spin indicator={<Loading3QuartersOutlined spin />} />
+          ) : (
+            <Select placeholder="Chọn nền tảng">
+              {brandList.map((brand : any) => (
+                <Select.Option key={brand._id} value={brand.name}>
+                  {brand.name}
+                </Select.Option>
+              ))}
+            </Select>
+          )}
+        </Form.Item>
+>>>>>>> 8945871364a09ab53a05d16112c270eda58ddd50:fe/src/pages/(dashboard)/game/add/page.tsx
 
           <Form.Item<FieldType>
             label="Giá game"
@@ -263,10 +347,12 @@ const GameAddPage: React.FC = () => {
       </Form>
     </>
   );
+
 };
 
 export default GameAddPage;
 
+<<<<<<< HEAD:SU24/fe/src/pages/(dashboard)/game/add/page.tsx
 
 
 
@@ -397,3 +483,5 @@ export default GameAddPage;
   </Form.Item>
 </Form>
 </> */
+=======
+>>>>>>> 8945871364a09ab53a05d16112c270eda58ddd50:fe/src/pages/(dashboard)/game/add/page.tsx
