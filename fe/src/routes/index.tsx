@@ -20,7 +20,8 @@ import ProductDetail from "@/pages/(website)/home/ProductDetail";
 import PagePay from "@/pages/(website)/pays/page";
 
 import ProductPage from "@/pages/(website)/product/page";
-
+import PageCart from "@/pages/cart/page";
+import VnpayPayment from "@/pages/(website)/pays/_components/payvnpay";
 import PaymentMomo from "@/pages/(website)/pays/_components/paymm";
 
 const Router = () => {
@@ -31,10 +32,11 @@ const Router = () => {
         <Route index element={<HomePage />} />
         <Route path="games/:game_id" element={<ProductDetail />} />
         <Route path="pay" element={<PagePay />} />
+        <Route path="/pay-vnpay" element={<VnpayPayment />} />
+        <Route path="/pay-momo" element={<PaymentMomo />} />
 
         <Route path="products" element={<ProductPage />} />
-
-        <Route path="pay" element={<PaymentMomo />} />
+        <Route path="cart" element={<PageCart />} />
       </Route>
 
       {/* Các route cho trang quản trị */}
