@@ -16,7 +16,11 @@ import PlatFormAddPage from "@/pages/(dashboard)/platform/add/page";
 import PlatformEditPage from "@/pages/(dashboard)/platform/edit/page";
 import HomePage from "@/pages/(website)/home/page";
 import ProductDetail from "@/pages/(website)/home/ProductDetail";
+<<<<<<< HEAD
 import ProductPage from "@/pages/(website)/product/page";
+=======
+import PaymentMomo from "@/pages/(website)/pays/_components/paymm";
+>>>>>>> e9afcb81724e86a51a651c09a82cc17018d870b4
 
 const Router = () => {
   return (
@@ -25,7 +29,11 @@ const Router = () => {
       <Route path="/" element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path="games/:game_id" element={<ProductDetail />} />
+<<<<<<< HEAD
         <Route path="products" element={<ProductPage />} />
+=======
+        <Route path="pay" element={<PaymentMomo />} />
+>>>>>>> e9afcb81724e86a51a651c09a82cc17018d870b4
       </Route>
 
       {/* Các route cho trang quản trị */}
@@ -36,13 +44,19 @@ const Router = () => {
         <Route path="games/:game_id/edit" element={<GameEditPage />} />
         <Route path="categories" element={<CategoryPage />} />
         <Route path="categories/add" element={<CategoryAddPage />} />
-        <Route path="categories/:category_id/edit" element={<CategoryEditPage />} />
+        <Route
+          path="categories/:category_id/edit"
+          element={<CategoryEditPage />}
+        />
         <Route path="brands" element={<BrandPage />} />
         <Route path="brands/add" element={<BrandAddPage />} />
         <Route path="brands/:brand_id/edit" element={<BrandEditPage />} />
         <Route path="platforms" element={<PlatformPage />} />
         <Route path="platforms/add" element={<PlatFormAddPage />} />
-        <Route path="platforms/:platform_id/edit" element={<PlatformEditPage />} />
+        <Route
+          path="platforms/:platform_id/edit"
+          element={<PlatformEditPage />}
+        />
       </Route>
     </Routes>
   );
