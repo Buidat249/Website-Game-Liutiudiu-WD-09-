@@ -16,6 +16,7 @@ import PlatFormAddPage from "@/pages/(dashboard)/platform/add/page";
 import PlatformEditPage from "@/pages/(dashboard)/platform/edit/page";
 import HomePage from "@/pages/(website)/home/page";
 import ProductDetail from "@/pages/(website)/home/ProductDetail";
+import ProductPage from "@/pages/(website)/product/page";
 
 const Router = () => {
   return (
@@ -24,6 +25,7 @@ const Router = () => {
       <Route path="/" element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path="games/:game_id" element={<ProductDetail />} />
+        <Route path="products" element={<ProductPage />} />
       </Route>
 
       {/* Các route cho trang quản trị */}
