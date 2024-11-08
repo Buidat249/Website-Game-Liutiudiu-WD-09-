@@ -3,8 +3,7 @@ import mongoose from "mongoose";
 const categorySchema = new mongoose.Schema({
 
     category_id: {
-        type: Number,
-        unique: false,
+        type: [Number],
         Array: true,
     },
     name: {
