@@ -75,7 +75,7 @@ const GameEditPage: React.FC = () => {
 
       const data = await response.json();
       if (data.secure_url) {
-        setImageUrl(data.secure_url);
+        setImageUrl(data.secure_url); // Cập nhật URL ảnh mới
         message.success("Ảnh đã được tải lên thành công!");
       } else {
         message.error("Không thể tải ảnh lên. Vui lòng thử lại.");
@@ -93,7 +93,7 @@ const GameEditPage: React.FC = () => {
   };
 
   const onFinish = (values: FieldType) => {
-    const gameData = { ...values, image: imageUrl };
+    const gameData = { ...values, image: imageUrl || data?.data?.image }; // Nếu không có ảnh mới, giữ ảnh cũ
     mutate(gameData);
   };
 
@@ -109,25 +109,25 @@ const GameEditPage: React.FC = () => {
 
   //
 
-   const { data: categories = { data: [] } } = useQuery({
+  const { data: categories = { data: [] } } = useQuery({
     queryKey: ["categories"],
     queryFn: () =>
       axios.get("http://localhost:8080/categories").then((res) => res.data),
   });
 
   console.log("Categories:", categories);
-const categoriesList = Array.isArray(categories.data) ? categories.data : [];
+  const categoriesList = Array.isArray(categories.data) ? categories.data : [];
 
-//
+  //
 
-const { data: platforms = { data: [] } } = useQuery({
-  queryKey: ["platforms"],
-  queryFn: () =>
-    axios.get("http://localhost:8080/platforms").then((res) => res.data),
-});
+  const { data: platforms = { data: [] } } = useQuery({
+    queryKey: ["platforms"],
+    queryFn: () =>
+      axios.get("http://localhost:8080/platforms").then((res) => res.data),
+  });
 
-console.log("platforms:", platforms);
-const platformsList = Array.isArray(platforms.data) ? platforms.data : [];
+  console.log("platforms:", platforms);
+  const platformsList = Array.isArray(platforms.data) ? platforms.data : [];
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading brand: {error.message}</div>;
@@ -165,16 +165,14 @@ const platformsList = Array.isArray(platforms.data) ? platforms.data : [];
         <Form.Item
           label="Tên game"
           name="name"
-          rules={[{ required: true, message: "Không được bỏ trống" }]}
-        >
+          rules={[{ required: true, message: "Không được bỏ trống" }]}>
           <Input />
         </Form.Item>
 
         <Form.Item
           label="Tên hãng phát triển"
           name="brand_id"
-          rules={[{ required: true, message: "Vui lòng chọn tên hãng phát triển" }]}
-        >
+          rules={[{ required: true, message: "Vui lòng chọn tên hãng phát triển" }]}>
           {isLoading ? (
             <Spin indicator={<Loading3QuartersOutlined spin />} />
           ) : (
@@ -189,16 +187,20 @@ const platformsList = Array.isArray(platforms.data) ? platforms.data : [];
         </Form.Item>
 
         <Form.Item
-          label="Tên danh mục"
+          label="Tên thể loại"
           name="category_id"
-          rules={[{ required: true, message: "Vui lòng chọn tên danh mục" }]}
+          rules={[{ required: true, message: "Vui lòng chọn tên thể loại" }]}
         >
           {isLoading ? (
             <Spin indicator={<Loading3QuartersOutlined spin />} />
           ) : (
-            <Select mode="multiple" placeholder="Chọn tên danh mục">
+            <Select
+              mode="multiple" // Đảm bảo đây là chế độ multiple nếu category_id là mảng
+              placeholder="Chọn tên thể loại"
+              defaultValue={data?.data?.category_id || []}  // Dùng defaultValue nếu cần
+            >
               {categoriesList.map((category: any) => (
-                <Select.Option key={category.category_id} value={category.id}>
+                <Select.Option key={category.category_id} value={category.category_id}>
                   {category.name}
                 </Select.Option>
               ))}
@@ -206,11 +208,11 @@ const platformsList = Array.isArray(platforms.data) ? platforms.data : [];
           )}
         </Form.Item>
 
+
         <Form.Item
           label="Nền tảng"
           name="platform_id"
-          rules={[{ required: true, message: "Vui lòng chọn nền tảng" }]}
-        >
+          rules={[{ required: true, message: "Vui lòng chọn nền tảng" }]}>
           {isLoading ? (
             <Spin indicator={<Loading3QuartersOutlined spin />} />
           ) : (
@@ -227,19 +229,14 @@ const platformsList = Array.isArray(platforms.data) ? platforms.data : [];
         <Form.Item
           label="Giá game"
           name="price"
-          rules={[
-            { required: true, message: "Không được bỏ trống" },
-            { type: "number", min: 0, message: "Giá sản phẩm phải là số dương" },
-          ]}
-        >
+          rules={[{ required: true, message: "Không được bỏ trống" }, { type: "number", min: 0, message: "Giá sản phẩm phải là số dương" }]}>
           <InputNumber />
         </Form.Item>
 
         <Form.Item
           label="Giảm giá"
           name="discount"
-          rules={[{ type: "number", min: 0, max: 100, message: "Giảm giá phải từ 0 đến 100" }]}
-        >
+          rules={[{ type: "number", min: 0, max: 100, message: "Giảm giá phải từ 0 đến 100" }]}>
           <InputNumber addonAfter="%" />
         </Form.Item>
 
@@ -249,25 +246,28 @@ const platformsList = Array.isArray(platforms.data) ? platforms.data : [];
           valuePropName="fileList"
           getValueFromEvent={normFile}
         >
-          <Upload
-            beforeUpload={handleImageUpload}
-            showUploadList={false}
-          >
-            <button style={{ border: 0, background: "none" }} type="button">
-              <PlusOutlined />
-              <div style={{ marginTop: 8 }}>Upload</div>
-            </button>
-          </Upload>
+          <div> {/* Bao bọc Upload trong một div */}
+            <Upload
+              beforeUpload={handleImageUpload}
+              showUploadList={false}
+            >
+              <button style={{ border: 0, background: "none" }} type="button">
+                <PlusOutlined />
+                <div style={{ marginTop: 8 }}>Upload</div>
+              </button>
+            </Upload>
 
-          {/* Hiển thị ảnh đã có từ dữ liệu */}
-          {imageUrl || data?.data?.image ? (
-            <img
-              src={imageUrl || data?.data?.image}
-              alt="Uploaded"
-              style={{ width: "20%", marginTop: 10 }}
-            />
-          ) : null}
+            {/* Hiển thị ảnh đã có từ dữ liệu */}
+            {imageUrl || data?.data?.image ? (
+              <img
+                src={imageUrl || data?.data?.image}
+                alt="Uploaded"
+                style={{ width: "20%", marginTop: 10 }}
+              />
+            ) : null}
+          </div> {/* Đóng div */}
         </Form.Item>
+
 
         <Form.Item label="Mô tả game" name="description">
           <TextArea rows={5} />
@@ -279,9 +279,9 @@ const platformsList = Array.isArray(platforms.data) ? platforms.data : [];
           </Button>
         </Form.Item>
       </Form>
-
     </>
   );
 };
 
 export default GameEditPage;
+
