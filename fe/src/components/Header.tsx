@@ -11,20 +11,18 @@ const Header = (props: Props) => {
   return (
     <div>
       <header>
-    
-      <div className="top-bar">
-        <div className="top-bar-content">
-          <span>Kết nối yêu thương cùng Tinder Plus</span>
-          <nav>
-            <a href="#">Hướng dẫn mua hàng</a>
-            <a href="#">Ưu đãi khách hàng</a>
-            <a href="#">Thông tin liên hệ</a>
-          </nav>
+        <div className="top-bar">
+          <div className="top-bar-content">
+            <span>Kết nối yêu thương cùng Tinder Plus</span>
+            <nav>
+              <a href="#">Hướng dẫn mua hàng</a>
+              <a href="#">Ưu đãi khách hàng</a>
+              <a href="#">Thông tin liên hệ</a>
+            </nav>
+          </div>
         </div>
-      </div>
 
-    
-      <div className="main-header">
+        <div className="main-header">
           <div className="main-header-content">
             <div className="logo">
               <img src={logo} alt="Luutuidiu logo" />
@@ -38,18 +36,12 @@ const Header = (props: Props) => {
             </div>
             <div className="user-cart">
               <div className="user-info">
-                <img
-                  src={userAvatar}
-                  alt="User Avatar"
-                />
+                <img src={userAvatar} alt="User Avatar" />
                 <span>TrVanNhat</span>
               </div>
               <div className="cart">
                 <a href="#">
-                  <img
-                    src={cartIcon}
-                    alt="Cart Icon"
-                  />
+                  <img src={cartIcon} alt="Cart Icon" />
                   <span>Giỏ hàng</span>
                   <span className="cart-count">0</span>
                 </a>
@@ -58,18 +50,18 @@ const Header = (props: Props) => {
           </div>
         </div>
 
-      <div className="main-nav">
-        <div className="main-nav-content">
-          <a href="">Trang chủ</a>
-          <a href="/products">Sản phẩm</a>
-          <a href="#">Tin tức</a>
-          <a href="#">Liên hệ</a>
-          <a href="#">Hình thức thanh toán</a>
+        <div className="main-nav">
+          <div className="main-nav-content">
+            <a href="/">Trang chủ</a>
+            <a href="/products">Sản phẩm</a>
+            <a href="#">Tin tức</a>
+            <a href="#">Liên hệ</a>
+            <a href="/paymentMethods">Hình thức thanh toán</a>
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
     </div>
-  )
+  );
 }
 
 export default Header

@@ -1,11 +1,13 @@
 import React from "react";
 import { List, Typography, Card, Divider, Avatar } from "antd";
+import { useNavigate } from "react-router-dom";
 
 const paymentMethods = [
   {
     title: "Chuyển Khoản Ngân Hàng 24/7",
     description: "Chuyển khoản ngân hàng online hoặc tại quầy giao dịch",
     icon: "https://cdn.divineshop.vn/image/catalog/Logo-bank/bank.png?hash=1604888771", // Đường dẫn đến hình ảnh icon thực tế
+    route: "/banhking24h",
   },
   {
     title: "Thanh toán VNPAY-QR",
@@ -42,6 +44,13 @@ const paymentMethods = [
 ];
 
 const PaymentPage: React.FC = () => {
+  const navigate = useNavigate();
+
+  const handleItemClick = (route: string | undefined) => {
+    if (route) {
+      navigate(route); // Điều hướng đến đường dẫn khi nhấp vào mục
+    }
+  }
   return (
     <Card style={{ maxWidth: 800, margin: "20px auto", padding: "20px" }}>
       <Typography.Title level={3}>Nạp tiền vào tài khoản</Typography.Title>
@@ -53,7 +62,10 @@ const PaymentPage: React.FC = () => {
         itemLayout="horizontal"
         dataSource={paymentMethods}
         renderItem={(item) => (
-          <List.Item>
+          <List.Item
+          onClick={() => handleItemClick(item.route)}
+            style={{ cursor: item.route ? "pointer" : "default" }}
+          >
             <List.Item.Meta
               avatar={<Avatar src={item.icon} />}
               title={item.title}
