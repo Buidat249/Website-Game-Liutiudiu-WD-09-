@@ -1,15 +1,21 @@
-//chuyển qua gân hàng
-import React from "react";
-import { Card, Typography, List, Avatar, Row, Col, Table } from "antd";
+import React, { useState } from "react";
+import {
+  Card,
+  Typography,
+  List,
+  Avatar,
+  Row,
+  Col,
+  Table,
+  Button,
+  Modal,
+} from "antd";
 
 const bankLogos = [
   {
     name: "MB Bank",
     logo: "https://cdn.divineshop.vn/image/catalog/Logo-bank/logo-mbbank-33428.png?hash=1703148927",
   },
-//   { name: "Vietcombank", logo: "/icons/vietcombank.png" },
-//   { name: "Agribank", logo: "/icons/agribank.png" },
-//   { name: "Techcombank", logo: "/icons/techcombank.png" },
 ];
 
 const transferInfo = [
@@ -34,6 +40,16 @@ const columns = [
 ];
 
 const BankingPage: React.FC = () => {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const showQrCode = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleModalClose = () => {
+    setIsModalVisible(false);
+  };
+
   return (
     <Card style={{ maxWidth: 900, margin: "20px auto", padding: "20px" }}>
       <Typography.Title level={3}>Nạp tiền vào tài khoản</Typography.Title>
@@ -79,6 +95,24 @@ const BankingPage: React.FC = () => {
         pagination={false}
         bordered
       />
+
+      <Button type="primary" style={{ marginTop: "20px" }} onClick={showQrCode}>
+        Nạp tiền
+      </Button>
+
+      <Modal
+        title="Mã QR để chuyển khoản"
+        visible={isModalVisible}
+        onCancel={handleModalClose}
+        footer={null}
+      >
+        <img
+          src="" // Đường dẫn đến hình ảnh mã QR thật
+          alt="QR Code"
+          style={{ width: "100%" }}
+        />
+      </Modal>
+
       <Typography.Paragraph style={{ marginTop: "20px", color: "red" }}>
         <strong>Lưu ý:</strong> Hệ thống sẽ xử lý tự động cộng dồn số dư sau khi
         chuyển khoản 1-3 phút nếu bạn:
