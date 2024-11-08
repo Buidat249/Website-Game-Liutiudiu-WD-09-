@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   Typography,
@@ -41,14 +41,27 @@ const columns = [
 
 const BankingPage: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [countdown, setCountdown] = useState(60); // 1 minute countdown
 
   const showQrCode = () => {
     setIsModalVisible(true);
+    setCountdown(60); // Reset countdown when modal is opened
   };
 
   const handleModalClose = () => {
     setIsModalVisible(false);
   };
+
+  // Countdown timer effect
+  useEffect(() => {
+    if (countdown === 0) return;
+
+    const timer = setInterval(() => {
+      setCountdown((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(timer); // Clear the timer when component is unmounted or countdown reaches 0
+  }, [countdown]);
 
   return (
     <Card style={{ maxWidth: 900, margin: "20px auto", padding: "20px" }}>
@@ -81,7 +94,7 @@ const BankingPage: React.FC = () => {
       </Typography.Title>
       <Row gutter={[16, 16]} justify="start">
         {bankLogos.map((bank) => (
-          <Col key={bank.name}>
+          <Col key={bank.name} xs={24} sm={12} md={8}>
             <Avatar src={bank.logo} size={64} />
           </Col>
         ))}
@@ -104,26 +117,19 @@ const BankingPage: React.FC = () => {
         title="Mã QR để chuyển khoản"
         visible={isModalVisible}
         onCancel={handleModalClose}
-        footer={null}
+        footer={[
+          <Button key="close" onClick={handleModalClose}>
+            Đóng
+          </Button>,
+        ]}
       >
         <img
-          src="" // Đường dẫn đến hình ảnh mã QR thật
+          src="QR"
           alt="QR Code"
-          style={{ width: "100%" }}
+          style={{ width: "100%", height: "auto", marginBottom: "20px" }}
         />
+        <Typography.Text>Thời gian còn lại: {countdown} giây</Typography.Text>
       </Modal>
-
-      <Typography.Paragraph style={{ marginTop: "20px", color: "red" }}>
-        <strong>Lưu ý:</strong> Hệ thống sẽ xử lý tự động cộng dồn số dư sau khi
-        chuyển khoản 1-3 phút nếu bạn:
-        <ul>
-          <li>
-            Ghi nội dung chuyển khoản <strong>Dùng nội dung bên trên</strong>.
-          </li>
-          <li>Sử dụng hình thức chuyển tiền nhanh 24/7.</li>
-        </ul>
-        Trong trường hợp gặp sự cố, liên hệ CSKH để được trợ giúp.
-      </Typography.Paragraph>
     </Card>
   );
 };
