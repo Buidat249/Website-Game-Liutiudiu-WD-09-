@@ -2,7 +2,7 @@ import React from 'react'
 import PaymentMomo from './_components/paymm'
 
 
-const PageMomo = () => {
+const PagePay = () => {
   return (
     <div>
       <PaymentMomo />
@@ -10,4 +10,4 @@ const PageMomo = () => {
   )
 }
 
-export default PageMomo
+export default PagePay
