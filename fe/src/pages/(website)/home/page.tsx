@@ -103,9 +103,11 @@ const HomePage = () => {
                   <Link to={`/games/${game.game_id}`}>
                     <img src={game.image} alt={game.name} />
                     <p>{game.name}</p>
-                    <p>Giá: {game.price}</p>
-                    <p>Mô tả: {game.description}</p>
-                    <p>Nền tảng: {getPlatformName(game.platform_id)}</p>
+                    <div className="flex gap-2">
+                      <p>Giá: Miễn phí</p>
+                      <p>{getPlatformName(game.platform_id)}</p>
+                    </div>
+
                   </Link>
                 </div>
               ))
@@ -124,9 +126,11 @@ const HomePage = () => {
                   <div key={game.game_id} className="game">
                     <img src={game.image} alt={game.name} />
                     <p>{game.name}</p>
-                    <p>Giá: Miễn phí</p>
-                    <p>Mô tả: {game.description}</p>
-                    <p>Nền tảng: {getPlatformName(game.platform_id)}</p>
+                    <div className="flex gap-2">
+                      <p>Giá: Miễn phí</p>
+                      <p>{getPlatformName(game.platform_id)}</p>
+                    </div>
+
                   </div>
                 ))
               ) : (

@@ -19,6 +19,10 @@ import ProductDetail from "@/pages/(website)/home/ProductDetail";
 
 import PagePay from "@/pages/(website)/pays/page";
 
+import ProductPage from "@/pages/(website)/product/page";
+
+import PaymentMomo from "@/pages/(website)/pays/_components/paymm";
+
 const Router = () => {
   return (
     <Routes>
@@ -27,6 +31,10 @@ const Router = () => {
         <Route index element={<HomePage />} />
         <Route path="games/:game_id" element={<ProductDetail />} />
         <Route path="pay" element={<PagePay />} />
+
+        <Route path="products" element={<ProductPage />} />
+
+        <Route path="pay" element={<PaymentMomo />} />
       </Route>
 
       {/* Các route cho trang quản trị */}

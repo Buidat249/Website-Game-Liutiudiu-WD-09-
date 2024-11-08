@@ -60,8 +60,8 @@ const Header = (props: Props) => {
 
       <div className="main-nav">
         <div className="main-nav-content">
-          <a href="#">Trang chủ</a>
-          <a href="#">Sản phẩm</a>
+          <a href="">Trang chủ</a>
+          <a href="/products">Sản phẩm</a>
           <a href="#">Tin tức</a>
           <a href="#">Liên hệ</a>
           <a href="#">Hình thức thanh toán</a>
