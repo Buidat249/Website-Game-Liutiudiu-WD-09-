@@ -60,7 +60,7 @@ const ProductDetail = () => {
 
   return (
     <div>
-      <Header />
+      
       {game ? (
         <div className="flex flex-col justify-center items-center px-16 py-5 bg-white max-md:px-5">
           <div className="flex flex-col justify-center items-center px-16 py-5 bg-white max-md:px-5">
@@ -278,8 +278,7 @@ const ProductDetail = () => {
         </div>
       ) : (
         <p>Loading...</p>
-      )}
-      <Footer />
+      )}     
     </div>
   );
 };
