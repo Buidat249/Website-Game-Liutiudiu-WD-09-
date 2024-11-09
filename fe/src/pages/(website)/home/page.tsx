@@ -120,7 +120,6 @@ const HomePage = () => {
               {freeGames.length > 0 ? (
                 freeGames.map((game) => (
                   <div key={game.game_id} className="game">
-<<<<<<< HEAD
                     <Link to={`/productgame/${game.game_id}`}>
                       <img src={game.image} alt={game.name} />
                       <p>{game.name}</p>
@@ -129,15 +128,6 @@ const HomePage = () => {
                         <p>{getPlatformName(game.platform_id)}</p>
                       </div>
                     </Link>
-
-=======
-                    <img src={game.image} alt={game.name} />
-                    <p>{game.name}</p>
-                    <div className="flex gap-2">
-                      <p>Giá: Miễn phí</p>
-                      <p>{getPlatformName(game.platform_id)}</p>
-                    </div>
->>>>>>> 6c341defa5f339a0e64827b5da7a63a75eb0a1e3
                   </div>
                 ))
               ) : (
