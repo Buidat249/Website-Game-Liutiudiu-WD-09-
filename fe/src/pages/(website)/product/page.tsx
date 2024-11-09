@@ -190,7 +190,9 @@ const ProductPage = () => {
             {filteredGames.length > 0 ? (
               filteredGames.map((game) => (
                 <div key={game.game_id} className="game">
+                  <Link to={`/games/${game.game_id}`}>
                   <img src={game.image} alt={game.name} />
+                  </Link>
                   <p>{game.name}</p>
                   <div className="small-p-product">
                     <p>Giá: {game.price === 0 ? 'Miễn phí' : `${game.price} VND`}</p>

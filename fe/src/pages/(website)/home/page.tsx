@@ -86,14 +86,12 @@ const HomePage = () => {
               ))}
             </div>
           </div>
-
           <div className="aside-right">
             {rightGames.map((game) => (
               <img key={game.game_id} src={game.image} alt={game.title} />
             ))}
           </div>
         </div>
-
         <section className="games">
           <h2>Sản phẩm nổi bật</h2>
           <div className="game-grid">
@@ -107,7 +105,6 @@ const HomePage = () => {
                       <p>Giá: Miễn phí</p>
                       <p>{getPlatformName(game.platform_id)}</p>
                     </div>
-
                   </Link>
                 </div>
               ))
@@ -116,7 +113,6 @@ const HomePage = () => {
             )}
           </div>
         </section>
-
         <div>
           <section className="games">
             <h2>Sản phẩm miễn phí</h2>
@@ -130,7 +126,6 @@ const HomePage = () => {
                       <p>Giá: Miễn phí</p>
                       <p>{getPlatformName(game.platform_id)}</p>
                     </div>
-
                   </div>
                 ))
               ) : (
