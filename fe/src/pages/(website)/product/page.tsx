@@ -7,6 +7,7 @@ interface Game {
   game_id: number;
   brand_id: number;
   category_id: number[];
+  filter_id: number[];
   platform_id: number | number[];
   name: string;
   price: number;
@@ -30,17 +31,26 @@ interface Category {
   name: string;
 }
 
+interface Filter {
+  filter_id: number;
+  name: string;
+}
+
 const GamePage = () => {
   const [games, setGames] = useState<Game[]>([]);
   const [platforms, setPlatforms] = useState<Platform[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
+  const [filters, setFilters] = useState<Filter[]>([]); // State for filters
   const [filteredGames, setFilteredGames] = useState<Game[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedBrand, setSelectedBrand] = useState<string>('');
+  const [selectedFilter, setSelectedFilter] = useState<string>(''); // State for selected filter
   const [priceFrom, setPriceFrom] = useState<number | string>('');
   const [priceTo, setPriceTo] = useState<number | string>('');
   const [sortOrder, setSortOrder] = useState<string>('');
+
+  console.log('hi', selectedCategory)
 
   useEffect(() => {
     axios.get("http://localhost:8080/games")
@@ -61,12 +71,16 @@ const GamePage = () => {
     axios.get("http://localhost:8080/brands")
       .then((response) => setBrands(response.data.data))
       .catch((error) => console.error("Error fetching brands:", error));
+
+    axios.get("http://localhost:8080/filters") // Fetch filters data
+      .then((response) => setFilters(response.data.data))
+      .catch((error) => console.error("Error fetching filters:", error));
   }, []);
 
   const handleFilter = () => {
     let filtered = [...games];
 
-    // Lọc theo danh mục
+    // Lọc theo thể loại
     if (selectedCategory) {
       const categoryId = Number(selectedCategory);
       filtered = filtered.filter((game) =>
@@ -77,7 +91,17 @@ const GamePage = () => {
     // Lọc theo thương hiệu
     if (selectedBrand) {
       const brandId = Number(selectedBrand);
-      filtered = filtered.filter((game) => game.brand_id === brandId);
+      filtered = filtered.filter((game) =>
+        Array.isArray(game.brand_id) && game.brand_id.includes(brandId)
+      );
+    }
+
+    // Lọc theo danh mục
+    if (selectedFilter) {
+      const filterId = Number(selectedFilter);
+      filtered = filtered.filter((game) =>
+        Array.isArray(game.filter_id) && game.filter_id.includes(filterId)
+      );
     }
 
     // Lọc theo giá
@@ -110,6 +134,7 @@ const GamePage = () => {
   const handleReset = () => {
     setSelectedCategory('');
     setSelectedBrand('');
+    setSelectedFilter(''); // Reset the selected filter
     setPriceFrom('');
     setPriceTo('');
     setSortOrder('');
@@ -136,7 +161,7 @@ const GamePage = () => {
         <div className="filter-small">
           <div className="filter-options">
             <div className="select-wrapper">
-              <label className="select-label">Chọn danh mục:</label>
+              <label className="select-label">Chọn thể loại:</label>
               <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
                 <option value="">Tất cả</option>
                 {categories.map((category) => (
@@ -159,6 +184,18 @@ const GamePage = () => {
               </select>
             </div>
 
+            <div className="select-wrapper">
+              <label className="select-label">Chọn danh mục:</label>
+              <select value={selectedFilter} onChange={(e) => setSelectedFilter(e.target.value)}>
+                <option value="">Tất cả</option>
+                {filters.map((filter) => (
+                  <option key={filter.filter_id} value={filter.filter_id}>
+                    {filter.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             <div className="price-range">
               <input type="text" value={priceFrom} onChange={(e) => setPriceFrom(e.target.value)} placeholder="Mức giá từ" />
               <span>-</span>
@@ -168,8 +205,7 @@ const GamePage = () => {
             <div className="select-wrapper">
               <label className="select-label">Chọn sắp xếp:</label>
               <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
-                <option value="">Sắp xếp</option>
-                <option value="default">Mặc định</option>
+                <option value="">Mặc định</option>
                 <option value="priceDesc">Giá: Cao đến Thấp</option>
                 <option value="priceAsc">Giá: Thấp đến Cao</option>
                 <option value="nameAsc">Tên: A đến Z</option>
@@ -199,14 +235,7 @@ const GamePage = () => {
                       <p>{getPlatformName(game.platform_id)}</p>
                     </div>
                   </Link>
-                  <Link to={`/games/${game.game_id}`}>
-                  <img src={game.image} alt={game.name} />
-                  </Link>
-                  <p>{game.name}</p>
-                  <div className="small-p-product">
-                    <p>Giá: {game.price === 0 ? 'Miễn phí' : `${game.price} VND`}</p>
-                    <p>{getPlatformName(game.platform_id)}</p>
-                  </div>
+
                 </div>
               ))
             ) : (

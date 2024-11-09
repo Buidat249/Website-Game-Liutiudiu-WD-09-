@@ -3,6 +3,7 @@ import { Button, Image, message, Popconfirm, Skeleton, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { IBrand } from "@/common/types/brand";
+import { IFilter } from "@/common/types/filter";
 import axios from "axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ICategory } from "@/common/types/category";
@@ -38,6 +39,7 @@ const GamePage = () => {
   const [brands, setBrands] = useState<IBrand[]>([]);
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [platforms, setPlatforms] = useState<IPlatform[]>([]);
+  const [filters, setFilter] = useState<IFilter[]>([]);
 
   useEffect(() => {
     fetch("http://localhost:8080/brands/")
@@ -54,6 +56,11 @@ const GamePage = () => {
       .then((response) => response.json())
       .then((data) => setPlatforms(data.data))
       .catch((error) => console.error("Lỗi khi lấy dữ liệu platforms:", error));
+
+      fetch("http://localhost:8080/filters/")
+      .then((response) => response.json())
+      .then((data) => setFilter(data.data))
+      .catch((error) => console.error("Lỗi khi lấy dữ liệu filter:", error));
   }, []);
 
   if (error) return <div>Lỗi: {error.message}</div>;
@@ -86,7 +93,7 @@ const GamePage = () => {
         if (isLoading || !categories.length) {
           return "Đang tải danh mục..."; // Nếu dữ liệu chưa có
         }
-  
+
         if (Array.isArray(category_id)) {
           return category_id
             .map((id) => {
@@ -115,6 +122,24 @@ const GamePage = () => {
         } else {
           const platform = platforms.find((p) => p.platform_id === platform_id);
           return platform ? platform.name : "Nền tảng không xác định";
+        }
+      },
+    },
+    {
+      key: "filter_id",
+      title: "Danh mục",
+      dataIndex: "filter_id",
+      render: (filter_id: any) => {
+        if (Array.isArray(filter_id)) {
+          return filter_id
+            .map((id) => {
+              const filter = filters.find((p) => p.filter_id === id);
+              return filter ? filter.name : "Danh mục không xác định";
+            })
+            .join(", ");
+        } else {
+          const filter = filters.find((p) => p.filter_id === filter_id);
+          return filter ? filter.name : "Danh mục không xác định";
         }
       },
     },
@@ -155,7 +180,7 @@ const GamePage = () => {
       },
     },
   ];
-  
+
 
   if (isLoading) return <div>...Đang tải</div>;
 

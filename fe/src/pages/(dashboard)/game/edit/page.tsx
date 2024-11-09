@@ -20,6 +20,7 @@ type FieldType = {
   brand_id?: number;
   category_id?: number;
   platform_id?: number;
+  filter_id?: number;
   name?: string;
   price?: number;
   discount?: number;
@@ -129,6 +130,17 @@ const GameEditPage: React.FC = () => {
   console.log("platforms:", platforms);
   const platformsList = Array.isArray(platforms.data) ? platforms.data : [];
 
+  //
+
+  const { data: filters = { data: [] } } = useQuery({
+    queryKey: ["filters"],
+    queryFn: () =>
+      axios.get("http://localhost:8080/filters").then((res) => res.data),
+  });
+
+  console.log("filters:", filters);
+  const filtersList = Array.isArray(filters.data) ? filters.data : [];
+
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading brand: {error.message}</div>;
 
@@ -220,6 +232,23 @@ const GameEditPage: React.FC = () => {
               {platformsList.map((platform: any) => (
                 <Select.Option key={platform.platform_id} value={platform.platform_id}>
                   {platform.name}
+                </Select.Option>
+              ))}
+            </Select>
+          )}
+        </Form.Item>
+
+        <Form.Item
+          label="Danh mục"
+          name="filter_id"
+          rules={[{ required: true, message: "Vui lòng chọn danh mục" }]}>
+          {isLoading ? (
+            <Spin indicator={<Loading3QuartersOutlined spin />} />
+          ) : (
+            <Select mode="multiple" placeholder="Chọn danh mục">
+              {filtersList.map((filter: any) => (
+                <Select.Option key={filter.filter_id} value={filter.filter_id}>
+                  {filter.name}
                 </Select.Option>
               ))}
             </Select>

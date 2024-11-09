@@ -20,6 +20,12 @@ const gameSchema = new mongoose.Schema({
         unique: false,
         ref: 'Platform', // Tham chiếu đến model Platform
     }],
+    filter_id: [{
+        type: mongoose.Schema.Types.Number,
+        required: true,
+        unique: false,
+        ref: 'Filter', // Tham chiếu đến model Filter
+    }],
     brand_ids: [{ type: Number, ref: 'Brands' }],
     category_ids: [{ type: Number, ref: 'categories' }],
     name: { type: String, required: true },

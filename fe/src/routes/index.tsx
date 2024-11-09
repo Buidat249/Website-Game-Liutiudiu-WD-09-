@@ -30,6 +30,9 @@ import PagePayment_method from "@/pages/(website)/Payment_method/page";
 import PaymentMomo from "@/pages/(website)/pays/_components/paymm";
 import VnpayPayment from "@/pages/(website)/pays/_components/payvnpay";
 import ProductGamePage from "@/pages/(website)/product/page";
+import FilterPage from "@/pages/(dashboard)/filter/page";
+import FilterAddPage from "@/pages/(dashboard)/filter/add/page";
+import FilterEditPage from "@/pages/(dashboard)/filter/edit/page";
 
 const Router = () => {
   return (
@@ -55,23 +58,34 @@ const Router = () => {
       {/* Các route cho trang quản trị */}
       <Route path="admin/" element={<LayoutAdmin />}>
         <Route index element={<DashboardPage />} />
+         {/*game*/}
         <Route path="games" element={<GamePage />} />
         <Route path="games/add" element={<GameAddPage />} />
         <Route path="games/:game_id/edit" element={<GameEditPage />} />
+         {/*thể loại*/}
         <Route path="categories" element={<CategoryPage />} />
         <Route path="categories/add" element={<CategoryAddPage />} />
         <Route
           path="categories/:category_id/edit"
           element={<CategoryEditPage />}
         />
+         {/*hãng*/}
         <Route path="brands" element={<BrandPage />} />
         <Route path="brands/add" element={<BrandAddPage />} />
         <Route path="brands/:brand_id/edit" element={<BrandEditPage />} />
+        {/*nền tảng*/}
         <Route path="platforms" element={<PlatformPage />} />
         <Route path="platforms/add" element={<PlatFormAddPage />} />
         <Route
           path="platforms/:platform_id/edit"
           element={<PlatformEditPage />}
+        />
+        {/*Danh muc*/}
+        <Route path="filters" element={<FilterPage />} />
+        <Route path="filters/add" element={<FilterAddPage />} />
+        <Route
+          path="filters/:filter_id/edit"
+          element={<FilterEditPage />}
         />
       </Route>
     </Routes>

@@ -942,7 +942,7 @@ h2 {
   border: 1px solid #ccc;
   border-radius: 4px;
   outline: none;
-  width: 200px; /* Cố định chiều rộng cho các select và input */
+  width: 130px; /* Cố định chiều rộng cho các select và input */
   max-width: 100%; /* Đảm bảo không vượt quá chiều rộng của container */
   box-sizing: border-box;
 }
@@ -953,16 +953,23 @@ h2 {
   gap: 5px;
 }
 
-.filter-button-ft,
 .filter-button-rs {
   padding: 9px;
   font-size: 14px;
   border: none;
+
   border-radius: 4px;
   cursor: pointer;
 }
 
 .filter-button-ft {
+  padding: 9px; 
+  font-size: 14px;
+  border: none;
+  width: 65px;
+  border-radius: 4px;
+  cursor: pointer;
+  
   background-color: #007bff;
   color: white;
 }
@@ -972,9 +979,11 @@ h2 {
   color: white;
 }
 
-.filter-button-ft:hover,
-.filter-button-rs:hover {
+.filter-button-ft:hover{
   background-color: #0056b3;
+}
+.filter-button-rs:hover {
+  background-color: rgb(214, 5, 5);
 }
 
 @media (max-width: 768px) {

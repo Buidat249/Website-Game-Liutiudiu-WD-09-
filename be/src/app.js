@@ -14,6 +14,7 @@ import gameRouter from "./routers/game";
 import cartRouter from "./routers/cart";
 import cart_itemRouter from "./routers/cart_item";
 import platformRouter from "./routers/platform";
+import filter from "./routers/filter";
 
 const app = express();
 // middleware
@@ -42,6 +43,7 @@ app.use("", reviewRouter);
 app.use("", cartRouter);
 app.use("", cart_itemRouter);
 app.use("", platformRouter);
+app.use("", filter);
 export const viteNodeApp = app;
 
 app.listen(PORT, () => {
