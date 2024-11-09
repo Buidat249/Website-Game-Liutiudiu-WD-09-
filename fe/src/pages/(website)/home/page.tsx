@@ -86,14 +86,12 @@ const HomePage = () => {
               ))}
             </div>
           </div>
-
           <div className="aside-right">
             {rightGames.map((game) => (
               <img key={game.game_id} src={game.image} alt={game.title} />
             ))}
           </div>
         </div>
-
         <section className="games">
           <h2>Sản phẩm nổi bật</h2>
           <div className="game-grid">
@@ -107,7 +105,6 @@ const HomePage = () => {
                       <p>Giá: Miễn phí</p>
                       <p>{getPlatformName(game.platform_id)}</p>
                     </div>
-
                   </Link>
                 </div>
               ))
@@ -116,7 +113,6 @@ const HomePage = () => {
             )}
           </div>
         </section>
-
         <div>
           <section className="games">
             <h2>Sản phẩm miễn phí</h2>
@@ -124,6 +120,7 @@ const HomePage = () => {
               {freeGames.length > 0 ? (
                 freeGames.map((game) => (
                   <div key={game.game_id} className="game">
+<<<<<<< HEAD
                     <Link to={`/productgame/${game.game_id}`}>
                       <img src={game.image} alt={game.name} />
                       <p>{game.name}</p>
@@ -133,6 +130,14 @@ const HomePage = () => {
                       </div>
                     </Link>
 
+=======
+                    <img src={game.image} alt={game.name} />
+                    <p>{game.name}</p>
+                    <div className="flex gap-2">
+                      <p>Giá: Miễn phí</p>
+                      <p>{getPlatformName(game.platform_id)}</p>
+                    </div>
+>>>>>>> 6c341defa5f339a0e64827b5da7a63a75eb0a1e3
                   </div>
                 ))
               ) : (

@@ -23,13 +23,13 @@ const FAQ: React.FC<IFAQ> = ({ game  }) => {
       title: "Khám Phá Vùng Đất Của Những Điều Kỳ Diệu",
       quote: "Thế giới chưa thấy, nơi kỳ quan lấp lánh, \nVà mỗi bước đi, một cảnh mới trải dài.",
       description: "Bước vào một cõi huyền bí đầy những kỳ quan và khám phá của thần thoại Trung Quốc cổ đại! Là Nhân Vật Được Định Mệnh Chọn Lựa, bạn sẽ băng qua nhiều phong cảnh tuyệt đẹp và độc đáo từ câu chuyện cổ điển, tạo nên một thiên anh hùng ca về cuộc phiêu lưu được nhìn nhận theo một cách hoàn toàn mới.",
-      image: "https://cdn.builder.io/api/v1/image/assets/TEMP/f0be825c492ca89df53acc3616459778855705722a0d37fd73bcebcfa62eeb93?placeholderIfAbsent=true&apiKey=b147c62d1b404bf790d7133a5bf6ed3c"
+      image: `${game.image}`
     },
     {
       title: "Đối Mặt Với Kẻ Thù Hùng Mạnh, Cả Cũ Lẫn Mới",
       quote: "Hầu Vương dũng mãnh, danh vọng vang xa, \nKẻ thù trỗi dậy, thử thách danh hà.",
       description: "Một trong những điểm nhấn chính của \"Tây Du Ký\" là dàn nhân vật đối địch đa dạng, mỗi người đều có sức mạnh riêng biệt. Là Nhân Vật Được Định Mệnh Chọn Lựa, bạn sẽ gặp phải những kẻ thù hùng mạnh và những đối thủ xứng tầm trong suốt hành trình của mình. Hãy dũng cảm tham gia vào các trận chiến hoành tráng, nơi mà đầu hàng không phải là một lựa chọn.",
-      image: "https://cdn.builder.io/api/v1/image/assets/TEMP/d400c09695fedc6f585b7ca4403d1e048c94639756f942e92e7f95ff3360f4ca?placeholderIfAbsent=true&apiKey=b147c62d1b404bf790d7133a5bf6ed3c"
+      image: `${game.image}`
     },
   ];
 
@@ -71,7 +71,7 @@ const FAQ: React.FC<IFAQ> = ({ game  }) => {
             <p className="text-sm max-w-full">
               {game.description}
             </p>
-            <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/a1554b4ec495c19e5849b57253906ff240297b4df52ef51ad4ec04037eacafd7?placeholderIfAbsent=true&apiKey=b147c62d1b404bf790d7133a5bf6ed3c" alt="Black Myth: Wukong game visual" className="mt-4 w-full object-contain" />
+            <img src={game.image} alt="Black Myth: Wukong game visual" className="mt-4 w-full object-contain" />
             
             {productDetails.map((detail, index) => (
               <article key={index} className="mt-4">

@@ -298,6 +298,7 @@ const ProductDetail = () => {
             </div>
             <FAQ game={game} />
             {/* Các Game cùng thể loại */}
+<<<<<<< HEAD
             <div className="games">
               <section className="games">
                 <h2>Sản phẩm Liên Quan</h2>
@@ -322,6 +323,21 @@ const ProductDetail = () => {
                 </div>
               </section>
 
+=======
+            <div className="related-games mt-8">
+              <h6 className="text-lg font-medium leading-loose text-black">
+                Game đề xuất cùng thể loại
+              </h6>
+              <div className="flex gap-4 mt-4">
+                {relatedGames.map((relatedGame) => (
+                  <div key={relatedGame.game_id} className="related-game-item">
+                    <Image src={relatedGame.image} alt={relatedGame.name} style={{width: '13rem'}}/>
+                    <h6>{relatedGame.name}</h6>
+                    <p>{relatedGame.price} đ</p>
+                  </div>
+                ))}
+              </div>
+>>>>>>> 6c341defa5f339a0e64827b5da7a63a75eb0a1e3
             </div>
           </div>
         </div>

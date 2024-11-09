@@ -190,6 +190,7 @@ const GamePage = () => {
             {filteredGames.length > 0 ? (
               filteredGames.map((game) => (
                 <div key={game.game_id} className="game">
+<<<<<<< HEAD
                   <Link to={`/productgame/${game.game_id}`}>
                     <img src={game.image} alt={game.name} />
                     <p>{game.name}</p>
@@ -198,6 +199,16 @@ const GamePage = () => {
                       <p>{getPlatformName(game.platform_id)}</p>
                     </div>
                   </Link>
+=======
+                  <Link to={`/games/${game.game_id}`}>
+                  <img src={game.image} alt={game.name} />
+                  </Link>
+                  <p>{game.name}</p>
+                  <div className="small-p-product">
+                    <p>Giá: {game.price === 0 ? 'Miễn phí' : `${game.price} VND`}</p>
+                    <p>{getPlatformName(game.platform_id)}</p>
+                  </div>
+>>>>>>> 6c341defa5f339a0e64827b5da7a63a75eb0a1e3
                 </div>
               ))
             ) : (
