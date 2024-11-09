@@ -267,7 +267,7 @@ const ProductDetail = () => {
               <div className="flex gap-4 mt-4">
                 {relatedGames.map((relatedGame) => (
                   <div key={relatedGame.game_id} className="related-game-item">
-                    <Image src={relatedGame.image} alt={relatedGame.name} />
+                    <Image src={relatedGame.image} alt={relatedGame.name} style={{width: '13rem'}}/>
                     <h6>{relatedGame.name}</h6>
                     <p>{relatedGame.price} đ</p>
                   </div>
