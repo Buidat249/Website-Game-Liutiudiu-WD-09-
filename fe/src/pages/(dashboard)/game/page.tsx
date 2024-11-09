@@ -80,21 +80,25 @@ const GamePage = () => {
     },
     {
       key: "category_id",
-      title: "Danh mục",
+      title: "Thể loại",
       dataIndex: "category_id",
       render: (category_id: any) => {
+        if (isLoading || !categories.length) {
+          return "Đang tải danh mục..."; // Nếu dữ liệu chưa có
+        }
+  
         if (Array.isArray(category_id)) {
           return category_id
             .map((id) => {
               const category = categories.find((c) => c.category_id === id);
-              return category ? category.name : "Danh mục không xác định";
+              return category ? category.name : "Thể loại không xác định";
             })
             .join(", ");
         } else {
           const category = categories.find((c) => c.category_id === category_id);
-          return category ? category.name : "Danh mục không xác định";
+          return category ? category.name : "Thể loại không xác định";
         }
-      },
+      }
     },
     {
       key: "platform_id",
@@ -151,6 +155,7 @@ const GamePage = () => {
       },
     },
   ];
+  
 
   if (isLoading) return <div>...Đang tải</div>;
 

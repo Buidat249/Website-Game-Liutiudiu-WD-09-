@@ -20,6 +20,7 @@ const BrandEditPage: React.FC = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const queryClient = useQueryClient();
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+  
 
   // Lấy dữ liệu hãng phát triển cụ thể
   const { data, isLoading, error } = useQuery({
@@ -61,7 +62,7 @@ const BrandEditPage: React.FC = () => {
 
       const data = await response.json();
       if (data.secure_url) {
-        setImageUrl(data.secure_url);
+        setImageUrl(data.secure_url); // Cập nhật URL ảnh mới
         message.success("Ảnh đã được tải lên thành công!");
       } else {
         message.error("Không thể tải ảnh lên. Vui lòng thử lại.");
@@ -80,13 +81,8 @@ const BrandEditPage: React.FC = () => {
 
   const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
 
-    const brandData = {
-      ...values,
-      image: imageUrl, // Gắn ảnh vào `brandData`
-    };
-
-    console.log("Sending data:", brandData); // Kiểm tra dữ liệu trước khi gửi
-    mutate(brandData); // Gửi dữ liệu brand với ảnh
+    const branData = { ...values, image: imageUrl || data?.data?.image }; // Nếu không có ảnh mới, giữ ảnh cũ
+    mutate(branData);
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -137,24 +133,26 @@ const BrandEditPage: React.FC = () => {
           valuePropName="fileList"
           getValueFromEvent={normFile}
         >
-          <Upload
-            beforeUpload={handleImageUpload}
-            showUploadList={false}
-          >
-            <button style={{ border: 0, background: "none" }} type="button">
-              <PlusOutlined />
-              <div style={{ marginTop: 8 }}>Upload</div>
-            </button>
-          </Upload>
+          <div> {/* Bao bọc Upload trong một div */}
+            <Upload
+              beforeUpload={handleImageUpload}
+              showUploadList={false}
+            >
+              <button style={{ border: 0, background: "none" }} type="button">
+                <PlusOutlined />
+                <div style={{ marginTop: 8 }}>Upload</div>
+              </button>
+            </Upload>
 
-          {/* Hiển thị ảnh đã có từ dữ liệu */}
-          {imageUrl || data?.data?.image ? (
-            <img
-              src={imageUrl || data?.data?.image}
-              alt="Uploaded"
-              style={{ width: "20%", marginTop: 10 }}
-            />
-          ) : null}
+            {/* Hiển thị ảnh đã có từ dữ liệu */}
+            {imageUrl || data?.data?.image ? (
+              <img
+                src={imageUrl || data?.data?.image}
+                alt="Uploaded"
+                style={{ width: "20%", marginTop: 10 }}
+              />
+            ) : null}
+          </div> {/* Đóng div */}
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>

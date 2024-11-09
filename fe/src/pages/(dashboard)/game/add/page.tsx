@@ -181,14 +181,14 @@ const GameAddPage: React.FC = () => {
         </Form.Item>
 
         <Form.Item<FieldType>
-          label="Tên danh mục"
+          label="Tên thể loại"
           name="category_id"
-          rules={[{ required: true, message: "Vui lòng chọn tên danh mục" }]}
+          rules={[{ required: true, message: "Vui lòng chọn tên thể loại" }]}
         >
           {isLoading ? (
             <Spin indicator={<Loading3QuartersOutlined spin />} />
           ) : (
-            <Select mode="multiple" placeholder="Chọn tên danh mục">
+            <Select mode="multiple" placeholder="Chọn tên thể loại">
               {categoryList.map((category: any) => (
                 <Select.Option
                   key={category.category_id}

@@ -17,37 +17,65 @@ import ProductDetail from "@/pages/(website)/home/ProductDetail";
 import Layout from "@/pages/(website)/layout";
 import { Route, Routes } from "react-router-dom";
 
+import PagePay from "@/pages/(website)/pays/page";
+
+import PageCart from "@/pages/(website)/cart/page";
+import PagePayCofirm from "@/pages/(website)/paycofirm/page";
+import NapTienTuDongForm from "@/pages/(website)/Payment_method/_components/auto_top_u";
+import BankingPage from "@/pages/(website)/Payment_method/_components/bank_transfer";
+import CardBankForm from "@/pages/(website)/Payment_method/_components/card_Bank";
+import PayMoMOForm from "@/pages/(website)/Payment_method/_components/PayMomo";
+import VnPay_autoForm from "@/pages/(website)/Payment_method/_components/VnPay";
+import PagePayment_method from "@/pages/(website)/Payment_method/page";
+import PaymentMomo from "@/pages/(website)/pays/_components/paymm";
+import VnpayPayment from "@/pages/(website)/pays/_components/payvnpay";
+import ProductPage from "@/pages/(website)/product/page";
+
 const Router = () => {
   return (
-    <>
-      <Routes>
-        <Route path="admin/" element={<LayoutAdmin />}>
-          <Route index element={<DashboardPage />} />
-          <Route path="games" element={<GamePage />} />
-          <Route path="games/add" element={<GameAddPage />} />
-          <Route path="games/:game_id/edit" element={<GameEditPage />} />
-          <Route path="categories" element={<CategoryPage />} />
-          <Route path="categories/add" element={<CategoryAddPage />} />
-          <Route
-            path="categories/:category_id/edit"
-            element={<CategoryEditPage />}
-          />
-          <Route path="brands" element={<BrandPage />} />
-          <Route path="brands/add" element={<BrandAddPage />} />
-          <Route path="brands/:brand_id/edit" element={<BrandEditPage />} />
-          <Route path="platforms" element={<PlatformPage />} />
-          <Route path="platforms/add" element={<PlatFormAddPage />} />
-          <Route
-            path="platforms/:platform_id/edit"
-            element={<PlatformEditPage />}
-          />
-        </Route>
-      </Routes>
-      <Routes>
-        <Route path="/" index element={<HomePage/>}/>
-        <Route path="games/:game_id" element={<ProductDetail/>}/>
-      </Routes>
-    </>
+    <Routes>
+      {/* Các route cho trang người dùng */}
+      <Route path="/" element={<Layout />}>
+        <Route index element={<HomePage />} />
+        <Route path="games/:game_id" element={<ProductDetail />} />
+        <Route path="pay" element={<PagePay />} />
+        <Route path="/pay-vnpay" element={<VnpayPayment />} />
+        <Route path="/pay-momo" element={<PaymentMomo />} />
+        <Route path="/payconfirm" element={<PagePayCofirm />} />
+
+        <Route path="products" element={<ProductPage />} />
+        <Route path="cart" element={<PageCart />} />
+        <Route path="paymentMethods" element={<PagePayment_method />} />
+        <Route path="/banhking24h" element={<BankingPage />} />
+        <Route path="/NapTienTuDongForm" element={<NapTienTuDongForm />} />
+        <Route path="/CardBank" element={<CardBankForm />} />
+        <Route path="/VnPhayauto" element={<VnPay_autoForm />} />
+        <Route path="/PayMoMOAuto" element={<PayMoMOForm />} />
+      </Route>
+
+      {/* Các route cho trang quản trị */}
+      <Route path="admin/" element={<LayoutAdmin />}>
+        <Route index element={<DashboardPage />} />
+        <Route path="games" element={<GamePage />} />
+        <Route path="games/add" element={<GameAddPage />} />
+        <Route path="games/:game_id/edit" element={<GameEditPage />} />
+        <Route path="categories" element={<CategoryPage />} />
+        <Route path="categories/add" element={<CategoryAddPage />} />
+        <Route
+          path="categories/:category_id/edit"
+          element={<CategoryEditPage />}
+        />
+        <Route path="brands" element={<BrandPage />} />
+        <Route path="brands/add" element={<BrandAddPage />} />
+        <Route path="brands/:brand_id/edit" element={<BrandEditPage />} />
+        <Route path="platforms" element={<PlatformPage />} />
+        <Route path="platforms/add" element={<PlatFormAddPage />} />
+        <Route
+          path="platforms/:platform_id/edit"
+          element={<PlatformEditPage />}
+        />
+      </Route>
+    </Routes>
   );
 };
 
