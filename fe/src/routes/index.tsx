@@ -29,7 +29,7 @@ import VnPay_autoForm from "@/pages/(website)/Payment_method/_components/VnPay";
 import PagePayment_method from "@/pages/(website)/Payment_method/page";
 import PaymentMomo from "@/pages/(website)/pays/_components/paymm";
 import VnpayPayment from "@/pages/(website)/pays/_components/payvnpay";
-import ProductPage from "@/pages/(website)/product/page";
+import ProductGamePage from "@/pages/(website)/product/page";
 
 const Router = () => {
   return (
@@ -37,13 +37,12 @@ const Router = () => {
       {/* Các route cho trang người dùng */}
       <Route path="/" element={<Layout />}>
         <Route index element={<HomePage />} />
-        <Route path="games/:game_id" element={<ProductDetail />} />
+        <Route path="productgame/:game_id" element={<ProductDetail />} />
         <Route path="pay" element={<PagePay />} />
         <Route path="/pay-vnpay" element={<VnpayPayment />} />
         <Route path="/pay-momo" element={<PaymentMomo />} />
         <Route path="/payconfirm" element={<PagePayCofirm />} />
-
-        <Route path="products" element={<ProductPage />} />
+        <Route path="productgame" element={<ProductGamePage />} />
         <Route path="cart" element={<PageCart />} />
         <Route path="paymentMethods" element={<PagePayment_method />} />
         <Route path="/banhking24h" element={<BankingPage />} />

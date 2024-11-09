@@ -100,7 +100,7 @@ const HomePage = () => {
             {featuredGames.length > 0 ? (
               featuredGames.map((game) => (
                 <div key={game.game_id} className="game">
-                  <Link to={`/games/${game.game_id}`}>
+                  <Link to={`/productgame/${game.game_id}`}>
                     <img src={game.image} alt={game.name} />
                     <p>{game.name}</p>
                     <div className="flex gap-2">
@@ -124,12 +124,14 @@ const HomePage = () => {
               {freeGames.length > 0 ? (
                 freeGames.map((game) => (
                   <div key={game.game_id} className="game">
-                    <img src={game.image} alt={game.name} />
-                    <p>{game.name}</p>
-                    <div className="flex gap-2">
-                      <p>Giá: Miễn phí</p>
-                      <p>{getPlatformName(game.platform_id)}</p>
-                    </div>
+                    <Link to={`/productgame/${game.game_id}`}>
+                      <img src={game.image} alt={game.name} />
+                      <p>{game.name}</p>
+                      <div className="flex gap-2">
+                        <p>Giá: Miễn phí</p>
+                        <p>{getPlatformName(game.platform_id)}</p>
+                      </div>
+                    </Link>
 
                   </div>
                 ))

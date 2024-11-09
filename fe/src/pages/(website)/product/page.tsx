@@ -30,7 +30,7 @@ interface Category {
   name: string;
 }
 
-const ProductPage = () => {
+const GamePage = () => {
   const [games, setGames] = useState<Game[]>([]);
   const [platforms, setPlatforms] = useState<Platform[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -190,12 +190,14 @@ const ProductPage = () => {
             {filteredGames.length > 0 ? (
               filteredGames.map((game) => (
                 <div key={game.game_id} className="game">
-                  <img src={game.image} alt={game.name} />
-                  <p>{game.name}</p>
-                  <div className="small-p-product">
-                    <p>Giá: {game.price === 0 ? 'Miễn phí' : `${game.price} VND`}</p>
-                    <p>{getPlatformName(game.platform_id)}</p>
-                  </div>
+                  <Link to={`/productgame/${game.game_id}`}>
+                    <img src={game.image} alt={game.name} />
+                    <p>{game.name}</p>
+                    <div className="small-p-product">
+                      <p>Giá: {game.price === 0 ? 'Miễn phí' : `${game.price} VND`}</p>
+                      <p>{getPlatformName(game.platform_id)}</p>
+                    </div>
+                  </Link>
                 </div>
               ))
             ) : (
@@ -208,4 +210,4 @@ const ProductPage = () => {
   );
 };
 
-export default ProductPage;
+export default GamePage;

@@ -3,7 +3,7 @@ import React from 'react';
 interface Game {
   game_id?: number;
   brand_id?: number;
-  category_id?: number;
+  category_id?: number[];
   platform_id?: number;
   name?: string;
   price?: number;
@@ -17,7 +17,7 @@ interface IFAQ {
   game: Game;
 }
 
-const FAQ: React.FC<IFAQ> = ({ game }) => {
+const FAQ: React.FC<IFAQ> = ({ game  }) => {
   const productDetails = [
     {
       title: "Khám Phá Vùng Đất Của Những Điều Kỳ Diệu",

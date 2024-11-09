@@ -688,8 +688,9 @@ body {
   gap: 20px;
 }
 
-.game {
-
+.game-lq {
+display: flex;
+justify-content: space-around;
 }
 
 .game img {

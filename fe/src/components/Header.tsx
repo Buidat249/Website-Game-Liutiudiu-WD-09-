@@ -40,9 +40,9 @@ const Header = (props: Props) => {
                 <span>TrVanNhat</span>
               </div>
               <div className="cart">
-                <a href="#">
+                <a href="/cart">
                   <img src={cartIcon} alt="Cart Icon" />
-                  <span>Giỏ hàng</span>
+                  <span >Giỏ hàng</span>
                   <span className="cart-count">0</span>
                 </a>
               </div>
@@ -53,7 +53,7 @@ const Header = (props: Props) => {
         <div className="main-nav">
           <div className="main-nav-content">
             <a href="/">Trang chủ</a>
-            <a href="/products">Sản phẩm</a>
+            <a href="/productgame">Sản phẩm</a>
             <a href="#">Tin tức</a>
             <a href="#">Liên hệ</a>
             <a href="/paymentMethods">Hình thức thanh toán</a>
