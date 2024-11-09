@@ -14,27 +14,32 @@ const paymentMethods = [
     description:
       "Quét mã QR PAY trên ứng dụng Mobile Banking, phí giao dịch 2%",
     icon: "https://cdn.divineshop.vn/image/catalog/icon/Image%202022-06-24-1656046250-88939.png?hash=1656046385",
+    route: "/VnPhayauto",
   },
   {
     title: "Nạp số dư tự động bằng thẻ ngân hàng",
     description: "Phí 0.9% + 900đ",
     icon: "https://cdn.divineshop.vn/image/catalog/Logo-bank/Atm.png?hash=1604888771",
+    route: "/NapTienTuDongForm",
   },
   {
     title: "Thanh toán bằng thẻ Master/Visa/JCB",
     description: "Phí 2.36% + 2,660 đ",
     icon: "https://cdn.divineshop.vn/image/catalog/Logo-bank/visa-master.png?hash=1604888771",
+    route: "/CardBank",
   },
   {
     title: "Nạp tiền qua thẻ cào Viettel",
     description: "Nạp tiền qua thẻ cào Viettel, phí giao dịch 30%",
     icon: "https://cdn.divineshop.vn/image/catalog/Logo-bank/Viettel.png?hash=1604888771",
+    // route: "/banhking24h",
   },
   {
     title: "Nạp số dư trực tiếp bằng Momo Payment",
     description:
       "Nạp Dcoin tự động liên kết với Momo, hoàn thành tức thì. Phí 5%",
     icon: "https://cdn.divineshop.vn/image/catalog/Logo-bank/Momo.png?hash=1604888771",
+    route: "/PayMoMOAuto",
   },
   {
     title: "Giao dịch trực tiếp",

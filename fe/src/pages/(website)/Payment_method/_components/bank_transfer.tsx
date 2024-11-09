@@ -124,9 +124,9 @@ const BankingPage: React.FC = () => {
         ]}
       >
         <img
-          src="QR"
+          src="https://cdn.pixabay.com/photo/2023/02/28/01/51/qr-code-7819654_640.jpg"
           alt="QR Code"
-          style={{ width: "100%", height: "auto", marginBottom: "20px" }}
+          style={{ width: "150px", height: "auto", marginBottom: "20px", margin:"auto" }}
         />
         <Typography.Text>Thời gian còn lại: {countdown} giây</Typography.Text>
       </Modal>

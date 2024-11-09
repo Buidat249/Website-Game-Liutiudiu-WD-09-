@@ -25,6 +25,10 @@ import VnpayPayment from "@/pages/(website)/pays/_components/payvnpay";
 import PaymentMomo from "@/pages/(website)/pays/_components/paymm";
 import PagePayment_method from "@/pages/(website)/Payment_method/page";
 import BankingPage from "@/pages/(website)/Payment_method/_components/bank_transfer";
+import NapTienTuDongForm from "@/pages/(website)/Payment_method/_components/auto_top_u";
+import CardBankForm from "@/pages/(website)/Payment_method/_components/card_Bank";
+import VnPay_autoForm from "@/pages/(website)/Payment_method/_components/VnPay";
+import PayMoMOForm from "@/pages/(website)/Payment_method/_components/PayMomo";
 
 const Router = () => {
   return (
@@ -40,8 +44,11 @@ const Router = () => {
         <Route path="products" element={<ProductPage />} />
         <Route path="cart" element={<PageCart />} />
         <Route path="paymentMethods" element={<PagePayment_method />} />
-        <Route path="/banhking24h" element={<BankingPage/>}/>
-
+        <Route path="/banhking24h" element={<BankingPage />} />
+        <Route path="/NapTienTuDongForm" element={<NapTienTuDongForm />} />
+        <Route path="/CardBank" element={<CardBankForm />} />
+        <Route path="/VnPhayauto" element={<VnPay_autoForm />} />
+        <Route path="/PayMoMOAuto" element={<PayMoMOForm />} />
       </Route>
 
       {/* Các route cho trang quản trị */}
