@@ -12,8 +12,12 @@ const CheckoutBoxRight = () => {
       navigate("/pay-vnpay");
     } else if (method === "momo") {
       navigate("/pay-momo");
+    } else {
+      // Khi nhấn nút "Thanh Toán" chuyển tới PagePayCofirm
+      navigate("/payconfirm");
     }
   };
+
   return (
     <div className="w-full lg:w-1/3 bg-white p-6 rounded-lg shadow-md">
       <h3 className="text-xl font-semibold mb-4">Thanh toán</h3>
@@ -36,8 +40,11 @@ const CheckoutBoxRight = () => {
         </div>
       </div>
       <div className="mt-6 space-y-3">
-        <button className="w-full bg-blue-600 text-white py-2 rounded">
-          Nạp thêm vào tài khoản
+        <button
+          className="w-full bg-blue-600 text-white py-2 rounded"
+          onClick={() => handlePayment("confirm")}
+        >
+          Thanh Toán
         </button>
         <button
           className="w-full bg-blue-700 text-white py-2 rounded flex items-center justify-center"
