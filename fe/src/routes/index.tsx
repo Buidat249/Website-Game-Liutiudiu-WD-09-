@@ -20,7 +20,7 @@ import ProductDetail from "@/pages/(website)/home/ProductDetail";
 import PagePay from "@/pages/(website)/pays/page";
 
 import ProductPage from "@/pages/(website)/product/page";
-import PageCart from "@/pages/cart/page";
+import PageCart from "@/pages/(website)/cart/page";
 import VnpayPayment from "@/pages/(website)/pays/_components/payvnpay";
 import PaymentMomo from "@/pages/(website)/pays/_components/paymm";
 import PagePayment_method from "@/pages/(website)/Payment_method/page";
