@@ -14,6 +14,7 @@ import gameRouter from "./routers/game";
 import cartRouter from "./routers/cart";
 import cart_itemRouter from "./routers/cart_item";
 import platformRouter from "./routers/platform";
+import roleRouter from "./routers/role";
 import filter from "./routers/filter";
 
 const app = express();
@@ -43,6 +44,7 @@ app.use("", reviewRouter);
 app.use("", cartRouter);
 app.use("", cart_itemRouter);
 app.use("", platformRouter);
+app.use("", roleRouter);
 app.use("", filter);
 export const viteNodeApp = app;
 

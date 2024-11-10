@@ -4,10 +4,16 @@ import logo from './public/external/logoliu.png';
 import searchIcon from './public/external/timkiem.png';
 import userAvatar from './public/external/avatar-khach-hang-2-52544.png';
 import cartIcon from './public/external/cart icon.png';
+import { Link } from 'react-router-dom';
 
 type Props = {}
 
 const Header = (props: Props) => {
+
+  // Lấy thông tin người dùng từ localStorage
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+
+  
   return (
     <div>
       <header>
@@ -36,15 +42,28 @@ const Header = (props: Props) => {
             </div>
             <div className="user-cart">
               <div className="user-info">
-                <img src={userAvatar} alt="User Avatar" />
-                <span>TrVanNhat</span>
+                {user.username ? (
+                  // Nếu người dùng đã đăng nhập, hiển thị tên người dùng và liên kết đăng xuất
+                  <span>Xin chào, {user.username} </span>
+                ) : (
+                  // Nếu chưa đăng nhập, hiển thị các liên kết đăng ký và đăng nhập
+                  <>
+                    <Link to="/register" style={{ marginRight: '15px' }}>
+                      <span>Đăng kí</span>
+                    </Link>
+                    /
+                    <Link to="/login" style={{ marginLeft: '15px' }}>
+                      <span>Đăng nhập</span>
+                    </Link>
+                  </>
+                )}
               </div>
               <div className="cart">
-                <a href="/cart">
+                <Link to="/cart">
                   <img src={cartIcon} alt="Cart Icon" />
-                  <span >Giỏ hàng</span>
+                  <span>Giỏ hàng</span>
                   <span className="cart-count">0</span>
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -53,7 +72,7 @@ const Header = (props: Props) => {
         <div className="main-nav">
           <div className="main-nav-content">
             <a href="/">Trang chủ</a>
-            <a href="/productgame">Sản phẩm</a>
+            <a href="/games">Sản phẩm</a>
             <a href="#">Tin tức</a>
             <a href="#">Liên hệ</a>
             <a href="/paymentMethods">Hình thức thanh toán</a>

@@ -1104,3 +1104,227 @@ select {
   font-size: 14px;
   margin-left: 5px;
 }
+
+//////                   
+///     REGISTER FORM
+/* Tổng thể */
+.register-form {
+  width: 1000px;
+  margin: 50px auto;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-family: 'Arial', sans-serif;
+}
+
+/* Tiêu đề */
+.register-form h1 {
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+/* Form item */
+.register-form .ant-form-item {
+  margin-bottom: 20px;
+  width: 700px;
+  
+}
+
+/* Các label nằm bên trái */
+.register-form .ant-form-item-label {
+  font-weight: bold;
+  color: #444;
+  font-size: 14px;
+  text-align: left;  /* Đảm bảo rằng nhãn (label) luôn căn trái */
+  margin-bottom: 8px;
+  padding-right: 0;  /* Bỏ padding phải để tránh khoảng cách thừa */
+  margin-right: 115px;
+}
+
+/* Các input vẫn giữ nguyên vị trí */
+.register-form .ant-input,
+.register-form .ant-input-password {
+  padding: 12px 16px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  transition: border-color 0.3s ease;
+  width: 100%;  /* Đảm bảo các ô input sẽ chiếm hết chiều rộng */
+}
+
+/* Hover/Focus trên input */
+.register-form .ant-input:focus,
+.register-form .ant-input-password:focus {
+  border-color: #4A90E2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+/* Nút submit */
+.register-form .ant-btn-primary {
+  width: 100%;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: #4A90E2;
+  border-color: #4A90E2;
+  color: #fff;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.register-form .ant-btn-primary:hover {
+  background-color: #357ABD;
+  border-color: #357ABD;
+}
+
+.register-form .ant-btn-primary:focus {
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+/* Message lỗi */
+.register-form .ant-form-item-explain-error {
+  color: #f5222d;
+  font-size: 12px;
+  margin-top: 8px;
+  text-align: left;
+}
+
+/* Căn chỉnh các label nằm sát bên trái với Flexbox */
+
+
+.register-form .ant-form-item-label {
+  flex: 0 0 120px;  /* Chiều rộng cố định cho label */
+  padding-right: 20px; /* Khoảng cách giữa label và input */
+}
+
+.register-form .ant-form-item-control {
+  flex-grow: 1;  /* Các ô input sẽ chiếm hết chiều rộng còn lại */
+}
+
+/* Các input số điện thoại và địa chỉ */
+.register-form .ant-input {
+  width: 100%;
+  border-radius: 8px;
+  padding: 10px;
+  border: 1px solid #d9d9d9;
+  box-sizing: border-box;
+}
+
+/* Định dạng form khi thành công */
+.register-form .ant-form-item-success .ant-input {
+  border-color: #52c41a;
+}
+
+.register-form .ant-form-item-error .ant-input {
+  border-color: #f5222d;
+}
+
+/////////                  LOGIN FORM
+/// /* Container của form Login */
+.login-form {
+  width: 1000px;
+  margin: 50px auto;
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-family: 'Arial', sans-serif;
+}
+
+/* Tiêu đề */
+.login-form h1 {
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+/* Form item */
+.login-form .ant-form-item {
+  margin-bottom: 20px;
+  width: 700px;
+}
+
+/* Các label nằm bên trái */
+.login-form .ant-form-item-label {
+  font-weight: bold;
+  color: #444;
+  font-size: 14px;
+  text-align: left;  /* Đảm bảo rằng nhãn (label) luôn căn trái */
+  margin-bottom: 8px;
+  padding-right: 0;  /* Bỏ padding phải để tránh khoảng cách thừa */
+  margin-right: 115px;
+}
+
+/* Các input vẫn giữ nguyên vị trí */
+.login-form .ant-input,
+.login-form .ant-input-password {
+  padding: 12px 16px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  transition: border-color 0.3s ease;
+  width: 100%;  /* Đảm bảo các ô input sẽ chiếm hết chiều rộng */
+}
+
+/* Hover/Focus trên input */
+.login-form .ant-input:focus,
+.login-form .ant-input-password:focus {
+  border-color: #4A90E2;
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+/* Nút submit */
+.login-form .ant-btn-primary {
+  width: 100%;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: #4A90E2;
+  border-color: #4A90E2;
+  color: #fff;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.login-form .ant-btn-primary:hover {
+  background-color: #357ABD;
+  border-color: #357ABD;
+}
+
+.login-form .ant-btn-primary:focus {
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+/* Message lỗi */
+.login-form .ant-form-item-explain-error {
+  color: #f5222d;
+  font-size: 12px;
+  margin-top: 8px;
+  text-align: left;
+}
+
+/* Căn chỉnh các label nằm sát bên trái với Flexbox */
+.login-form .ant-form-item-label {
+  flex: 0 0 120px;  /* Chiều rộng cố định cho label */
+  padding-right: 20px; /* Khoảng cách giữa label và input */
+}
+
+.login-form .ant-form-item-control {
+  flex-grow: 1;  /* Các ô input sẽ chiếm hết chiều rộng còn lại */
+}
+
+/* Định dạng form khi thành công */
+.login-form .ant-form-item-success .ant-input {
+  border-color: #52c41a;
+}
+
+.login-form .ant-form-item-error .ant-input {
+  border-color: #f5222d;
+}
+
