@@ -1,33 +1,32 @@
-import instance from "@/configs/axios";
-import {
-  BackwardFilled,
-  Loading3QuartersOutlined,
-  PlusOutlined,
-} from "@ant-design/icons";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import React, { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Button,
-  Checkbox,
   Form,
-  FormProps,
   Input,
   InputNumber,
   Select,
-  Spin,
   Upload,
   message,
+  Spin,
 } from "antd";
+import { PlusOutlined, Loading3QuartersOutlined, BackwardFilled } from "@ant-design/icons";
 import TextArea from "antd/es/input/TextArea";
+<<<<<<< HEAD
 import axios from "axios";
 import { options } from "joi";
 import React, { useState } from "react";
+=======
+>>>>>>> 1a28ab342f0403d237e4ae4c16aedbd46e6cf76c
 import { Link, useParams } from "react-router-dom";
+import axios from "axios";
 
 type FieldType = {
   game_id?: number;
   brand_id?: number;
   category_id?: number;
   platform_id?: number;
+  filter_id?: number;
   name?: string;
   price?: number;
   discount?: number;
@@ -36,32 +35,22 @@ type FieldType = {
   description?: string;
 };
 
-type Brands = {
-  brand_id: number;
-  name: string;
-  image: string;
-};
-
-type Categories = {
-  category_id: number;
-  name: string;
-};
-
-type Platforms = {
-  platform_id: number;
-  name: string;
-};
+const CLOUD_NAME = "dlcxulvmu"; // Thay bằng cloud name của bạn
+const UPLOAD_PRESET = "DATNWD-09"; // Thay bằng upload preset của bạn
 
 const GameEditPage: React.FC = () => {
   const { game_id } = useParams();
   const [messageApi, contextHolder] = message.useMessage();
   const queryClient = useQueryClient();
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+<<<<<<< HEAD
 
   const CLOUD_NAME = "dlcxulvmu"; // Thay bằng cloud name của bạn
 const UPLOAD_PRESET = "DATNWD-09"; // Thay bằng upload preset của bạn
+=======
+>>>>>>> 1a28ab342f0403d237e4ae4c16aedbd46e6cf76c
 
-  // Lấy dữ liệu cụ thể
+  // Fetch game data
   const { data, isLoading, error } = useQuery({
     queryKey: ["games", game_id],
     queryFn: () =>
@@ -70,6 +59,7 @@ const UPLOAD_PRESET = "DATNWD-09"; // Thay bằng upload preset của bạn
         .then((response) => response.data),
   });
 
+  // Mutation for updating game
   const { mutate } = useMutation({
     mutationFn: (game: any) =>
       axios.put(`http://localhost:8080/games/${game_id}`, game),
@@ -78,12 +68,35 @@ const UPLOAD_PRESET = "DATNWD-09"; // Thay bằng upload preset của bạn
       messageApi.success("Cập nhật game thành công");
     },
     onError: (error) => {
-      messageApi.open({
-        type: "error",
-        content: error.message,
-      });
+      messageApi.error(error.message);
     },
   });
+
+  const handleImageUpload = async (file: any) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", UPLOAD_PRESET);
+
+    try {
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+      if (data.secure_url) {
+        setImageUrl(data.secure_url); // Cập nhật URL ảnh mới
+        message.success("Ảnh đã được tải lên thành công!");
+      } else {
+        message.error("Không thể tải ảnh lên. Vui lòng thử lại.");
+      }
+    } catch (error) {
+      message.error("Không thể tải ảnh lên. Vui lòng thử lại.");
+    }
+  };
 
   const normFile = (e: any) => {
     if (Array.isArray(e)) {
@@ -92,15 +105,22 @@ const UPLOAD_PRESET = "DATNWD-09"; // Thay bằng upload preset của bạn
     return e?.fileList;
   };
 
+  const onFinish = (values: FieldType) => {
+    const gameData = { ...values, image: imageUrl || data?.data?.image }; // Nếu không có ảnh mới, giữ ảnh cũ
+    mutate(gameData);
+  };
+
+  //
   const { data: brands = { data: [] } } = useQuery({
     queryKey: ["brands"],
     queryFn: () =>
       axios.get("http://localhost:8080/brands").then((res) => res.data),
   });
 
-  console.log("Brands:", brands);
-
+  console.log("Categories:", brands);
   const brandList = Array.isArray(brands.data) ? brands.data : [];
+
+  //
 
   const { data: categories = { data: [] } } = useQuery({
     queryKey: ["categories"],
@@ -109,8 +129,9 @@ const UPLOAD_PRESET = "DATNWD-09"; // Thay bằng upload preset của bạn
   });
 
   console.log("Categories:", categories);
+  const categoriesList = Array.isArray(categories.data) ? categories.data : [];
 
-  const categoryList = Array.isArray(categories.data) ? categories.data : [];
+  //
 
   const { data: platforms = { data: [] } } = useQuery({
     queryKey: ["platforms"],
@@ -118,17 +139,18 @@ const UPLOAD_PRESET = "DATNWD-09"; // Thay bằng upload preset của bạn
       axios.get("http://localhost:8080/platforms").then((res) => res.data),
   });
 
-  console.log("Platforms:", platforms);
+  console.log("platforms:", platforms);
+  const platformsList = Array.isArray(platforms.data) ? platforms.data : [];
 
-  const platformList = Array.isArray(platforms.data) ? platforms.data : [];
+  //
 
-  // Kiểm tra dữ liệu nhận được
-  const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
-    const imageFile =
-      values.image && values.image[0]
-        ? (values.image[0] as any).thumbUrl || (values.image[0] as any).name
-        : undefined;
+  const { data: filters = { data: [] } } = useQuery({
+    queryKey: ["filters"],
+    queryFn: () =>
+      axios.get("http://localhost:8080/filters").then((res) => res.data),
+  });
 
+<<<<<<< HEAD
     const gameData = {
       ...values,
       image: imageFile, // Gắn ảnh vào `gameData`
@@ -174,6 +196,10 @@ const UPLOAD_PRESET = "DATNWD-09"; // Thay bằng upload preset của bạn
 
   // Kiểm tra cấu trúc dữ liệu
   console.log("Category data:", data); // Kiểm tra dữ liệu
+=======
+  console.log("filters:", filters);
+  const filtersList = Array.isArray(filters.data) ? filters.data : [];
+>>>>>>> 1a28ab342f0403d237e4ae4c16aedbd46e6cf76c
 
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error loading brand: {error.message}</div>;
@@ -182,7 +208,7 @@ const UPLOAD_PRESET = "DATNWD-09"; // Thay bằng upload preset của bạn
     <>
       {contextHolder}
       <div className="flex items-center justify-between mb-5">
-        <h1 className="text-2xl font-semibold"> Cập nhật game</h1>
+        <h1 className="text-2xl font-semibold">Cập nhật game</h1>
         <Button type="primary">
           <Link to="/admin/games">
             <BackwardFilled /> Quay lại
@@ -202,28 +228,27 @@ const UPLOAD_PRESET = "DATNWD-09"; // Thay bằng upload preset của bạn
           platform_id: data?.data?.platform_id || [],
           price: data?.data?.price || 0,
           discount: data?.data?.discount || 0,
+<<<<<<< HEAD
           image: data?.data?.image ,
+=======
+          image: data?.data?.image || "",
+>>>>>>> 1a28ab342f0403d237e4ae4c16aedbd46e6cf76c
           description: data?.data?.description || "",
         }}
         onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
-        <Form.Item<FieldType>
+        <Form.Item
           label="Tên game"
           name="name"
-          rules={[{ required: true, message: "Không được bỏ trống" }]}
-        >
+          rules={[{ required: true, message: "Không được bỏ trống" }]}>
           <Input />
         </Form.Item>
 
-        <Form.Item<FieldType>
+        <Form.Item
           label="Tên hãng phát triển"
           name="brand_id"
-          rules={[
-            { required: true, message: "Vui lòng chọn tên hãng phát triển" },
-          ]}
-        >
+          rules={[{ required: true, message: "Vui lòng chọn tên hãng phát triển" }]}>
           {isLoading ? (
             <Spin indicator={<Loading3QuartersOutlined spin />} />
           ) : (
@@ -237,20 +262,30 @@ const UPLOAD_PRESET = "DATNWD-09"; // Thay bằng upload preset của bạn
           )}
         </Form.Item>
 
-        <Form.Item<FieldType>
-          label="Tên danh mục"
+        <Form.Item
+          label="Tên thể loại"
           name="category_id"
-          rules={[{ required: true, message: "Vui lòng chọn tên danh mục" }]}
+          rules={[{ required: true, message: "Vui lòng chọn tên thể loại" }]}
         >
           {isLoading ? (
             <Spin indicator={<Loading3QuartersOutlined spin />} />
           ) : (
+<<<<<<< HEAD
             <Select mode="multiple" placeholder="Chọn tên danh mục">
               {categoryList.map((category: any) => (
                 <Select.Option
                   key={category.category_id}
                   value={category.category_id}
                 >
+=======
+            <Select
+              mode="multiple" // Đảm bảo đây là chế độ multiple nếu category_id là mảng
+              placeholder="Chọn tên thể loại"
+              defaultValue={data?.data?.category_id || []}  // Dùng defaultValue nếu cần
+            >
+              {categoriesList.map((category: any) => (
+                <Select.Option key={category.category_id} value={category.category_id}>
+>>>>>>> 1a28ab342f0403d237e4ae4c16aedbd46e6cf76c
                   {category.name}
                 </Select.Option>
               ))}
@@ -258,20 +293,25 @@ const UPLOAD_PRESET = "DATNWD-09"; // Thay bằng upload preset của bạn
           )}
         </Form.Item>
 
-        <Form.Item<FieldType>
-          label="Nền tang"
+
+        <Form.Item
+          label="Nền tảng"
           name="platform_id"
-          rules={[{ required: true, message: "Vui lòng chọn nền tảng" }]}
-        >
+          rules={[{ required: true, message: "Vui lòng chọn nền tảng" }]}>
           {isLoading ? (
             <Spin  indicator={<Loading3QuartersOutlined spin />} />
           ) : (
             <Select mode="multiple" placeholder="Chọn nền tảng">
+<<<<<<< HEAD
               {platformList.map((platform: any) => (
                 <Select.Option
                   key={platform.platform_id}
                   value={platform.platform_id}
                 >
+=======
+              {platformsList.map((platform: any) => (
+                <Select.Option key={platform.platform_id} value={platform.platform_id}>
+>>>>>>> 1a28ab342f0403d237e4ae4c16aedbd46e6cf76c
                   {platform.name}
                 </Select.Option>
               ))}
@@ -279,33 +319,34 @@ const UPLOAD_PRESET = "DATNWD-09"; // Thay bằng upload preset của bạn
           )}
         </Form.Item>
 
-        <Form.Item<FieldType>
+        <Form.Item
+          label="Danh mục"
+          name="filter_id"
+          rules={[{ required: true, message: "Vui lòng chọn danh mục" }]}>
+          {isLoading ? (
+            <Spin indicator={<Loading3QuartersOutlined spin />} />
+          ) : (
+            <Select mode="multiple" placeholder="Chọn danh mục">
+              {filtersList.map((filter: any) => (
+                <Select.Option key={filter.filter_id} value={filter.filter_id}>
+                  {filter.name}
+                </Select.Option>
+              ))}
+            </Select>
+          )}
+        </Form.Item>
+
+        <Form.Item
           label="Giá game"
           name="price"
-          rules={[
-            { required: true, message: "Không được bỏ trống" },
-            {
-              type: "number",
-              min: 0,
-              message: "Giá sản phẩm phải là số dương",
-            },
-          ]}
-        >
+          rules={[{ required: true, message: "Không được bỏ trống" }, { type: "number", min: 0, message: "Giá sản phẩm phải là số dương" }]}>
           <InputNumber />
         </Form.Item>
 
-        <Form.Item<FieldType>
+        <Form.Item
           label="Giảm giá"
           name="discount"
-          rules={[
-            {
-              type: "number",
-              min: 0,
-              max: 100,
-              message: "Giảm giá phải từ 0 đến 100",
-            },
-          ]}
-        >
+          rules={[{ type: "number", min: 0, max: 100, message: "Giảm giá phải từ 0 đến 100" }]}>
           <InputNumber addonAfter="%" />
         </Form.Item>
 
@@ -315,6 +356,7 @@ const UPLOAD_PRESET = "DATNWD-09"; // Thay bằng upload preset của bạn
           valuePropName="fileList"
           getValueFromEvent={normFile}
         >
+<<<<<<< HEAD
           <Upload
             beforeUpload={handleImageUpload}
             showUploadList={false}
@@ -333,9 +375,32 @@ const UPLOAD_PRESET = "DATNWD-09"; // Thay bằng upload preset của bạn
               style={{ width: "20%", marginTop: 10 }}
             />
           ) : null}
+=======
+          <div> {/* Bao bọc Upload trong một div */}
+            <Upload
+              beforeUpload={handleImageUpload}
+              showUploadList={false}
+            >
+              <button style={{ border: 0, background: "none" }} type="button">
+                <PlusOutlined />
+                <div style={{ marginTop: 8 }}>Upload</div>
+              </button>
+            </Upload>
+
+            {/* Hiển thị ảnh đã có từ dữ liệu */}
+            {imageUrl || data?.data?.image ? (
+              <img
+                src={imageUrl || data?.data?.image}
+                alt="Uploaded"
+                style={{ width: "20%", marginTop: 10 }}
+              />
+            ) : null}
+          </div> {/* Đóng div */}
+>>>>>>> 1a28ab342f0403d237e4ae4c16aedbd46e6cf76c
         </Form.Item>
 
-        <Form.Item<FieldType> label="Mô tả game" name="description">
+
+        <Form.Item label="Mô tả game" name="description">
           <TextArea rows={5} />
         </Form.Item>
 
@@ -350,3 +415,4 @@ const UPLOAD_PRESET = "DATNWD-09"; // Thay bằng upload preset của bạn
 };
 
 export default GameEditPage;
+

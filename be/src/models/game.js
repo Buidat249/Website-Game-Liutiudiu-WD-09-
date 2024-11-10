@@ -21,6 +21,7 @@ const gameSchema = new mongoose.Schema({
         unique: false,
         ref: 'Platform', // Tham chiếu đến model Platform
     }],
+<<<<<<< HEAD
     review_id: [{
         type: mongoose.Schema.Types.Number,
         required: true,
@@ -33,6 +34,16 @@ const gameSchema = new mongoose.Schema({
         unique: false,
         ref: 'User', // Tham chiếu đến model User
     }],
+=======
+    filter_id: [{
+        type: mongoose.Schema.Types.Number,
+        required: true,
+        unique: false,
+        ref: 'Filter', // Tham chiếu đến model Filter
+    }],
+    brand_ids: [{ type: Number, ref: 'Brands' }],
+    category_ids: [{ type: Number, ref: 'categories' }],
+>>>>>>> 1a28ab342f0403d237e4ae4c16aedbd46e6cf76c
     name: { type: String, required: true },
     price: { type: Number, required: true },
     discount: { type: Number, default: 0 },

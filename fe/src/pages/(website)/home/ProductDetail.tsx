@@ -1,15 +1,26 @@
+<<<<<<< HEAD
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { Button, Image } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+=======
+import { Button, Image } from "antd";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+>>>>>>> 1a28ab342f0403d237e4ae4c16aedbd46e6cf76c
 import FAQ from "./_components/FAQ";
 
 interface Game {
   game_id?: number;
   brand_id?: number;
+<<<<<<< HEAD
   category_id?: number;
+=======
+  category_id: number[]; // Sửa để category_id luôn là một mảng
+>>>>>>> 1a28ab342f0403d237e4ae4c16aedbd46e6cf76c
   platform_id?: number;
   name?: string;
   price?: number;
@@ -19,13 +30,32 @@ interface Game {
   description?: string;
 }
 
+<<<<<<< HEAD
+=======
+interface Platform {
+  platform_id: number;
+  name: string;
+}
+
+
+>>>>>>> 1a28ab342f0403d237e4ae4c16aedbd46e6cf76c
 const ProductDetail = () => {
   const { game_id } = useParams<{ game_id: string }>();
   const [game, setGame] = useState<Game | null>(null);
   const [categoryName, setCategoryName] = useState<string | null>(null);
   const [relatedGames, setRelatedGames] = useState<Game[]>([]);
+<<<<<<< HEAD
 
   useEffect(() => {
+=======
+  const [platforms, setPlatforms] = useState<Platform[]>([]);
+
+  useEffect(() => {
+    axios.get("http://localhost:8080/platforms")
+      .then((response) => setPlatforms(response.data.data))
+      .catch((error) => console.error("Error fetching platforms:", error));
+
+>>>>>>> 1a28ab342f0403d237e4ae4c16aedbd46e6cf76c
     const fetchGame = async () => {
       try {
         const response = await axios.get<{ data: Game }>(
@@ -34,14 +64,24 @@ const ProductDetail = () => {
         const gameData = response.data.data;
         setGame(gameData);
 
+<<<<<<< HEAD
         // Lấy tên thể loại
         if (gameData.category_id) {
           const categoryResponse = await axios.get<{ data: { name: string } }>(
             `http://localhost:8080/categories/${gameData.category_id}`
+=======
+        // Kiểm tra nếu category_id tồn tại và là mảng
+        const categoryId = gameData.category_id[0]; // Lấy giá trị đầu tiên của mảng category_id
+
+        if (categoryId) {
+          const categoryResponse = await axios.get<{ data: { name: string } }>(
+            `http://localhost:8080/categories/${categoryId}`
+>>>>>>> 1a28ab342f0403d237e4ae4c16aedbd46e6cf76c
           );
           setCategoryName(categoryResponse.data.data.name);
         }
 
+<<<<<<< HEAD
         // Lấy các sản phẩm cùng thể loại
         if (gameData.category_id) {
           const relatedResponse = await axios.get<{ data: Game[] }>(
@@ -49,21 +89,69 @@ const ProductDetail = () => {
           );
           setRelatedGames(relatedResponse.data.data);
         }
+=======
+        // Tạo danh sách các category ID
+        const categoryIds = gameData.category_id.join(',');
+
+        // Lấy danh sách game liên quan
+        const relatedResponse = await axios.get<{ data: Game[] }>(
+          `http://localhost:8080/games?category_id=${categoryIds}`
+        );
+
+        // Lọc danh sách game liên quan
+        const relatedGamesList = relatedResponse.data.data.filter(
+          (relatedGame) =>
+            relatedGame.game_id !== gameData.game_id &&
+            Array.isArray(relatedGame.category_id) && // Kiểm tra category_id của game liên quan tồn tại và là mảng
+            relatedGame.category_id.some((catId) =>
+              gameData.category_id.includes(catId) // Kiểm tra xem category_id của game liên quan có bao gồm category_id của game hiện tại
+            )
+        );
+        setRelatedGames(relatedGamesList);
+
+        console.log("Related games:", relatedGamesList);
+>>>>>>> 1a28ab342f0403d237e4ae4c16aedbd46e6cf76c
       } catch (error) {
         console.error("Error fetching game details:", error);
       }
     };
+<<<<<<< HEAD
+=======
+
+>>>>>>> 1a28ab342f0403d237e4ae4c16aedbd46e6cf76c
     if (game_id) {
       fetchGame();
     }
   }, [game_id]);
 
+<<<<<<< HEAD
   return (
     <div>
       <Header />
       {game ? (
         <div className="flex flex-col justify-center items-center px-16 py-5 bg-white max-md:px-5">
           <div className="flex flex-col justify-center items-center px-16 py-5 bg-white max-md:px-5">
+=======
+  const getPlatformName = (platform_id: number | number[]) => {
+    if (Array.isArray(platform_id)) {
+      return platform_id
+        .map((id) => {
+          const platform = platforms.find((p) => p.platform_id === id);
+          return platform ? platform.name : "Nền tảng không xác định";
+        })
+        .join(", ");
+    } else {
+      const platform = platforms.find((p) => p.platform_id === platform_id);
+      return platform ? platform.name : "Nền tảng không xác định";
+    }
+  };
+
+  return (
+    <div>
+      {game ? (
+        <div className="flex flex-col justify-center items-center px-16 py-5 bg-white max-md:px-5">
+          <div className="max-w-full w-[1495px]">
+>>>>>>> 1a28ab342f0403d237e4ae4c16aedbd46e6cf76c
             <div className="flex flex-col justify-center items-center px-16 py-5 bg-white max-md:px-5">
               <div className="max-w-full w-[1495px]">
                 <div className="flex gap-5 max-md:flex-col">
@@ -260,6 +348,7 @@ const ProductDetail = () => {
             </div>
             <FAQ game={game} />
             {/* Các Game cùng thể loại */}
+<<<<<<< HEAD
             <div className="related-games mt-8">
               <h6 className="text-lg font-medium leading-loose text-black">
                 Game đề xuất cùng thể loại
@@ -275,11 +364,41 @@ const ProductDetail = () => {
               </div>
             </div>
           </div>                  
+=======
+            <div className="games">
+              <section className="games">
+                <h2>Sản phẩm Liên Quan</h2>
+                <div className="game-grid">
+                  {relatedGames.length > 0 ? (
+                    relatedGames.map((game) => (
+                      <div key={game.game_id} className="game">
+                        <Link to={`/productgame/${game.game_id}`}>
+                          <img src={game.image} alt={game.name} />
+                          <p>{game.name}</p>
+                          <div className="small-p-product">
+                            <p>Giá: {game.price === 0 ? 'Miễn phí' : `${game.price} VND`}</p>
+                            {/* Kiểm tra nếu platform_id tồn tại */}
+                            <p>{game.platform_id ? getPlatformName(game.platform_id) : 'N/A'}</p>
+                          </div>
+                        </Link>
+                      </div>
+                    ))
+                  ) : (
+                    <p>Không có sản phẩm phù hợp.</p>
+                  )}
+                </div>
+              </section>
+            </div>
+          </div>
+>>>>>>> 1a28ab342f0403d237e4ae4c16aedbd46e6cf76c
         </div>
       ) : (
         <p>Loading...</p>
       )}
+<<<<<<< HEAD
       <Footer />
+=======
+>>>>>>> 1a28ab342f0403d237e4ae4c16aedbd46e6cf76c
     </div>
   );
 };

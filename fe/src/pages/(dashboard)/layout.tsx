@@ -66,8 +66,13 @@ const LayoutAdmin: React.FC = () => {
             },
             {
               key: "3",
+<<<<<<< HEAD
               icon: <TagsOutlined />,
               label: <NavLink to="/admin/carts">Quản lý giỏ hàng</NavLink>
+=======
+              icon: <VideoCameraOutlined />,
+              label: <NavLink to="/admin/categories">Quản lý thể loại</NavLink>,
+>>>>>>> 1a28ab342f0403d237e4ae4c16aedbd46e6cf76c
             },
             {
               key: "4",
@@ -95,6 +100,7 @@ const LayoutAdmin: React.FC = () => {
               label: <NavLink to="/admin/platforms">Quản lý nền tảng</NavLink>,
             },
             {
+<<<<<<< HEAD
               key: "9",
               icon: <TagsOutlined />,
               label: <NavLink to="/admin/reviews">Quản lý bình luận</NavLink>,
@@ -108,6 +114,11 @@ const LayoutAdmin: React.FC = () => {
               key: "11",
               icon: <TagsOutlined />,
               label: <NavLink to="/admin/roles">Quản lý quyền</NavLink>,
+=======
+              key: "6",
+              icon: <TagsOutlined />,
+              label: <NavLink to="/admin/filters">Quản lý danh mục</NavLink>,
+>>>>>>> 1a28ab342f0403d237e4ae4c16aedbd46e6cf76c
             },
           ]}
         />

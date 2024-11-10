@@ -9,6 +9,7 @@ export interface IGame {
     rating?: number;
     image?: string;
     description?: string;
+    
 }
 
 
