@@ -5,6 +5,7 @@ const categorySchema = new mongoose.Schema({
     category_id: {
         type: Number,
         unique: false,
+        required: true,
         Array: true,
     },
     name: {

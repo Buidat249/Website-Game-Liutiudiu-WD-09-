@@ -36,7 +36,7 @@ const CategoryPage = () => {
 
   const columns = [
     { key: "category_id", title: "Category ID", dataIndex: "category_id" },
-    { key: "name", title: "Tên danh mục", dataIndex: "name" },
+    { key: "name", title: "Tên thể loại", dataIndex: "name" },
     {
       key: "action",
       title: "Action",
@@ -68,10 +68,10 @@ const CategoryPage = () => {
     <div>
       {contextHolder}
       <div className="flex items-center justify-between mb-5">
-        <h1 className="text-2xl font-semibold">Quản lý danh mục</h1>
+        <h1 className="text-2xl font-semibold">Quản lý thể loại</h1>
         <Button type="primary">
           <Link to="/admin/categories/add">
-            <PlusCircleFilled /> Thêm danh mục
+            <PlusCircleFilled /> Thêm thể loại
           </Link>
         </Button>
       </div>

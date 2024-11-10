@@ -12,6 +12,7 @@ import {
 import type { MenuProps } from "antd";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 import { NavLink, Outlet } from "react-router-dom";
+import { useLocation } from 'react-router-dom';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -32,7 +33,10 @@ function getItem(
 }
 
 const LayoutAdmin: React.FC = () => {
+  const { Header, Content, Footer } = Layout;
   const [collapsed, setCollapsed] = useState(false);
+  const location = useLocation();
+  const pathSnippets = location.pathname.split('/').filter((i) => i);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -58,50 +62,82 @@ const LayoutAdmin: React.FC = () => {
             {
               key: "2",
               icon: <VideoCameraOutlined />,
-              label: <NavLink to="/admin/games">Quản lý game</NavLink>,
+              label: <NavLink to="/admin/brands">Quản lý hãng phát triển</NavLink>,
             },
             {
               key: "3",
-              icon: <VideoCameraOutlined />,
-              label: <NavLink to="/admin/categories">Quản lý danh mục</NavLink>,
+              icon: <TagsOutlined />,
+              label: <NavLink to="/admin/carts">Quản lý giỏ hàng</NavLink>
             },
             {
               key: "4",
               icon: <TagsOutlined />,
-              label: (
-                <NavLink to="/admin/brands">Quản lý hãng phát triển</NavLink>
-              ),
+              label: <NavLink to="/admin/categories">Quản lý thể loại</NavLink>,
             },
             {
               key: "5",
               icon: <TagsOutlined />,
+              label: <NavLink to="/admin/games">Quản lý game</NavLink>,
+            },
+            {
+              key: "6",
+              icon: <TagsOutlined />,
+              label: <NavLink to="/admin/orders">Quản lý đơn hàng</NavLink>,
+            },
+            {
+              key: "7",
+              icon: <TagsOutlined />,
+              label: <NavLink to="/admin/payment_methods">Quản lý phương thức thanh toán</NavLink>,
+            },
+            {
+              key: "8",
+              icon: <TagsOutlined />,
               label: <NavLink to="/admin/platforms">Quản lý nền tảng</NavLink>,
+            },
+            {
+              key: "9",
+              icon: <TagsOutlined />,
+              label: <NavLink to="/admin/reviews">Quản lý bình luận</NavLink>,
+            },
+            {
+              key: "10",
+              icon: <TagsOutlined />,
+              label: <NavLink to="/admin/users">Quản lý người dùng</NavLink>,
+            },
+            {
+              key: "11",
+              icon: <TagsOutlined />,
+              label: <NavLink to="/admin/roles">Quản lý quyền</NavLink>,
             },
           ]}
         />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }} />
-        <Content style={{ margin: "0 16px" }}>
-          <Breadcrumb style={{ margin: "16px 0" }}>
-            <Breadcrumb.Item>Games</Breadcrumb.Item>
-            <Breadcrumb.Item>Bill</Breadcrumb.Item>
-          </Breadcrumb>
-          <div
-            style={{
-              padding: 24,
-              minHeight: 360,
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG,
-            }}
-          >
-            <Outlet />
-          </div>
-        </Content>
-        <Footer style={{ textAlign: "center" }}>
-          Ant Design ©{new Date().getFullYear()} Created by Ant UED
-        </Footer>
-      </Layout>
+      <Header style={{ padding: 0, background: colorBgContainer }} />
+      <Content style={{ margin: "0 16px" }}>
+        <Breadcrumb style={{ margin: "16px 0" }}>
+          {pathSnippets.map((snippet, index) => (
+            <Breadcrumb.Item key={index}>
+              {snippet.charAt(0).toUpperCase() + snippet.slice(1)}
+            </Breadcrumb.Item>
+          ))}
+        </Breadcrumb>
+
+        <div
+          style={{
+            padding: 24,
+            minHeight: 360,
+            background: colorBgContainer,
+            borderRadius: borderRadiusLG,
+          }}
+        >
+          <Outlet />
+        </div>
+      </Content>
+      <Footer style={{ textAlign: "center" }}>
+        Ant Design ©{new Date().getFullYear()} Created by Ant UED
+      </Footer>
+    </Layout>
     </Layout>
   );
 };

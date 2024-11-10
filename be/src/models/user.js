@@ -3,7 +3,13 @@ const userSchema = new mongoose.Schema({
     user_id: {
         type: Number,
         required: true,
+        unique: true,
+        Array: true,
+    },
+    role_id: {
+        type: mongoose.Schema.Types.Number,
         unique: false,
+        ref: 'Role', // Tham chiếu đến model Role
     },
     username: {
         type: String,
@@ -16,24 +22,18 @@ const userSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        required: true,
         unique: false, // Đảm bảo rằng email là duy nhất
         match: /.+\@.+\..+/, // Biểu thức chính quy để kiểm tra định dạng email
     }, 
     phone: {
         type: Number,
-        required: true,
     },
     address: {
         type: String,
-        required: true,
     },
-    role: {
+    avatar:{
         type: String,
-        enum: ["user", "admin", "moderator"], // Các vai trò có thể
-        required: true,
-    },
-    avatar: String,
+    }
 }, { timestamps: true });
 
 export default mongoose.model("User", userSchema);

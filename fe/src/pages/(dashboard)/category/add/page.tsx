@@ -20,7 +20,7 @@ const CategoryAddPage: React.FC = () => {
       queryClient.invalidateQueries({
         queryKey: ["categories"],
       });
-      messageApi.success("Thêm danh mục thành công");
+      messageApi.success("Thêm thể loại thành công");
     },
     onError: (error) => {
       messageApi.open({
@@ -32,7 +32,7 @@ const CategoryAddPage: React.FC = () => {
 
   const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
     console.log("Sending data:", values); // Kiểm tra dữ liệu trước khi gửi
-    mutate(values); // Gửi tên danh mục
+    mutate(values); // Gửi tên thể loại
   };
 
   const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
@@ -45,7 +45,7 @@ const CategoryAddPage: React.FC = () => {
     <>
       {contextHolder}
       <div className="flex items-center justify-between mb-5">
-        <h1 className="text-2xl font-semibold">Thêm danh mục</h1>
+        <h1 className="text-2xl font-semibold">Thêm thể loại</h1>
         <Button type="primary">
           <Link to="/admin/categories">
             <BackwardFilled /> Quay lại
@@ -62,7 +62,7 @@ const CategoryAddPage: React.FC = () => {
         autoComplete="off"
       >
         <Form.Item<FieldType>
-          label="Tên danh mục "
+          label="Tên thể loại "
           name="name"
           rules={[{ required: true, message: "Không được bỏ trống" }]}
         >
@@ -71,7 +71,7 @@ const CategoryAddPage: React.FC = () => {
 
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
           <Button type="primary" htmlType="submit">
-            Thêm danh mục
+            Thêm thể loại
           </Button>
         </Form.Item>
       </Form>

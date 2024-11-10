@@ -35,22 +35,6 @@ type FieldType = {
   description?: string;
 };
 
-type Brands = {
-  brand_id: number;
-  name: string;
-  image: string;
-};
-
-type Categories = {
-  category_id: number;
-  name: string;
-};
-
-type Platforms = {
-  platform_id: number;
-  name: string;
-};
-
 const GameAddPage: React.FC = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const queryClient = useQueryClient();

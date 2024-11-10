@@ -1,13 +1,14 @@
 import mongoose from 'mongoose';
 
 const gameSchema = new mongoose.Schema({
-    game_id: { type: Number, required: true, unique: false, },
+    game_id: { type: Number, required: true, unique: false, Array: true},
     brand_id: [{
         type: mongoose.Schema.Types.Number,
         required: true,
         unique: false,
         ref: 'Brand', // Tham chiếu đến model Brand
     }],
+    
     category_id: [{
         type: mongoose.Schema.Types.Number,
         required: true,
@@ -20,15 +21,36 @@ const gameSchema = new mongoose.Schema({
         unique: false,
         ref: 'Platform', // Tham chiếu đến model Platform
     }],
-    brand_ids: [{ type: Number, ref: 'Brands' }],
-    category_ids: [{ type: Number, ref: 'categories' }],
+    review_id: [{
+        type: mongoose.Schema.Types.Number,
+        required: true,
+        unique: false,
+        ref: 'Review', // Tham chiếu đến model Review
+    }],
+    user_id: [{
+        type: mongoose.Schema.Types.Number,
+        required: true,
+        unique: false,
+        ref: 'User', // Tham chiếu đến model User
+    }],
     name: { type: String, required: true },
-    description: { type: String, required: true },
     price: { type: Number, required: true },
     discount: { type: Number, default: 0 },
-    rating: { type: Number, min: 0, max: 5 },
-    image: { type: Array, required: true }
+    image: { type: Array, required: true },
+    description: { type: String, required: true },
+    rating: {
+
+    }
 });
+
+// Virtual field to calculate the average rating
+gameSchema.virtual('rating').get(function() {
+    if (this.reviews.length === 0) return 0;
+    const total = this.reviews.reduce((sum, review) => sum + review.rating, 0);
+    return (total / this.reviews.length).toFixed(1); // rounding to one decimal place
+});
+
+gameSchema.set('toJSON', { virtuals: true });
 
 const Game = mongoose.model('Game', gameSchema);
 export default Game;
