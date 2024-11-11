@@ -4,7 +4,7 @@ import { FaGift, FaPercent, FaUserFriends } from "react-icons/fa";
 
 const EmptyCart = () => {
   return (
-    <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-4xl">
+    <div className="max-w-5xl mx-auto bg-white shadow-lg rounded-lg p-6 my-4">
       {/* Phần tiến trình thanh toán */}
       <div className="flex justify-between items-center mb-8">
         <div className="flex items-center space-x-4">
