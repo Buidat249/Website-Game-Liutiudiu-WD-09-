@@ -36,7 +36,7 @@ interface Filter {
   name: string;
 }
 
-const GamePage = () => {
+const ProductPage = () => {
   const [games, setGames] = useState<Game[]>([]);
   const [platforms, setPlatforms] = useState<Platform[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -59,7 +59,6 @@ const GamePage = () => {
         setFilteredGames(response.data.data);
       })
       .catch((error) => console.error("Error fetching products:", error));
-
     axios.get("http://localhost:8080/platforms")
       .then((response) => setPlatforms(response.data.data))
       .catch((error) => console.error("Error fetching platforms:", error));
@@ -71,7 +70,6 @@ const GamePage = () => {
     axios.get("http://localhost:8080/brands")
       .then((response) => setBrands(response.data.data))
       .catch((error) => console.error("Error fetching brands:", error));
-
     axios.get("http://localhost:8080/filters") // Fetch filters data
       .then((response) => setFilters(response.data.data))
       .catch((error) => console.error("Error fetching filters:", error));
@@ -79,32 +77,30 @@ const GamePage = () => {
 
   const handleFilter = () => {
     let filtered = [...games];
-
-    // Lọc theo thể loại
+    // loc the loai
     if (selectedCategory) {
       const categoryId = Number(selectedCategory);
       filtered = filtered.filter((game) =>
         Array.isArray(game.category_id) && game.category_id.includes(categoryId)
       );
     }
-
-    // Lọc theo thương hiệu
+    // loc hang phat trien
     if (selectedBrand) {
       const brandId = Number(selectedBrand);
+      filtered = filtered.filter((game) => game.brand_id === brandId);
       filtered = filtered.filter((game) =>
         Array.isArray(game.brand_id) && game.brand_id.includes(brandId)
       );
     }
 
-    // Lọc theo danh mục
+ // loc danh muc
     if (selectedFilter) {
       const filterId = Number(selectedFilter);
       filtered = filtered.filter((game) =>
         Array.isArray(game.filter_id) && game.filter_id.includes(filterId)
       );
     }
-
-    // Lọc theo giá
+// loc theo gia
     if (priceFrom !== '' && !isNaN(Number(priceFrom))) {
       filtered = filtered.filter((game) => game.price >= Number(priceFrom));
     }
@@ -135,6 +131,7 @@ const GamePage = () => {
     setSelectedCategory('');
     setSelectedBrand('');
     setSelectedFilter(''); // Reset the selected filter
+    setSelectedFilter(''); // Reset the selected filter
     setPriceFrom('');
     setPriceTo('');
     setSortOrder('');
@@ -161,7 +158,15 @@ const GamePage = () => {
         <div className="filter-small">
           <div className="filter-options">
             <div className="select-wrapper">
+
               <label className="select-label">Chọn thể loại:</label>
+
+
+              <label className="select-label">Chọn danh mục:</label>
+
+              <label className="select-label">Chọn thể loại:</label>
+
+
               <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
                 <option value="">Tất cả</option>
                 {categories.map((category) => (
@@ -184,6 +189,11 @@ const GamePage = () => {
               </select>
             </div>
 
+
+
+
+
+
             <div className="select-wrapper">
               <label className="select-label">Chọn danh mục:</label>
               <select value={selectedFilter} onChange={(e) => setSelectedFilter(e.target.value)}>
@@ -196,6 +206,10 @@ const GamePage = () => {
               </select>
             </div>
 
+
+
+
+
             <div className="price-range">
               <input type="text" value={priceFrom} onChange={(e) => setPriceFrom(e.target.value)} placeholder="Mức giá từ" />
               <span>-</span>
@@ -205,7 +219,16 @@ const GamePage = () => {
             <div className="select-wrapper">
               <label className="select-label">Chọn sắp xếp:</label>
               <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
+
                 <option value="">Mặc định</option>
+
+
+                <option value="">Sắp xếp</option>
+                <option value="default">Mặc định</option>
+
+                <option value="">Mặc định</option>
+
+
                 <option value="priceDesc">Giá: Cao đến Thấp</option>
                 <option value="priceAsc">Giá: Thấp đến Cao</option>
                 <option value="nameAsc">Tên: A đến Z</option>
@@ -227,6 +250,15 @@ const GamePage = () => {
               filteredGames.map((game) => (
                 <div key={game.game_id} className="game">
 
+
+
+                  <img src={game.image} alt={game.name} />
+                  <p>{game.name}</p>
+                  <div className="small-p-product">
+                    <p>Giá: {game.price === 0 ? 'Miễn phí' : `${game.price} VND`}</p>
+                    <p>{getPlatformName(game.platform_id)}</p>
+                  </div>
+
                   <Link to={`/productgame/${game.game_id}`}>
                     <img src={game.image} alt={game.name} />
                     <p>{game.name}</p>
@@ -235,7 +267,6 @@ const GamePage = () => {
                       <p>{getPlatformName(game.platform_id)}</p>
                     </div>
                   </Link>
-
                 </div>
               ))
             ) : (
@@ -248,4 +279,7 @@ const GamePage = () => {
   );
 };
 
-export default GamePage;
+export default ProductPage;
+
+
+

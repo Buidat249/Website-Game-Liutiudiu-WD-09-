@@ -27,6 +27,7 @@ const GamePage = () => {
     queryKey: ["games"],
     queryFn: async () => {
       const { data } = await axios.get(`http://localhost:8080/games`);
+      console.log(data); // Kiểm tra lại cấu trúc dữ liệu
       return data.data.map((game: any) => ({
         key: game.game_id,
         ...game,
@@ -65,6 +66,7 @@ const GamePage = () => {
 
   const columns = [
     { key: "game_id", title: "Game_ID", dataIndex: "game_id" },
+    { key: "game_id", title: "Game ID", dataIndex: "game_id" },
     {
       key: "brand_id",
       title: "Hãng phát triển",
@@ -123,6 +125,24 @@ const GamePage = () => {
         }
       },
     },
+      {
+        key: "platform_id",
+        title: "Nền tảng",
+        dataIndex: "platform_id",
+        render: (platform_id: any) => {
+            if (Array.isArray(platform_id)) {
+              return platform_id
+                .map((id) => {
+                  const platform = platforms.find((p) => p.platform_id === id);
+                  return platform ? platform.name : "Unknown Platform";
+                })
+                .join(", ");
+            } else {
+              const platform = platforms.find((p) => p.platform_id === platform_id);
+              return platform ? platform.name : "Unknown Platform";
+            }
+          }
+    },
     {
       key: "filter_id",
       title: "Danh mục",
@@ -144,6 +164,7 @@ const GamePage = () => {
     { key: "name", title: "Game", dataIndex: "name" },
     { key: "price", title: "Gía", dataIndex: "price" },
     { key: "discount", title: "Giảm giá", dataIndex: "discount" },
+
     {
       key: "final_price",
       title: "Giá cuối cùng",
@@ -153,10 +174,12 @@ const GamePage = () => {
       },
     },
     { key: "rating", title: "Đánh giá", dataIndex: "rating" },
+    { key: "rating", title: "Đánh giá", dataIndex: "rating" },
     {
-      key: "image",
-      title: "Image",
-      render: (_: any, game: any) => <Image src={game.image} width={100} height={100} />,
+      key: "image", title: "Ảnh", 
+      render: (_: any, game: any) => (
+          <Image src={game.image} width={100} height={100} />
+      ),
     },
     { key: "description", title: "Mô tả", dataIndex: "description" },
     {
@@ -186,10 +209,6 @@ const GamePage = () => {
       },
     },
   ];
-
-
-  if (isLoading) return <div>...Đang tải</div>;
-
   return (
     <div>
       {contextHolder}

@@ -19,6 +19,7 @@ const RegisterPage: React.FC = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const queryClient = useQueryClient();
   const [form] = Form.useForm();
+
   const [showPassword, setShowPassword] = useState(false); // state để kiểm soát hiển thị mật khẩu
   const navigate = useNavigate(); // Khởi tạo navigate
 
@@ -28,15 +29,14 @@ const RegisterPage: React.FC = () => {
   };
 
   const { mutate } = useMutation({
-    mutationFn: (user: any) => axios.post(`http://localhost:8080/register`, user),
+    mutationFn: (user: any) =>
+      axios.post(`http://localhost:8080/register`, user),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: [""],
+        queryKey: ["users"],
       });
-
       messageApi.success("Đăng ký thành công");
       form.resetFields();
-
       // Chuyển hướng sang trang đăng nhập sau khi đăng ký thành công
       navigate("/login"); // Dùng navigate để chuyển hướng đến trang đăng nhập
     },
@@ -50,7 +50,7 @@ const RegisterPage: React.FC = () => {
 
   const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
     // Kiểm tra và chuyển đổi các giá trị số (phone, user_id, v.v.)
-    const phoneNumber = values.phone ? String(values.phone) : ''; // Chuyển phone thành string nếu có giá trị
+    const phoneNumber = values.phone ? String(values.phone) : ""; // Chuyển phone thành string nếu có giá trị
 
     // Kiểm tra nếu phoneNumber không hợp lệ
     if (phoneNumber && isNaN(Number(phoneNumber))) {
@@ -66,7 +66,9 @@ const RegisterPage: React.FC = () => {
     console.log(userData);
   };
 
-  const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
+  const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
+    errorInfo
+  ) => {
     console.log("Thất bại", errorInfo);
   };
 
@@ -90,24 +92,33 @@ const RegisterPage: React.FC = () => {
               <Form.Item<FieldType>
                 label="Tên"
                 name="username"
-                rules={[{ required: true, message: "Không được bỏ trống" }]} >
+                rules={[{ required: true, message: "Không được bỏ trống" }]}
+              >
                 <Input placeholder="Nhập tên của bạn" />
               </Form.Item>
 
               <Form.Item<FieldType>
                 label="Email"
                 name="email"
-                rules={[{ required: true, message: "Không được bỏ trống" }, { type: "email", message: "Email không đúng định dạng" }]}>
+                rules={[
+                  { required: true, message: "Không được bỏ trống" },
+                  { type: "email", message: "Email không đúng định dạng" },
+                ]}
+              >
                 <Input placeholder="Nhập email của bạn" />
               </Form.Item>
 
               <Form.Item<FieldType>
                 label="Password"
                 name="password"
-                rules={[{ required: true, message: "Không được bỏ trống" }, { min: 6, message: "Mật khẩu tối thiểu phải có 6 kí tự" }]}>
+                rules={[
+                  { required: true, message: "Không được bỏ trống" },
+                  { min: 6, message: "Mật khẩu tối thiểu phải có 6 kí tự" },
+                ]}
+              >
                 <Input
                   type={showPassword ? "text" : "password"} // Đổi giữa 'text' và 'password' dựa trên trạng thái showPassword
-                  style={{ width: '100%' }}
+                  style={{ width: "100%" }}
                   placeholder="Nhập mật khẩu của bạn"
                   addonAfter={
                     <Button
@@ -115,21 +126,21 @@ const RegisterPage: React.FC = () => {
                       onClick={togglePasswordVisibility}
                       style={{ padding: 0 }}
                     >
-                      {showPassword ? <p style={{ color: 'red' }}>Ẩn</p> : <p style={{ color: 'blue' }}>Hiện</p>}
+                      {showPassword ? (
+                        <p style={{ color: "red" }}>Ẩn</p>
+                      ) : (
+                        <p style={{ color: "blue" }}>Hiện</p>
+                      )}
                     </Button>
                   }
                 />
               </Form.Item>
 
-              <Form.Item<FieldType>
-                label="Số điện thoại"
-                name="phone">
+              <Form.Item<FieldType> label="Số điện thoại" name="phone">
                 <Input placeholder="Nhập số điện thoại" />
               </Form.Item>
 
-              <Form.Item<FieldType>
-                label="Địa chỉ"
-                name="address">
+              <Form.Item<FieldType> label="Địa chỉ" name="address">
                 <Input placeholder="Nhập địa chỉ của bạn" />
               </Form.Item>
 

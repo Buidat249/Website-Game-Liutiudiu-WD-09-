@@ -12,7 +12,7 @@ import {
 import type { MenuProps } from "antd";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 import { NavLink, Outlet } from "react-router-dom";
-import { useLocation } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -36,7 +36,7 @@ const LayoutAdmin: React.FC = () => {
   const { Header, Content, Footer } = Layout;
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
-  const pathSnippets = location.pathname.split('/').filter((i) => i);
+  const pathSnippets = location.pathname.split("/").filter((i) => i);
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -62,12 +62,14 @@ const LayoutAdmin: React.FC = () => {
             {
               key: "2",
               icon: <VideoCameraOutlined />,
-              label: <NavLink to="/admin/brands">Quản lý hãng phát triển</NavLink>,
+              label: (
+                <NavLink to="/admin/brands">Quản lý hãng phát triển</NavLink>
+              ),
             },
             {
               key: "3",
               icon: <TagsOutlined />,
-              label: <NavLink to="/admin/carts">Quản lý giỏ hàng</NavLink>
+              label: <NavLink to="/admin/carts">Quản lý giỏ hàng</NavLink>,
             },
             {
               key: "4",
@@ -87,7 +89,11 @@ const LayoutAdmin: React.FC = () => {
             {
               key: "7",
               icon: <TagsOutlined />,
-              label: <NavLink to="/admin/payment_methods">Quản lý phương thức thanh toán</NavLink>,
+              label: (
+                <NavLink to="/admin/payment_methods">
+                  Quản lý phương thức thanh toán
+                </NavLink>
+              ),
             },
             {
               key: "8",
@@ -109,6 +115,7 @@ const LayoutAdmin: React.FC = () => {
               icon: <TagsOutlined />,
               label: <NavLink to="/admin/roles">Quản lý quyền</NavLink>,
             },
+
             {
               key: "12",
               icon: <TagsOutlined />,
@@ -118,31 +125,31 @@ const LayoutAdmin: React.FC = () => {
         />
       </Sider>
       <Layout>
-      <Header style={{ padding: 0, background: colorBgContainer }} />
-      <Content style={{ margin: "0 16px" }}>
-        <Breadcrumb style={{ margin: "16px 0" }}>
-          {pathSnippets.map((snippet, index) => (
-            <Breadcrumb.Item key={index}>
-              {snippet.charAt(0).toUpperCase() + snippet.slice(1)}
-            </Breadcrumb.Item>
-          ))}
-        </Breadcrumb>
+        <Header style={{ padding: 0, background: colorBgContainer }} />
+        <Content style={{ margin: "0 16px" }}>
+          <Breadcrumb style={{ margin: "16px 0" }}>
+            {pathSnippets.map((snippet, index) => (
+              <Breadcrumb.Item key={index}>
+                {snippet.charAt(0).toUpperCase() + snippet.slice(1)}
+              </Breadcrumb.Item>
+            ))}
+          </Breadcrumb>
 
-        <div
-          style={{
-            padding: 24,
-            minHeight: 360,
-            background: colorBgContainer,
-            borderRadius: borderRadiusLG,
-          }}
-        >
-          <Outlet />
-        </div>
-      </Content>
-      <Footer style={{ textAlign: "center" }}>
-        Ant Design ©{new Date().getFullYear()} Created by Ant UED
-      </Footer>
-    </Layout>
+          <div
+            style={{
+              padding: 24,
+              minHeight: 360,
+              background: colorBgContainer,
+              borderRadius: borderRadiusLG,
+            }}
+          >
+            <Outlet />
+          </div>
+        </Content>
+        <Footer style={{ textAlign: "center" }}>
+          Ant Design ©{new Date().getFullYear()} Created by Ant UED
+        </Footer>
+      </Layout>
     </Layout>
   );
 };

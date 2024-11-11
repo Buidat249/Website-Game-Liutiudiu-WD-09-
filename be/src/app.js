@@ -16,7 +16,6 @@ import cart_itemRouter from "./routers/cart_item";
 import platformRouter from "./routers/platform";
 import roleRouter from "./routers/role";
 import filter from "./routers/filter";
-
 const app = express();
 // middleware
 app.use(express.json());
@@ -25,10 +24,11 @@ app.use(morgan("tiny"));
 
 const PORT = 8080; // Đặt cổng cho backend
 
-app.use(cors({
-    origin: 'http://localhost:5173', // Thay đổi thành địa chỉ frontend của bạn
-}));
-
+app.use(
+  cors({
+    origin: "http://localhost:5173", // Thay đổi thành địa chỉ frontend của bạn
+  })
+);
 
 // connect database
 connectDB("mongodb://0.0.0.0:27017/GAME_LIUTIUDIU");
@@ -49,5 +49,5 @@ app.use("", filter);
 export const viteNodeApp = app;
 
 app.listen(PORT, () => {
-    console.log(`Backend server running on http://localhost:${PORT}`);
+  console.log(`Backend server running on http://localhost:${PORT}`);
 });

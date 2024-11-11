@@ -56,32 +56,55 @@ import PagePayCofirm from "@/pages/(website)/paycofirm/page";
 import PaymentMomo from "@/pages/(website)/pays/_components/paymm";
 import VnpayPayment from "@/pages/(website)/pays/_components/payvnpay";
 import PagePay from "@/pages/(website)/pays/page";
+import ProductPage from "@/pages/(website)/product/page";
 import ProductGame from "@/pages/(website)/product/page";
 import { Route, Routes } from "react-router-dom";
 
 const Router = () => {
   return (
-    <>
       <Routes >
         <Route path="/" element={<Layout />} >
           <Route path="/" element={<HomePage />} />
           <Route path="register" element={<RegisterPage />} />
           <Route path="login" element={<LoginPage />} />
           <Route path="productgame/:game_id" element={<ProductDetail />} />
+
+
+
+
           <Route path="pay" element={<PagePay />} />
           <Route path="/pay-vnpay" element={<VnpayPayment />} />
           <Route path="/pay-momo" element={<PaymentMomo />} />
           <Route path="/payconfirm" element={<PagePayCofirm />} />
+
           <Route path="games" element={<ProductGame />} />
           <Route path="cart" element={<PageCart />} />
           <Route path="emptcart" element={<PageEmptCart />} />
+
+
+
+          <Route path="products" element={<ProductPage />} />
+          <Route path="cart" element={<PageCart />} />
+
+          <Route path="games" element={<ProductGame />} />
+          <Route path="cart" element={<PageCart />} />
+          <Route path="emptcart" element={<PageEmptCart />} />
+
+
           <Route path="paymentMethods" element={<PagePayment_method />} />
           <Route path="/banhking24h" element={<BankingPage />} />
           <Route path="/NapTienTuDongForm" element={<NapTienTuDongForm />} />
           <Route path="/CardBank" element={<CardBankForm />} />
           <Route path="/VnPhayauto" element={<VnPay_autoForm />} />
           <Route path="/PayMoMOAuto" element={<PayMoMOForm />} />
+
           <Route path="/contact" element={<PageContact />} />
+
+
+
+          <Route path="/contact" element={<PageContact />} />
+
+
         </Route>
         <Route path="/admin" element={<LayoutAdmin />}>
           <Route index element={<DashboardPage />} />
@@ -131,12 +154,21 @@ const Router = () => {
             element={<PlatformEditPage />}
           />
 
+
+
+
+
+
           <Route path="filters" element={<FilterPage />} />
           <Route path="filters/add" element={<FilterAddPage />} />
           <Route
             path="filters/:filter_id/edit"
             element={<FilterEditPage />}
           />
+
+
+
+
           <Route path="reviews" element={<ReviewPage />} />
           <Route path="reviews/add" element={<ReviewAddPage />} />
           <Route path="reviews/:review_id/edit" element={<ReviewEditPage />} />
@@ -147,7 +179,6 @@ const Router = () => {
           <Route path="users/:user_id/edit" element={<UserEditPage />} />
         </Route>
       </Routes>
-    </>
   );
 };
 

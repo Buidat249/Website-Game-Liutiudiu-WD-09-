@@ -71,7 +71,15 @@ const FAQ: React.FC<IFAQ> = ({ game  }) => {
             <p className="text-sm max-w-full">
               {game.description}
             </p>
+
             <img src={game.image} alt="Black Myth: Wukong game visual" className="mt-4 w-full object-contain" />
+
+
+            <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/a1554b4ec495c19e5849b57253906ff240297b4df52ef51ad4ec04037eacafd7?placeholderIfAbsent=true&apiKey=b147c62d1b404bf790d7133a5bf6ed3c" alt="Black Myth: Wukong game visual" className="mt-4 w-full object-contain" />
+
+            <img src={game.image} alt="Black Myth: Wukong game visual" className="mt-4 w-full object-contain" />
+
+
             
             {productDetails.map((detail, index) => (
               <article key={index} className="mt-4">

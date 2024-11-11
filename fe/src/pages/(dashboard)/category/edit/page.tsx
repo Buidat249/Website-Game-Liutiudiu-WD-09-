@@ -14,8 +14,7 @@ const CategoryEditPage: React.FC = () => {
   const { category_id } = useParams();
   const [messageApi, contextHolder] = message.useMessage();
   const queryClient = useQueryClient();
-
-  // Lấy dữ liệu hãng phát triển cụ thể
+  // Lấy dữ liệu thể loại cụ thể
   const { data, isLoading, error } = useQuery({
     queryKey: ["categories", category_id],
     queryFn: () =>
@@ -29,7 +28,7 @@ const CategoryEditPage: React.FC = () => {
       axios.put(`http://localhost:8080/categories/${category_id}`, category),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["categories"] });
-      messageApi.success("Cập nhật danh mục thành công");
+      messageApi.success("Cập nhật thể loại thành công");
     },
     onError: (error) => {
       messageApi.open({
@@ -58,7 +57,7 @@ const CategoryEditPage: React.FC = () => {
     <>
       {contextHolder}
       <div className="flex items-center justify-between mb-5">
-        <h1 className="text-2xl font-semibold">Cập nhật danh mục</h1>
+        <h1 className="text-2xl font-semibold">Cập nhật thể loại</h1>
         <Button type="primary">
           <Link to="/admin/categories">
             <BackwardFilled /> Quay lại
@@ -76,7 +75,7 @@ const CategoryEditPage: React.FC = () => {
         autoComplete="off"
       >
         <Form.Item<FieldType>
-          label="Tên danh mục "
+          label="Tên thể loại "
           name="name"
           rules={[{ required: true, message: "Không được bỏ trống" }]}
         >
@@ -85,7 +84,7 @@ const CategoryEditPage: React.FC = () => {
 
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
           <Button type="primary" htmlType="submit">
-            Cập nhật tên danh mục
+            Cập nhật thể loại
           </Button>
         </Form.Item>
       </Form>

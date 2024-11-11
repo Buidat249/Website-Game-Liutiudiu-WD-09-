@@ -11,16 +11,14 @@ type FieldType = {
   image?: string;
 };
 
-const CLOUD_NAME = "dlcxulvmu"; // Thay bằng cloud name của bạn
-const UPLOAD_PRESET = "DATNWD-09"; // Thay bằng upload preset của bạn
-
 
 const BrandEditPage: React.FC = () => {
   const { brand_id } = useParams();
   const [messageApi, contextHolder] = message.useMessage();
   const queryClient = useQueryClient();
   const [imageUrl, setImageUrl] = useState<string | null>(null);
-  
+  const CLOUD_NAME = "dlcxulvmu"; // Thay bằng cloud name của bạn
+  const UPLOAD_PRESET = "DATNWD-09"; // Thay bằng upload preset của bạn
 
   // Lấy dữ liệu hãng phát triển cụ thể
   const { data, isLoading, error } = useQuery({
@@ -133,7 +131,6 @@ const BrandEditPage: React.FC = () => {
           valuePropName="fileList"
           getValueFromEvent={normFile}
         >
-          <div> {/* Bao bọc Upload trong một div */}
             <Upload
               beforeUpload={handleImageUpload}
               showUploadList={false}
@@ -152,7 +149,6 @@ const BrandEditPage: React.FC = () => {
                 style={{ width: "20%", marginTop: 10 }}
               />
             ) : null}
-          </div> {/* Đóng div */}
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>

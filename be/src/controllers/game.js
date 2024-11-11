@@ -9,7 +9,11 @@ import Game from "../models/game";
             data: games,
         });
     } catch (error) {
+
         res.status(500).json({ message: error.message });
+
+        return res.status(500).json({ message: error.message });
+
     }
 };
 
@@ -18,11 +22,14 @@ export const getGameDetail = async (req, res) => {
     try {
         const game = await Game.findOne({game_id:req.params.id});
         if (!game) {
+
             const response = {
                 ...game.toObject(),
                 price: formatPrice(game.price) // Định dạng trước khi trả về
               };
               res.json(response);
+
+
             return res.status(404).json({
                 message: "Game Not Found",
             });
