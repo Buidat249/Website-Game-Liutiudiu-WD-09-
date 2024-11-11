@@ -9,7 +9,6 @@ import axios from "axios";
 import { Loader2Icon } from "lucide-react";
 import { ICategory } from "@/common/types/category";
 import { IPlatform } from "@/common/types/platform";
-type Props = {};
 
 const GamePage = () => {
   const [messageApi, contextHolder] = message.useMessage();
@@ -30,9 +29,9 @@ const GamePage = () => {
     queryFn: async () => {
       const { data } = await axios.get(`http://localhost:8080/games`);
       console.log(data); // Kiểm tra lại cấu trúc dữ liệu
-      return data.data.map((brand: any) => ({
-        key: brand.brand_id,
-        ...brand,
+      return data.data.map((game: any) => ({
+        key: game.game_id,
+        ...game,
       }));
     },
   });
@@ -78,7 +77,7 @@ const GamePage = () => {
   if (error) return <div>Error: {error.message}</div>;
 
   const columns = [
-    { key: "game_id", title: "Game_ID", dataIndex: "game_id" },
+    { key: "game_id", title: "Game ID", dataIndex: "game_id" },
     {
       key: "brand_id",
       title: "Hãng phát triển",
@@ -132,17 +131,16 @@ const GamePage = () => {
               return platform ? platform.name : "Unknown Platform";
             }
           }
-          
       },
     { key: "name", title: "Game", dataIndex: "name" },
     { key: "price", title: "Gía", dataIndex: "price" },
     { key: "discount", title: "Giảm giá", dataIndex: "discount" },
     { key: "rating", title: "Đánh giá", dataIndex: "rating" },
     {
-        key: "image", title: "Image", 
-        render: (_: any, game: any) => (
-            <Image src={game.image} width={100} height={100} />
-        ),
+      key: "image", title: "Ảnh", 
+      render: (_: any, game: any) => (
+          <Image src={game.image} width={100} height={100} />
+      ),
     },
     { key: "description", title: "Mô tả", dataIndex: "description" },
     {
@@ -171,8 +169,6 @@ const GamePage = () => {
       },
     },
   ];
-
-  if (isLoading) return <div>...Loading</div>;
 
   return (
     <div>

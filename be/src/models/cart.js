@@ -19,6 +19,7 @@ const cartSchema = new mongoose.Schema({
     },
     status: {
         type: String,
+        required: true,
         enum: ["pending", "completed", "canceled"], // Các trạng thái có thể
         default: "pending",
     },

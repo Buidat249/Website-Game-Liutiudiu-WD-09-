@@ -20,7 +20,7 @@ import {
 import TextArea from "antd/es/input/TextArea";
 import axios from "axios";
 import { options } from "joi";
-import React from "react";
+import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 type FieldType = {
@@ -56,6 +56,10 @@ const GameEditPage: React.FC = () => {
   const { game_id } = useParams();
   const [messageApi, contextHolder] = message.useMessage();
   const queryClient = useQueryClient();
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+
+  const CLOUD_NAME = "dlcxulvmu"; // Thay bằng cloud name của bạn
+const UPLOAD_PRESET = "DATNWD-09"; // Thay bằng upload preset của bạn
 
   // Lấy dữ liệu cụ thể
   const { data, isLoading, error } = useQuery({
@@ -142,6 +146,32 @@ const GameEditPage: React.FC = () => {
     console.log("Thất bại", errorInfo);
   };
 
+  const handleImageUpload = async (file: any) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", UPLOAD_PRESET);
+
+    try {
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const data = await response.json();
+      if (data.secure_url) {
+        setImageUrl(data.secure_url);
+        message.success("Ảnh đã được tải lên thành công!");
+      } else {
+        message.error("Không thể tải ảnh lên. Vui lòng thử lại.");
+      }
+    } catch (error) {
+      message.error("Không thể tải ảnh lên. Vui lòng thử lại.");
+    }
+  };
+
   // Kiểm tra cấu trúc dữ liệu
   console.log("Category data:", data); // Kiểm tra dữ liệu
 
@@ -165,7 +195,16 @@ const GameEditPage: React.FC = () => {
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 16 }}
         style={{ maxWidth: 600 }}
-        initialValues={{ name: data?.data?.name || "" }} // Đảm bảo truy cập đúng trường
+        initialValues={{
+          name: data?.data?.name || "",
+          brand_id: data?.data?.brand_id || [],
+          category_id: data?.data?.category_id || [],
+          platform_id: data?.data?.platform_id || [],
+          price: data?.data?.price || 0,
+          discount: data?.data?.discount || 0,
+          image: data?.data?.image ,
+          description: data?.data?.description || "",
+        }}
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
         autoComplete="off"
@@ -206,7 +245,7 @@ const GameEditPage: React.FC = () => {
           {isLoading ? (
             <Spin indicator={<Loading3QuartersOutlined spin />} />
           ) : (
-            <Select placeholder="Chọn tên danh mục">
+            <Select mode="multiple" placeholder="Chọn tên danh mục">
               {categoryList.map((category: any) => (
                 <Select.Option
                   key={category.category_id}
@@ -225,9 +264,9 @@ const GameEditPage: React.FC = () => {
           rules={[{ required: true, message: "Vui lòng chọn nền tảng" }]}
         >
           {isLoading ? (
-            <Spin indicator={<Loading3QuartersOutlined spin />} />
+            <Spin  indicator={<Loading3QuartersOutlined spin />} />
           ) : (
-            <Select placeholder="Chọn nền tảng">
+            <Select mode="multiple" placeholder="Chọn nền tảng">
               {platformList.map((platform: any) => (
                 <Select.Option
                   key={platform.platform_id}
@@ -276,12 +315,24 @@ const GameEditPage: React.FC = () => {
           valuePropName="fileList"
           getValueFromEvent={normFile}
         >
-          <Upload action="/upload.do" listType="picture-card">
+          <Upload
+            beforeUpload={handleImageUpload}
+            showUploadList={false}
+          >
             <button style={{ border: 0, background: "none" }} type="button">
               <PlusOutlined />
               <div style={{ marginTop: 8 }}>Upload</div>
             </button>
           </Upload>
+
+          {/* Hiển thị ảnh đã có từ dữ liệu */}
+          {imageUrl || data?.data?.image ? (
+            <img
+              src={imageUrl || data?.data?.image}
+              alt="Uploaded"
+              style={{ width: "20%", marginTop: 10 }}
+            />
+          ) : null}
         </Form.Item>
 
         <Form.Item<FieldType> label="Mô tả game" name="description">

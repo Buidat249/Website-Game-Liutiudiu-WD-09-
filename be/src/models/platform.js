@@ -5,6 +5,7 @@ const platformSchema = new mongoose.Schema({
     platform_id: {
         type: Number,
         unique: false,
+        required: true,
         Array: true,
     },
     name: {

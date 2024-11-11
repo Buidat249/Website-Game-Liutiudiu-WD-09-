@@ -12,12 +12,12 @@ const reviewSchema = new mongoose.Schema({
         ref: 'User', // Tham chiếu đến model User
         unique: false,
     },
-    game_id: {
+    game_id: [{
         type: mongoose.Schema.Types.Number,
         required: true,
         ref: 'Game', // Tham chiếu đến model Game
         unique: false,
-    },
+    }],
     title: {
         type: String,
         required: true,
@@ -28,7 +28,7 @@ const reviewSchema = new mongoose.Schema({
     },
     image: {
         type: String,
-        required: true,
+        Array: true,
     },
 }, { timestamps: true });
 

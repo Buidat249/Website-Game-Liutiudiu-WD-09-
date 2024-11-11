@@ -12,12 +12,12 @@ const orderSchema = new mongoose.Schema({
         required: true,
         unique: false,
     },
-    payment_method_id: {
+    payment_method_id: [{
         type: mongoose.Schema.Types.Number,
         ref: "Payment_Method", // Tham chiếu đến mô hình PaymentMethod
         required: true,
         unique: false,
-    },
+    }],
     total_price: {
         type: Number,
         required: true,
@@ -25,6 +25,7 @@ const orderSchema = new mongoose.Schema({
     },
     status: {
         type: String,
+        required: true,
         enum: ["pending", "completed", "canceled"], // Các trạng thái có thể
         default: "pending",
     },
