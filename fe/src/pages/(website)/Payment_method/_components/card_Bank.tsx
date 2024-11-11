@@ -1,11 +1,15 @@
 import React from "react";
-import { Form, Input, Button, Typography, Card } from "antd";
+import { Form, Input, Button, Typography, Card, Modal } from "antd";
 
 const { Title, Text } = Typography;
 
 const CardBankForm: React.FC = () => {
   const onFinish = (values: any) => {
-    console.log("Success:", values);
+    Modal.warning({
+      title: "Thông báo",
+      content:
+        "Hệ thống thanh toán đang bảo trì. ",
+    });
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -19,9 +23,9 @@ const CardBankForm: React.FC = () => {
       <Card style={{ marginTop: 20 }}>
         <div
           style={{ display: "flex", alignItems: "center", marginBottom: 20 }}
-        > 
+        >
           <img
-            src="https://cdn.divineshop.vn/image/catalog/Logo-bank/visa-master.png?hash=1604888771" // Thay bằng link hình ảnh của bạn
+            src="https://cdn.divineshop.vn/image/catalog/Logo-bank/visa-master.png?hash=1604888771" 
             alt="QR code"
             style={{ marginRight: 15 }}
             width={35}
@@ -38,7 +42,6 @@ const CardBankForm: React.FC = () => {
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
         >
-            
           <div style={{ marginBottom: 8 }}>
             <Text strong style={{ color: "red" }}>
               Lưu Ý:

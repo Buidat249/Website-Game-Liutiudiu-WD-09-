@@ -46,6 +46,8 @@ import VnPay_autoForm from "@/pages/(website)/Payment_method/_components/VnPay";
 import NapTienTuDongForm from "@/pages/(website)/Payment_method/_components/auto_top_u";
 import BankingPage from "@/pages/(website)/Payment_method/_components/bank_transfer";
 import CardBankForm from "@/pages/(website)/Payment_method/_components/card_Bank";
+import NapTrucTiepForm from "@/pages/(website)/Payment_method/_components/naptructiep";
+import TheCaoForm from "@/pages/(website)/Payment_method/_components/thecao";
 import PagePayment_method from "@/pages/(website)/Payment_method/page";
 import PageCart from "@/pages/(website)/cart/page";
 import PageContact from "@/pages/(website)/contact/page";
@@ -62,123 +64,101 @@ import { Route, Routes } from "react-router-dom";
 
 const Router = () => {
   return (
-      <Routes >
-        <Route path="/" element={<Layout />} >
-          <Route path="/" element={<HomePage />} />
-          <Route path="register" element={<RegisterPage />} />
-          <Route path="login" element={<LoginPage />} />
-          <Route path="productgame/:game_id" element={<ProductDetail />} />
+    <Routes>
+      <Route path="/" element={<Layout />}>
+        <Route path="/" element={<HomePage />} />
+        <Route path="register" element={<RegisterPage />} />
+        <Route path="login" element={<LoginPage />} />
+        <Route path="productgame/:game_id" element={<ProductDetail />} />
 
+        <Route path="pay" element={<PagePay />} />
+        <Route path="/pay-vnpay" element={<VnpayPayment />} />
+        <Route path="/pay-momo" element={<PaymentMomo />} />
+        <Route path="/payconfirm" element={<PagePayCofirm />} />
 
+        <Route path="games" element={<ProductGame />} />
+        <Route path="cart" element={<PageCart />} />
+        <Route path="emptcart" element={<PageEmptCart />} />
 
+        <Route path="products" element={<ProductPage />} />
+        <Route path="cart" element={<PageCart />} />
 
-          <Route path="pay" element={<PagePay />} />
-          <Route path="/pay-vnpay" element={<VnpayPayment />} />
-          <Route path="/pay-momo" element={<PaymentMomo />} />
-          <Route path="/payconfirm" element={<PagePayCofirm />} />
+        <Route path="games" element={<ProductGame />} />
+        <Route path="cart" element={<PageCart />} />
+        <Route path="emptcart" element={<PageEmptCart />} />
 
-          <Route path="games" element={<ProductGame />} />
-          <Route path="cart" element={<PageCart />} />
-          <Route path="emptcart" element={<PageEmptCart />} />
+        <Route path="paymentMethods" element={<PagePayment_method />} />
+        <Route path="/banhking24h" element={<BankingPage />} />
+        <Route path="/NapTienTuDongForm" element={<NapTienTuDongForm />} />
+        <Route path="/CardBank" element={<CardBankForm />} />
+        <Route path="/VnPhayauto" element={<VnPay_autoForm />} />
+        <Route path="/PayMoMOAuto" element={<PayMoMOForm />} />
+        <Route path="/napthecao" element={<TheCaoForm />} />
+        <Route path="/naptructiep" element={<NapTrucTiepForm />} />
 
+        <Route path="/contact" element={<PageContact />} />
 
+        <Route path="/contact" element={<PageContact />} />
+      </Route>
+      <Route path="/admin" element={<LayoutAdmin />}>
+        <Route index element={<DashboardPage />} />
+        <Route path="brands" element={<BrandPage />} />
+        <Route path="brands/add" element={<BrandAddPage />} />
+        <Route path="brands/:brand_id/edit" element={<BrandEditPage />} />
+        <Route path="cart_items" element={<Cart_ItemPage />} />
+        <Route path="cart_items/add" element={<Cart_ItemAddPage />} />
+        <Route
+          path="cart_items/:cart_item_id/edit"
+          element={<Cart_ItemEditPage />}
+        />
+        <Route path="carts" element={<CartPage />} />
+        <Route path="carts/add" element={<CartAddPage />} />
+        <Route path="carts/:cart_id/edit" element={<CartEditPage />} />
+        <Route path="categories" element={<CategoryPage />} />
+        <Route path="categories/add" element={<CategoryAddPage />} />
+        <Route
+          path="categories/:category_id/edit"
+          element={<CategoryEditPage />}
+        />
+        <Route path="games" element={<GamePage />} />
+        <Route path="games/add" element={<GameAddPage />} />
+        <Route path="games/:game_id/edit" element={<GameEditPage />} />
+        <Route path="order_details" element={<Order_DetailPage />} />
+        <Route path="order_details/add" element={<Order_DetailAddPage />} />
+        <Route
+          path="order_details/:order_detail_id/edit"
+          element={<Order_DetailEditPage />}
+        />
+        <Route path="orders" element={<OrderPage />} />
+        <Route path="orders/add" element={<OrderAddPage />} />
+        <Route path="orders/:order_id/edit" element={<OrderEditPage />} />
+        <Route path="payment_methods" element={<Payment_MethodPage />} />
+        <Route path="payment_methods/add" element={<Payment_MethodAddPage />} />
+        <Route
+          path="payment_methods/:payment_method_id/edit"
+          element={<Payment_MethodEditPage />}
+        />
+        <Route path="platforms" element={<PlatformPage />} />
+        <Route path="platforms/add" element={<PlatFormAddPage />} />
+        <Route
+          path="platforms/:platform_id/edit"
+          element={<PlatformEditPage />}
+        />
 
-          <Route path="products" element={<ProductPage />} />
-          <Route path="cart" element={<PageCart />} />
+        <Route path="filters" element={<FilterPage />} />
+        <Route path="filters/add" element={<FilterAddPage />} />
+        <Route path="filters/:filter_id/edit" element={<FilterEditPage />} />
 
-          <Route path="games" element={<ProductGame />} />
-          <Route path="cart" element={<PageCart />} />
-          <Route path="emptcart" element={<PageEmptCart />} />
-
-
-          <Route path="paymentMethods" element={<PagePayment_method />} />
-          <Route path="/banhking24h" element={<BankingPage />} />
-          <Route path="/NapTienTuDongForm" element={<NapTienTuDongForm />} />
-          <Route path="/CardBank" element={<CardBankForm />} />
-          <Route path="/VnPhayauto" element={<VnPay_autoForm />} />
-          <Route path="/PayMoMOAuto" element={<PayMoMOForm />} />
-
-          <Route path="/contact" element={<PageContact />} />
-
-
-
-          <Route path="/contact" element={<PageContact />} />
-
-
-        </Route>
-        <Route path="/admin" element={<LayoutAdmin />}>
-          <Route index element={<DashboardPage />} />
-          <Route path="brands" element={<BrandPage />} />
-          <Route path="brands/add" element={<BrandAddPage />} />
-          <Route path="brands/:brand_id/edit" element={<BrandEditPage />} />
-          <Route path="cart_items" element={<Cart_ItemPage />} />
-          <Route path="cart_items/add" element={<Cart_ItemAddPage />} />
-          <Route
-            path="cart_items/:cart_item_id/edit"
-            element={<Cart_ItemEditPage />}
-          />
-          <Route path="carts" element={<CartPage />} />
-          <Route path="carts/add" element={<CartAddPage />} />
-          <Route path="carts/:cart_id/edit" element={<CartEditPage />} />
-          <Route path="categories" element={<CategoryPage />} />
-          <Route path="categories/add" element={<CategoryAddPage />} />
-          <Route
-            path="categories/:category_id/edit"
-            element={<CategoryEditPage />}
-          />
-          <Route path="games" element={<GamePage />} />
-          <Route path="games/add" element={<GameAddPage />} />
-          <Route path="games/:game_id/edit" element={<GameEditPage />} />
-          <Route path="order_details" element={<Order_DetailPage />} />
-          <Route path="order_details/add" element={<Order_DetailAddPage />} />
-          <Route
-            path="order_details/:order_detail_id/edit"
-            element={<Order_DetailEditPage />}
-          />
-          <Route path="orders" element={<OrderPage />} />
-          <Route path="orders/add" element={<OrderAddPage />} />
-          <Route path="orders/:order_id/edit" element={<OrderEditPage />} />
-          <Route path="payment_methods" element={<Payment_MethodPage />} />
-          <Route
-            path="payment_methods/add"
-            element={<Payment_MethodAddPage />}
-          />
-          <Route
-            path="payment_methods/:payment_method_id/edit"
-            element={<Payment_MethodEditPage />}
-          />
-          <Route path="platforms" element={<PlatformPage />} />
-          <Route path="platforms/add" element={<PlatFormAddPage />} />
-          <Route
-            path="platforms/:platform_id/edit"
-            element={<PlatformEditPage />}
-          />
-
-
-
-
-
-
-          <Route path="filters" element={<FilterPage />} />
-          <Route path="filters/add" element={<FilterAddPage />} />
-          <Route
-            path="filters/:filter_id/edit"
-            element={<FilterEditPage />}
-          />
-
-
-
-
-          <Route path="reviews" element={<ReviewPage />} />
-          <Route path="reviews/add" element={<ReviewAddPage />} />
-          <Route path="reviews/:review_id/edit" element={<ReviewEditPage />} />
-          <Route path="roles" element={<RolePage />} />
-          <Route path="roles/add" element={<RoleAddPage />} />
-          <Route path="roles/:role_id/edit" element={<RoleEditPage />} />
-          <Route path="users" element={<UserPage />} />
-          <Route path="users/:user_id/edit" element={<UserEditPage />} />
-        </Route>
-      </Routes>
+        <Route path="reviews" element={<ReviewPage />} />
+        <Route path="reviews/add" element={<ReviewAddPage />} />
+        <Route path="reviews/:review_id/edit" element={<ReviewEditPage />} />
+        <Route path="roles" element={<RolePage />} />
+        <Route path="roles/add" element={<RoleAddPage />} />
+        <Route path="roles/:role_id/edit" element={<RoleEditPage />} />
+        <Route path="users" element={<UserPage />} />
+        <Route path="users/:user_id/edit" element={<UserEditPage />} />
+      </Route>
+    </Routes>
   );
 };
 

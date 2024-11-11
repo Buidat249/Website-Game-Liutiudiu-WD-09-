@@ -32,7 +32,7 @@ const paymentMethods = [
     title: "Nạp tiền qua thẻ cào Viettel",
     description: "Nạp tiền qua thẻ cào Viettel, phí giao dịch 30%",
     icon: "https://cdn.divineshop.vn/image/catalog/Logo-bank/Viettel.png?hash=1604888771",
-    // route: "/banhking24h",
+    route: "/napthecao",
   },
   {
     title: "Nạp số dư trực tiếp bằng Momo Payment",
@@ -45,6 +45,7 @@ const paymentMethods = [
     title: "Giao dịch trực tiếp",
     description: "Mua hàng tại các đại lý của Divine Shop trên khắp cả nước",
     icon: "https://cdn.divineshop.vn/image/catalog/Logo-bank/GDTT.png?hash=1604888771",
+    route: "/naptructiep",
   },
 ];
 

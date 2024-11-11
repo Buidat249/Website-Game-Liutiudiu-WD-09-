@@ -1,15 +1,20 @@
-import React from "react";
-import { Form, Input, Button, Typography, Card } from "antd";
+import React, { useState } from "react";
+import { Form, Input, Button, Typography, Card, Modal } from "antd";
 
 const { Title, Text } = Typography;
 
 const PayMoMOForm: React.FC = () => {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [amount, setAmount] = useState<string>("");
+
   const onFinish = (values: any) => {
     console.log("Success:", values);
+    setAmount(values.soTien);
+    setIsModalVisible(true);
   };
 
-  const onFinishFailed = (errorInfo: any) => {
-    console.log("Failed:", errorInfo);
+  const handleCancel = () => {
+    setIsModalVisible(false);
   };
 
   return (
@@ -21,7 +26,7 @@ const PayMoMOForm: React.FC = () => {
           style={{ display: "flex", alignItems: "center", marginBottom: 20 }}
         >
           <img
-            src="https://cdn.divineshop.vn/image/catalog/Logo-bank/Momo.png?hash=1604888771" // Thay bằng link hình ảnh của bạn
+            src="https://cdn.divineshop.vn/image/catalog/Logo-bank/Momo.png?hash=1604888771"
             alt="QR code"
             style={{ marginRight: 15 }}
             width={35}
@@ -30,29 +35,60 @@ const PayMoMOForm: React.FC = () => {
             <Text strong>Nạp số dư trực tiếp bằng Momo Payment</Text>
             <br />
             <Text type="secondary">
-              Nạp Dcoin tự động liên kết với Momo, hoàn thành tức thì. Phí 5
+              Nạp Dcoin tự động liên kết với Momo, hoàn thành tức thì. Phí 5%
             </Text>
           </div>
         </div>
 
-        <Form
-          layout="vertical"
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-        >
+        <Form layout="vertical" onFinish={onFinish}>
           <Form.Item
             label="Nhập số tiền"
             name="soTien"
             rules={[{ required: true, message: "Vui lòng nhập số tiền!" }]}
           >
-            <Input placeholder="Nhập số tiền" />
+            <Input
+              placeholder="Nhập số tiền"
+              type="number"
+              onChange={(e) => setAmount(e.target.value)}
+            />
           </Form.Item>
           <Button type="primary" htmlType="submit">
             Nạp Liucoin
           </Button>
         </Form>
-   
       </Card>
+
+      {/* Modal to show the QR code and payment details */}
+      <Modal
+        title="Nạp số dư trực tiếp bằng Momo Payment"
+        visible={isModalVisible}
+        onCancel={handleCancel}
+        footer={null}
+        className="custom-momo-modal" // Custom class for styling
+      >
+        <p>Số tiền: {amount}đ</p>
+        <p>Phí giao dịch: {(parseFloat(amount) * 0.05).toFixed(0)}đ (5%)</p>
+        <p>
+          Tổng tiền:{" "}
+          {(parseFloat(amount) + parseFloat(amount) * 0.05).toFixed(0)}đ
+        </p>
+        <div className="modal-qr-container">
+          <img
+            src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=momo%3A%2F%2Fapp%3Faction%3DpayWithApp%26isScanQR%3Dtrue%26serviceType%3Dqr%26sid%3DTU9NT1hGUE4yMDE5MDUzMHxNTTIyMDg5MTc%26v%3D3.0"
+            alt="QR Code"
+            style={{margin:"aotu", width: "200px", height: "200px" }}
+          />
+        </div>
+        <Text strong>Thực hiện theo hướng dẫn sau để thanh toán:</Text>
+        <ol>
+          <li>Mở ứng dụng MoMo để thanh toán</li>
+          <li>Chọn "Thanh Toán" và quét mã QR tại hướng dẫn này</li>
+          <li>
+            Hoàn thành các bước thanh toán theo hướng dẫn và đợi Divine Shop xử
+            lý trong giây lát
+          </li>
+        </ol>
+      </Modal>
     </div>
   );
 };
