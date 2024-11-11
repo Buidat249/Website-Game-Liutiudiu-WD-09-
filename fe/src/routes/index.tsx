@@ -47,6 +47,7 @@ import BankingPage from "@/pages/(website)/Payment_method/_components/bank_trans
 import CardBankForm from "@/pages/(website)/Payment_method/_components/card_Bank";
 import PagePayment_method from "@/pages/(website)/Payment_method/page";
 import PageCart from "@/pages/(website)/cart/page";
+import PageContact from "@/pages/(website)/contact/page";
 import ProductDetail from "@/pages/(website)/home/ProductDetail";
 import HomePage from "@/pages/(website)/home/page";
 import Layout from "@/pages/(website)/layout";
@@ -78,6 +79,7 @@ const Router = () => {
           <Route path="/CardBank" element={<CardBankForm />} />
           <Route path="/VnPhayauto" element={<VnPay_autoForm />} />
           <Route path="/PayMoMOAuto" element={<PayMoMOForm />} />
+          <Route path="/contact" element={<PageContact />} />
         </Route>
         <Route path="/admin" element={<LayoutAdmin />}>
           <Route index element={<DashboardPage />} />
