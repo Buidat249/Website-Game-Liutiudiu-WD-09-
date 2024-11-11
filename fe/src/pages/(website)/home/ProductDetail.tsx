@@ -298,30 +298,6 @@ const ProductDetail = () => {
                             -{game.discount}%
                           </small>
                         </div>
-
-                        <hr className="flex shrink-0 mt-4 max-w-full h-px border-t border-gray-400 border-opacity-30 w-[450px]" />
-                        <h6 className="mt-5 text-base font-medium leading-loose text-black">
-                          Các sản phẩm khác
-                        </h6>
-                        <div className="flex gap-2.5 mt-3.5 max-w-full text-sm font-medium text-blue-600 w-[361px]">
-                          <Button className="btn btn-outline-primary">
-                            Tài khoản game
-                          </Button>
-                          <Button className="btn btn-outline-primary">
-                            Thuê 1 ngày
-                          </Button>
-                          <Button className="btn btn-outline-primary">
-                            Thuê 1 tuần
-                          </Button>
-                        </div>
-                        <div className="flex gap-3 mt-3 max-w-full text-sm font-medium text-blue-600 w-[264px]">
-                          <Button className="btn btn-outline-primary">
-                            Mua game
-                          </Button>
-                          <Button className="btn btn-outline-primary">
-                            Tài khoản game - Cũ
-                          </Button>
-                        </div>
                         <div className="flex shrink-0 mt-3.5 max-w-full h-px border-t border-gray-400 border-opacity-30 w-[450px]" />
                       </div>
                       <div
@@ -361,33 +337,44 @@ const ProductDetail = () => {
             {/* Các Game cùng thể loại */}
             <div className="games">
               <section className="games">
-                <h2>Sản phẩm Liên Quan</h2>
+                <h1
+                  style={{
+                    fontSize: "32px",
+                    fontWeight: "bold",
+                    color: "black",
+                  }}
+                >
+                  Game đề xuất
+                </h1>
                 <div className="game-grid">
                   {relatedGames.length > 0 ? (
                     relatedGames.map((game) => (
                       <div key={game.game_id} className="game">
                         <Link to={`/productgame/${game.game_id}`}>
                           <img src={game.image} alt={game.name} />
-                          <p>{game.name}</p>
-                          <div className="small-p-product">
-                            <p>
-                              Giá:{" "}
-                              {game.price === 0
-                                ? "Miễn phí"
-                                : `${game.price} VND`}
+                          <p style={{ fontWeight: "bold", fontSize: "17px" }}>
+                            {game.name}
+                          </p>
+                          <div className="flex gap-2 final_price-price-discount-container">
+                            <p className="final_price">
+                              {new Intl.NumberFormat("vi-VN", {}).format(
+                                game.final_price
+                              )}
+                              đ
                             </p>
-                            {/* Kiểm tra nếu platform_id tồn tại */}
-                            <p>
-                              {game.platform_id
-                                ? getPlatformName(game.platform_id)
-                                : "N/A"}
+                            <p className="price">
+                              {new Intl.NumberFormat("vi-VN", {}).format(
+                                game.price
+                              )}
+                              đ
                             </p>
+                            <p className="discount">-{game.discount}%</p>
                           </div>
                         </Link>
                       </div>
                     ))
                   ) : (
-                    <p>Không có sản phẩm phù hợp.</p>
+                    <p>Không có sản phẩm nổi bật nào.</p>
                   )}
                 </div>
               </section>
@@ -402,3 +389,5 @@ const ProductDetail = () => {
 };
 
 export default ProductDetail;
+
+

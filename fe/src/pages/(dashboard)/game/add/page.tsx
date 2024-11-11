@@ -35,6 +35,7 @@ type FieldType = {
   rating?: number;
   image?: string;
   description?: string;
+  configuration?: string;
 };
 
 
@@ -304,6 +305,10 @@ const GameAddPage: React.FC = () => {
         </Form.Item>
 
         <Form.Item<FieldType> label="Mô tả game" name="description">
+          <TextArea rows={5} />
+        </Form.Item>
+
+        <Form.Item<FieldType> label="Cấu hình tối thiểu" name="configuration">
           <TextArea rows={5} />
         </Form.Item>
 

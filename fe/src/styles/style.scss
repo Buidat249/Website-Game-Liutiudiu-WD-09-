@@ -1747,7 +1747,7 @@ select {
 .discount {
   background-color: red; /* Nền đỏ */
   color: white; /* Chữ trắng */
-  border: 2px solid red; /* Viền đỏ */
+  border: 0px solid red; /* Viền đỏ */
   border-radius: 10px; /* Bo góc */
   padding: 0.25rem 0.5rem; /* Padding xung quanh */
   font-weight: bold; /* Đậm chữ */
@@ -1756,14 +1756,14 @@ select {
 
 /* Phần giá */
 .final_price {
-  font-size: 16px !important; /* Buộc áp dụng font-size */
+  font-size: 14px !important; /* Buộc áp dụng font-size */
   font-weight: bold;
   color: black;
 }
 
 .price {
-  padding-bottom: 24px;
-  font-size: 16px !important; /* Buộc áp dụng font-size */
+  padding-bottom: 20px;
+  font-size: 14px !important; /* Buộc áp dụng font-size */
   font-weight: bold;
   color: rgb(161, 159, 159);
   text-decoration: line-through; /* Gạch ngang phần giá */

@@ -52,16 +52,6 @@ const FAQ: React.FC<IFAQ> = ({ game  }) => {
   ];
   return (
     <main className="flex flex-col py-4 px-6 w-full max-w-[992px] min-h-[348px] mx-auto">
-      <section className="flex flex-col p-4 bg-neutral-200 text-sm text-black rounded-md border border-zinc-500 max-w-full">
-        <p className="leading-5">
-          - Đây là tài khoản Steam tạo sẵn đã mua game <span className="font-medium">Black Myth: Wukong Standard Version.</span> Sau khi mua bạn sẽ nhận được thông tin tài khoản để đăng nhập. <span className="font-medium text-red-500">Vui lòng không thay đổi thông tin tài khoản</span>
-        </p>
-        <p className="mt-2 font-medium">- Giá thuê tài khoản tính theo ngày. Ví dụ bạn muốn mua 5 ngày thì chọn số lượng sản phẩm là 5.</p>
-        <p className="mt-2">- Divine Shop cam kết chỉ cho 1 khách hàng thuê tại 1 thời điểm. Không bị người khác login làm gián đoạn trong khi chơi.</p>
-        <p className="mt-2">- Tài khoản có thể đã có File Save sẵn, bạn có thể xóa đi và chơi từ đầu.</p>
-        <p className="mt-2">- Thuê tối thiểu 3 ngày.</p>
-      </section>
-
       <section className="mt-4 max-w-full">
         <div className="flex gap-5 flex-col lg:flex-row">
           <aside className="w-full lg:w-1/5">
@@ -103,12 +93,6 @@ const FAQ: React.FC<IFAQ> = ({ game  }) => {
             ))}
           </div>
         </div>
-      </section>
-
-      <section className="mt-6">
-        <h2 className="text-xl font-medium text-black">Chính sách bảo hành</h2>
-        <p className="mt-2">- Đổi mới sản phẩm khác nếu lỗi trong quá trình sử dụng hoặc hoàn tiền nếu không có sản phẩm bảo hành.</p>
-        <p className="mt-2">- Không hỗ trợ bảo hành trong trường hợp khách hàng vi phạm chính sách của Steam và khách hàng bán lại tài khoản.</p>
       </section>
 
       <footer className="mt-8 text-right font-medium text-black">

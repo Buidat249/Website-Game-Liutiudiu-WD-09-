@@ -47,6 +47,7 @@ const gameSchema = new mongoose.Schema({
   },
   image: { type: Array, required: true },
   description: { type: String, required: true },
+  configuration: { type: String, required: true },
 });
 
 gameSchema.pre("save", function (next) {
