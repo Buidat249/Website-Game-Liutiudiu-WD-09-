@@ -26,9 +26,9 @@ const NapTrucTiepForm: React.FC = () => {
           </Text>
           <br />
           <Text>
-            Hiện Divine Shop đã có hơn 60 điểm đại lý giao dịch trên toàn quốc.
-            Các bạn có thể đến đưa tiền trực tiếp và được nhận key game ngay lập
-            tức qua email.
+            Hiện LIUTUIDIU Shop đã có hơn 60 điểm đại lý giao dịch trên toàn
+            quốc. Các bạn có thể đến đưa tiền trực tiếp và được nhận key game
+            ngay lập tức qua email.
           </Text>
           <br />
           <Text>
