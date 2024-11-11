@@ -28,13 +28,13 @@ type FieldType = {
   category_id?: number;
   platform_id?: number;
   filter_id?: number;
+  description_id?: number;
   name?: string;
   price?: number;
   discount?: number;
   final_price?: number;
   rating?: number;
   image?: string;
-  description?: string;
   configuration?: string;
 };
 
@@ -126,22 +126,33 @@ const GameAddPage: React.FC = () => {
 
   const filterform = Array.isArray(filters.data) ? filters.data : [];
 
+  //fetch description
+  const { data: descriptions = { data: [] } } = useQuery({
+    queryKey: ["descriptions"],
+    queryFn: () =>
+      axios.get("http://localhost:8080/descriptions").then((res) => res.data),
+  });
+
+  console.log("Filter:", descriptions);
+
+  const descriptionform = Array.isArray(descriptions.data) ? descriptions.data : [];
+
   // Kiểm tra dữ liệu nhận được
   const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
     const imageFile =
       values.image && values.image[0]
         ? (values.image[0] as any).thumbUrl || (values.image[0] as any).name
         : undefined;
-  
+
     const gameData = {
       ...values,
       image: imageFile,
     };
-  
+
     console.log("Sending data:", gameData);
     mutate(gameData);
   };
-  
+
 
   const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
     errorInfo
@@ -261,6 +272,27 @@ const GameAddPage: React.FC = () => {
         </Form.Item>
 
         <Form.Item<FieldType>
+          label="Tên mô tả"
+          name="description_id"
+          rules={[{ required: true, message: "Vui lòng chọn tên mô tả" }]}
+        >
+          {isLoading ? (
+            <Spin indicator={<Loading3QuartersOutlined spin />} />
+          ) : (
+            <Select mode="multiple" placeholder="Chọn tên mô tả">
+              {descriptionform.map((description: any) => (
+                <Select.Option
+                  key={description.description_id}
+                  value={description.description_id}
+                >
+                  {description.name}
+                </Select.Option>
+              ))}
+            </Select>
+          )}
+        </Form.Item>
+
+        <Form.Item<FieldType>
           label="Giá game"
           name="price"
           rules={[
@@ -302,10 +334,6 @@ const GameAddPage: React.FC = () => {
               <div style={{ marginTop: 8 }}>Upload</div>
             </button>
           </Upload>
-        </Form.Item>
-
-        <Form.Item<FieldType> label="Mô tả game" name="description">
-          <TextArea rows={5} />
         </Form.Item>
 
         <Form.Item<FieldType> label="Cấu hình tối thiểu" name="configuration">

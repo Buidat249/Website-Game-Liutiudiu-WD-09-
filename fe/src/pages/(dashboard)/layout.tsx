@@ -1,11 +1,8 @@
 import React, { useState } from "react";
 import {
-  DesktopOutlined,
-  FileOutlined,
-  PieChartOutlined,
+ 
   TagsOutlined,
-  TeamOutlined,
-  UploadOutlined,
+ 
   UserOutlined,
   VideoCameraOutlined,
 } from "@ant-design/icons";
@@ -120,6 +117,19 @@ const LayoutAdmin: React.FC = () => {
               key: "12",
               icon: <TagsOutlined />,
               label: <NavLink to="/admin/filters">Quản lý danh mục</NavLink>,
+            },
+
+            {
+              key: "13",
+              icon: <TagsOutlined />,
+              label: <NavLink to="/admin/descriptions">Quản lý mô tả</NavLink>,
+            },
+
+            
+            {
+              key: "14",
+              icon: <TagsOutlined />,
+              label: <NavLink to="/admin/description_details">Quản lý mô tả chi tiết</NavLink>,
             },
           ]}
         />

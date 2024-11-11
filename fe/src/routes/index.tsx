@@ -11,6 +11,12 @@ import CategoryAddPage from "@/pages/(dashboard)/category/add/page";
 import CategoryEditPage from "@/pages/(dashboard)/category/edit/page";
 import CategoryPage from "@/pages/(dashboard)/category/page";
 import DashboardPage from "@/pages/(dashboard)/dashboard/page";
+import DescriptionAddPage from "@/pages/(dashboard)/description/add/page";
+import DescriptionEditPage from "@/pages/(dashboard)/description/edit/pages";
+import DescriptionPage from "@/pages/(dashboard)/description/page";
+import DescriptionDetailAddPage from "@/pages/(dashboard)/description_detail/add/pages";
+import DescriptionDetailEditPage from "@/pages/(dashboard)/description_detail/edit/page";
+import DescriptionDetailPage from "@/pages/(dashboard)/description_detail/page";
 import FilterAddPage from "@/pages/(dashboard)/filter/add/page";
 import FilterEditPage from "@/pages/(dashboard)/filter/edit/page";
 import FilterPage from "@/pages/(dashboard)/filter/page";
@@ -148,6 +154,14 @@ const Router = () => {
         <Route path="filters" element={<FilterPage />} />
         <Route path="filters/add" element={<FilterAddPage />} />
         <Route path="filters/:filter_id/edit" element={<FilterEditPage />} />
+
+        <Route path="descriptions" element={<DescriptionPage />} />
+        <Route path="descriptions/add" element={<DescriptionAddPage />} />
+        <Route path="descriptions/:description_id/edit" element={<DescriptionEditPage />} />
+
+        <Route path="description_details" element={<DescriptionDetailPage />} />
+        <Route path="description_details/add" element={<DescriptionDetailAddPage />} />
+        <Route path="description_details/:descriptiondetail_id/edit" element={<DescriptionDetailEditPage />} />
 
         <Route path="reviews" element={<ReviewPage />} />
         <Route path="reviews/add" element={<ReviewAddPage />} />

@@ -46,7 +46,14 @@ const gameSchema = new mongoose.Schema({
     },
   },
   image: { type: Array, required: true },
-  description: { type: String, required: true },
+  description_id: [
+    {
+      type: mongoose.Schema.Types.Number,
+      required: true,
+      unique: false,
+      ref: "Description", // Tham chiếu đến model description
+    },
+  ],
   configuration: { type: String, required: true },
 });
 

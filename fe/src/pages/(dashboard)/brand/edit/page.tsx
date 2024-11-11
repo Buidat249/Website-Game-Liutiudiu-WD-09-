@@ -81,6 +81,7 @@ const BrandEditPage: React.FC = () => {
 
     const branData = { ...values, image: imageUrl || data?.data?.image }; // Nếu không có ảnh mới, giữ ảnh cũ
     mutate(branData);
+    window.location.reload();
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -126,29 +127,28 @@ const BrandEditPage: React.FC = () => {
         </Form.Item>
 
         <Form.Item
-          label="Tải ảnh lên"
+          label="Hình ảnh"
           name="image"
           valuePropName="fileList"
           getValueFromEvent={normFile}
+          rules={[{ required: true, message: "Vui lòng tải lên hình ảnh" }]}
         >
-            <Upload
-              beforeUpload={handleImageUpload}
-              showUploadList={false}
-            >
-              <button style={{ border: 0, background: "none" }} type="button">
-                <PlusOutlined />
-                <div style={{ marginTop: 8 }}>Upload</div>
-              </button>
-            </Upload>
-
-            {/* Hiển thị ảnh đã có từ dữ liệu */}
-            {imageUrl || data?.data?.image ? (
-              <img
-                src={imageUrl || data?.data?.image}
-                alt="Uploaded"
-                style={{ width: "20%", marginTop: 10 }}
-              />
-            ) : null}
+          <Upload
+            name="file"
+            action=""
+            listType="picture"
+            beforeUpload={handleImageUpload}
+            maxCount={1}
+          >
+            <Button icon={<PlusOutlined />}>Tải lên ảnh</Button>
+          </Upload>
+          {imageUrl || data?.data?.image ? (
+            <img
+              src={imageUrl || data?.data?.image}
+              alt="Uploaded"
+              style={{ width: "50%", marginTop: 10 }}
+            />
+          ) : null}
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
