@@ -109,6 +109,14 @@ const LayoutAdmin: React.FC = () => {
               icon: <TagsOutlined />,
               label: <NavLink to="/admin/roles">Quản lý quyền</NavLink>,
             },
+<<<<<<< HEAD
+=======
+            {
+              key: "12",
+              icon: <TagsOutlined />,
+              label: <NavLink to="/admin/filters">Quản lý danh mục</NavLink>,
+            },
+>>>>>>> bfa8d29fece0b1c69aa8c3f83c309452f427856f
           ]}
         />
       </Sider>

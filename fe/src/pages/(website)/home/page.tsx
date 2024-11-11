@@ -86,28 +86,33 @@ const HomePage = () => {
               ))}
             </div>
           </div>
-
           <div className="aside-right">
             {rightGames.map((game) => (
               <img key={game.game_id} src={game.image} alt={game.title} />
             ))}
           </div>
         </div>
-
         <section className="games">
           <h2>Sản phẩm nổi bật</h2>
           <div className="game-grid">
             {featuredGames.length > 0 ? (
               featuredGames.map((game) => (
                 <div key={game.game_id} className="game">
+<<<<<<< HEAD
                   <Link to={`/games/${game.game_id}`}>
+=======
+                  <Link to={`/productgame/${game.game_id}`}>
+>>>>>>> bfa8d29fece0b1c69aa8c3f83c309452f427856f
                     <img src={game.image} alt={game.name} />
                     <p>{game.name}</p>
                     <div className="flex gap-2">
                       <p>Giá: Miễn phí</p>
                       <p>{getPlatformName(game.platform_id)}</p>
                     </div>
+<<<<<<< HEAD
 
+=======
+>>>>>>> bfa8d29fece0b1c69aa8c3f83c309452f427856f
                   </Link>
                 </div>
               ))
@@ -116,7 +121,6 @@ const HomePage = () => {
             )}
           </div>
         </section>
-
         <div>
           <section className="games">
             <h2>Sản phẩm miễn phí</h2>
@@ -124,6 +128,7 @@ const HomePage = () => {
               {freeGames.length > 0 ? (
                 freeGames.map((game) => (
                   <div key={game.game_id} className="game">
+<<<<<<< HEAD
                     <img src={game.image} alt={game.name} />
                     <p>{game.name}</p>
                     <div className="flex gap-2">
@@ -131,6 +136,16 @@ const HomePage = () => {
                       <p>{getPlatformName(game.platform_id)}</p>
                     </div>
 
+=======
+                    <Link to={`/productgame/${game.game_id}`}>
+                      <img src={game.image} alt={game.name} />
+                      <p>{game.name}</p>
+                      <div className="flex gap-2">
+                        <p>Giá: Miễn phí</p>
+                        <p>{getPlatformName(game.platform_id)}</p>
+                      </div>
+                    </Link>
+>>>>>>> bfa8d29fece0b1c69aa8c3f83c309452f427856f
                   </div>
                 ))
               ) : (

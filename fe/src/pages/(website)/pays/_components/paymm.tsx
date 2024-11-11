@@ -3,7 +3,11 @@ import React from "react";
 const PaymentMomo = () => {
   return (
     <div className="max-w-5xl mx-auto bg-white shadow-lg rounded-lg p-6 my-8">
+<<<<<<< HEAD
       {/* Header */}
+=======
+      
+>>>>>>> bfa8d29fece0b1c69aa8c3f83c309452f427856f
       <div className="flex items-center justify-between border-b pb-4 mb-4">
         <div className="flex items-center">
           <img

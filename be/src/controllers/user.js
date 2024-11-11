@@ -42,11 +42,15 @@ export const getUserDetail = async (req, res) => {
 };
 
 // POST / register
-export const Register = async(req, res) => {
+export const Register = async (req, res) => {
     try {
         const body = req.body;
 
+<<<<<<< HEAD
         // Hash password trước khi lưu
+=======
+        // Băm mật khẩu trước khi lưu
+>>>>>>> bfa8d29fece0b1c69aa8c3f83c309452f427856f
         body.password = await bcryptjs.hash(body.password, 6);
 
         // Lấy user_id cuối cùng để tạo user_id tự động tăng
@@ -69,8 +73,14 @@ export const Register = async(req, res) => {
         res.status(500).send({ message: "Đăng ký thất bại: " + error.message });
     }
 };
+<<<<<<< HEAD
 // POST / login
 export const Login = async (req, res) => {
+=======
+
+// POST / login
+export const Login = async (req, res) => { 
+>>>>>>> bfa8d29fece0b1c69aa8c3f83c309452f427856f
     try {
         const body = req.body;
 
@@ -103,8 +113,13 @@ export const Login = async (req, res) => {
                 status: true, 
                 message: "Đăng nhập thành công", 
                 token: token,
+<<<<<<< HEAD
                 email: user.email,
 
+=======
+                username : user.username,
+                email: user.email,
+>>>>>>> bfa8d29fece0b1c69aa8c3f83c309452f427856f
                 role_id: user.role_id // Trả về role_id của người dùng
             });
         } else {
@@ -119,30 +134,42 @@ export const Login = async (req, res) => {
 
 export const updateUser = async (req, res) => {
     try {
+<<<<<<< HEAD
         // Chuyển đổi user_id sang kiểu số
+=======
+>>>>>>> bfa8d29fece0b1c69aa8c3f83c309452f427856f
         const userId = parseInt(req.params.id, 10);
         if (isNaN(userId)) {
             return res.status(400).json({ message: "ID người dùng không hợp lệ" });
         }
 
+<<<<<<< HEAD
+=======
+        // Kiểm tra nếu mật khẩu được cập nhật trong yêu cầu
+        if (req.body.password) {
+            req.body.password = await bcryptjs.hash(req.body.password, 6); // Băm mật khẩu mới
+        }
+
+>>>>>>> bfa8d29fece0b1c69aa8c3f83c309452f427856f
         // Cập nhật thông tin người dùng
         const user = await User.findOneAndUpdate({ user_id: userId }, req.body, {
             new: true,
         });
+
         if (!user) {
             return res.status(404).json({
                 message: "User Not Found",
             });
         }
+
         return res.status(200).json({
-            message: "Update User Done",
+            message: "Cập nhật người dùng thành công",
             data: user,
         });
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
 };
-
  // DELETE / users / :id
 
  export const removeUser = async (req, res) => {

@@ -43,21 +43,23 @@ const CategoryPage = () => {
       render: (_: any, category: any) => {
         return (
           <>
-            <Popconfirm
-              title="Delete the task"
-              description="Bạn có chắc muốn xóa không?"
-              onConfirm={() => {
-                console.log("Deleting category with ID:", category.category_id); // kiểm tra category_id
-                mutate(category.category_id);
-              }}
-              okText="Yes"
-              cancelText="No"
-            >
-              <Button danger>Xóa</Button>
-            </Popconfirm>
-            <Link to={`/admin/categories/${category.category_id}/edit`}>
-              <Button>Cập nhật</Button>
-            </Link>
+            <div className="flex gap-2">
+              <Popconfirm
+                title="Delete the task"
+                description="Bạn có chắc muốn xóa không?"
+                onConfirm={() => {
+                  console.log("Deleting category with ID:", category.category_id); // kiểm tra category_id
+                  mutate(category.category_id);
+                }}
+                okText="Yes"
+                cancelText="No"
+              >
+                <Button danger>Xóa</Button>
+              </Popconfirm>
+              <Link to={`/admin/categories/${category.category_id}/edit`}>
+                <Button>Cập nhật</Button>
+              </Link>
+            </div>
           </>
         );
       },

@@ -27,6 +27,7 @@ type FieldType = {
   brand_id?: number;
   category_id?: number;
   platform_id?: number;
+  filter_id?: number;
   name?: string;
   price?: number;
   discount?: number;
@@ -62,7 +63,7 @@ const GameAddPage: React.FC = () => {
     }
     return e?.fileList;
   };
-
+  // fetch brand
   const { data: brands = { data: [] }, isLoading } = useQuery({
     queryKey: ["brands"],
     queryFn: () =>
@@ -73,6 +74,7 @@ const GameAddPage: React.FC = () => {
 
   const brandList = Array.isArray(brands.data) ? brands.data : [];
 
+  //fetch category
   const { data: categories = { data: [] } } = useQuery({
     queryKey: ["categories"],
     queryFn: () =>
@@ -83,6 +85,7 @@ const GameAddPage: React.FC = () => {
 
   const categoryList = Array.isArray(categories.data) ? categories.data : [];
 
+  //fetch platform
   const { data: platforms = { data: [] } } = useQuery({
     queryKey: ["platforms"],
     queryFn: () =>
@@ -92,6 +95,17 @@ const GameAddPage: React.FC = () => {
   console.log("Platforms:", platforms);
 
   const platformList = Array.isArray(platforms.data) ? platforms.data : [];
+
+  //fetch filter
+  const { data: filters = { data: [] } } = useQuery({
+    queryKey: ["filters"],
+    queryFn: () =>
+      axios.get("http://localhost:8080/filters").then((res) => res.data),
+  });
+
+  console.log("Filter:", filters);
+
+  const filterform = Array.isArray(filters.data) ? filters.data : [];
 
   // Kiểm tra dữ liệu nhận được
   const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
@@ -165,14 +179,14 @@ const GameAddPage: React.FC = () => {
         </Form.Item>
 
         <Form.Item<FieldType>
-          label="Tên danh mục"
+          label="Tên thể loại"
           name="category_id"
-          rules={[{ required: true, message: "Vui lòng chọn tên danh mục" }]}
+          rules={[{ required: true, message: "Vui lòng chọn tên thể loại" }]}
         >
           {isLoading ? (
             <Spin indicator={<Loading3QuartersOutlined spin />} />
           ) : (
-            <Select mode="multiple" placeholder="Chọn tên danh mục">
+            <Select mode="multiple" placeholder="Chọn tên thể loại">
               {categoryList.map((category: any) => (
                 <Select.Option
                   key={category.category_id}
@@ -186,20 +200,41 @@ const GameAddPage: React.FC = () => {
         </Form.Item>
 
         <Form.Item<FieldType>
-          label="Nền tang"
+          label="Tên nền tảng"
           name="platform_id"
-          rules={[{ required: true, message: "Vui lòng chọn nền tảng" }]}
+          rules={[{ required: true, message: "Vui lòng chọn tên nền tảng" }]}
         >
           {isLoading ? (
-            <Spin  indicator={<Loading3QuartersOutlined spin />} />
+            <Spin indicator={<Loading3QuartersOutlined spin />} />
           ) : (
-            <Select mode="multiple" placeholder="Chọn nền tảng">
+            <Select mode="multiple" placeholder="Chọn tên nền tảng">
               {platformList.map((platform: any) => (
                 <Select.Option
                   key={platform.platform_id}
                   value={platform.platform_id}
                 >
                   {platform.name}
+                </Select.Option>
+              ))}
+            </Select>
+          )}
+        </Form.Item>
+
+        <Form.Item<FieldType>
+          label="Tên danh mục"
+          name="filter_id"
+          rules={[{ required: true, message: "Vui lòng chọn tên danh mục" }]}
+        >
+          {isLoading ? (
+            <Spin indicator={<Loading3QuartersOutlined spin />} />
+          ) : (
+            <Select mode="multiple" placeholder="Chọn tên danh mục">
+              {filterform.map((filter: any) => (
+                <Select.Option
+                  key={filter.filter_id}
+                  value={filter.filter_id}
+                >
+                  {filter.name}
                 </Select.Option>
               ))}
             </Select>
