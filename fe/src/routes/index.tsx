@@ -40,6 +40,7 @@ import UserEditPage from "@/pages/(dashboard)/user/edit/page";
 import LoginPage from "@/pages/(dashboard)/user/login/page";
 import UserPage from "@/pages/(dashboard)/user/page";
 import RegisterPage from "@/pages/(dashboard)/user/register/page";
+import PageEmptCart from "@/pages/(website)/EmptyCart/page";
 import PayMoMOForm from "@/pages/(website)/Payment_method/_components/PayMomo";
 import VnPay_autoForm from "@/pages/(website)/Payment_method/_components/VnPay";
 import NapTienTuDongForm from "@/pages/(website)/Payment_method/_components/auto_top_u";
@@ -73,6 +74,7 @@ const Router = () => {
           <Route path="/payconfirm" element={<PagePayCofirm />} />
           <Route path="games" element={<ProductGame />} />
           <Route path="cart" element={<PageCart />} />
+          <Route path="emptcart" element={<PageEmptCart />} />
           <Route path="paymentMethods" element={<PagePayment_method />} />
           <Route path="/banhking24h" element={<BankingPage />} />
           <Route path="/NapTienTuDongForm" element={<NapTienTuDongForm />} />
