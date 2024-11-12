@@ -143,7 +143,6 @@ const ProductPage = () => {
     setSelectedCategory("");
     setSelectedBrand("");
     setSelectedFilter(""); // Reset the selected filter
-    setSelectedFilter(""); // Reset the selected filter
     setPriceFrom("");
     setPriceTo("");
     setSortOrder("");

@@ -13,7 +13,7 @@ interface Game {
   name?: string;
   price?: number;
   discount?: number;
-  final_price?: number;
+  final_price?: number | undefined;
   rating?: number;
   image?: string;
   description?: string;
@@ -246,6 +246,7 @@ const ProductDetail = () => {
                             }}
                           >
                             {new Intl.NumberFormat("vi-VN", {}).format(
+                              
                               game.final_price
                             )}
                             đ
@@ -361,7 +362,7 @@ const ProductDetail = () => {
                               {new Intl.NumberFormat("vi-VN", {}).format(
                                 game.final_price
                               )}
-                              đ
+                              
                             </p>
                             <p className="price">
                               {new Intl.NumberFormat("vi-VN", {}).format(
