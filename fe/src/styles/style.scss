@@ -1,9 +1,6 @@
 @use "_mixin" as m;
 $font-poppins: "Poppins", sans-serif;
 
-body {
-  // font-family: $font-poppins;
-}
 
 img {
   max-width: 100%;
@@ -413,7 +410,7 @@ img {
 
 
 body {
-  font-family: Arial, sans-serif;
+  font-family:  'Roboto', sans-serif;
   background-color: #f4f4f4;
 
 }
@@ -905,11 +902,6 @@ footer {
 
 //products
 
-
-body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
-}
 
 .filter {
   margin-top: 30px;

@@ -38,7 +38,6 @@ type FieldType = {
   configuration?: string;
 };
 
-
 type Brands = {
   brand_id: number;
   name: string;
@@ -135,7 +134,9 @@ const GameAddPage: React.FC = () => {
 
   console.log("Filter:", descriptions);
 
-  const descriptionform = Array.isArray(descriptions.data) ? descriptions.data : [];
+  const descriptionform = Array.isArray(descriptions.data)
+    ? descriptions.data
+    : [];
 
   // Kiểm tra dữ liệu nhận được
   const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
@@ -152,7 +153,6 @@ const GameAddPage: React.FC = () => {
     console.log("Sending data:", gameData);
     mutate(gameData);
   };
-
 
   const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
     errorInfo
@@ -187,7 +187,6 @@ const GameAddPage: React.FC = () => {
         >
           <Input />
         </Form.Item>
-
         <Form.Item<FieldType>
           label="Tên hãng phát triển"
           name="brand_id"
@@ -207,7 +206,6 @@ const GameAddPage: React.FC = () => {
             </Select>
           )}
         </Form.Item>
-
         <Form.Item<FieldType>
           label="Tên thể loại"
           name="category_id"
@@ -228,7 +226,6 @@ const GameAddPage: React.FC = () => {
             </Select>
           )}
         </Form.Item>
-
         <Form.Item<FieldType>
           label="Tên nền tảng"
           name="platform_id"
@@ -249,7 +246,6 @@ const GameAddPage: React.FC = () => {
             </Select>
           )}
         </Form.Item>
-
         <Form.Item<FieldType>
           label="Tên danh mục"
           name="filter_id"
@@ -260,17 +256,13 @@ const GameAddPage: React.FC = () => {
           ) : (
             <Select mode="multiple" placeholder="Chọn tên danh mục">
               {filterform.map((filter: any) => (
-                <Select.Option
-                  key={filter.filter_id}
-                  value={filter.filter_id}
-                >
+                <Select.Option key={filter.filter_id} value={filter.filter_id}>
                   {filter.name}
                 </Select.Option>
               ))}
             </Select>
           )}
         </Form.Item>
-
         <Form.Item<FieldType>
           label="Tên mô tả"
           name="description_id"
@@ -291,7 +283,6 @@ const GameAddPage: React.FC = () => {
             </Select>
           )}
         </Form.Item>
-
         <Form.Item<FieldType>
           label="Giá game"
           name="price"
@@ -306,7 +297,6 @@ const GameAddPage: React.FC = () => {
         >
           <InputNumber />
         </Form.Item>
-
         <Form.Item<FieldType>
           label="Giảm giá"
           name="discount"
@@ -321,7 +311,6 @@ const GameAddPage: React.FC = () => {
         >
           <InputNumber addonAfter="%" />
         </Form.Item>
-
         <Form.Item
           label="Tải ảnh lên"
           name="image"
@@ -335,16 +324,12 @@ const GameAddPage: React.FC = () => {
             </button>
           </Upload>
         </Form.Item>
-
-
         <Form.Item<FieldType> label="Mô tả game" name="description_id">
           <TextArea rows={5} />
         </Form.Item>
-
         <Form.Item<FieldType> label="Cấu hình" name="configuration">
           <TextArea rows={5} />
         </Form.Item>
-
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
           <Button type="primary" htmlType="submit">
             Thêm game

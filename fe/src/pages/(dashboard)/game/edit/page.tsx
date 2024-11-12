@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -34,6 +33,7 @@ type FieldType = {
   final_price?: number;
   rating?: number;
   image?: string;
+
   configuration?: string;
   description_id?: number;
 };
@@ -105,7 +105,6 @@ const GameEditPage: React.FC = () => {
   };
 
   const onFinish = (values: FieldType) => {
-
     const price = values.price || 0;
     const discount = values.discount || 0;
     const final_price = price - (price * discount) / 100;
@@ -118,8 +117,7 @@ const GameEditPage: React.FC = () => {
 
     window.localStorage.roload();
 
-  
-
+    window.localStorage.roload();
   };
 
   // Fetch lists for brands, categories, platforms, and filters
@@ -154,14 +152,16 @@ const GameEditPage: React.FC = () => {
   });
 
   const filtersList = Array.isArray(filters.data) ? filters.data : [];
-  
+
   const { data: descriptions = { data: [] } } = useQuery({
     queryKey: ["descriptions"],
     queryFn: () =>
       axios.get("http://localhost:8080/descriptions").then((res) => res.data),
   });
 
-  const descriptionList = Array.isArray(descriptions.data) ? descriptions.data : [];
+  const descriptionList = Array.isArray(descriptions.data)
+    ? descriptions.data
+    : [];
 
   // Hàm tính toán final_price
   const calculateFinalPrice = (price: number, discount: number) => {
@@ -169,16 +169,18 @@ const GameEditPage: React.FC = () => {
   };
 
   // Cập nhật final_price khi giá trị price hoặc discount thay đổi
-  const handlePriceChange = (value: number) => {
-    const newFinalPrice = calculateFinalPrice(value, discount);
+  const handlePriceChange = (value: number | null) => {
+    const validValue = value !== null ? value : 0;
+    const newFinalPrice = calculateFinalPrice(validValue, discount);
     setFinalPrice(newFinalPrice);
-    setPrice(value);
+    setPrice(validValue);
   };
 
-  const handleDiscountChange = (value: number) => {
-    const newFinalPrice = calculateFinalPrice(price, value);
+  const handleDiscountChange = (value: number | null) => {
+    const validValue = value !== null ? value : 0;
+    const newFinalPrice = calculateFinalPrice(price, validValue);
     setFinalPrice(newFinalPrice);
-    setDiscount(value);
+    setDiscount(validValue);
   };
 
   useEffect(() => {
@@ -225,7 +227,6 @@ const GameEditPage: React.FC = () => {
           configuration: data?.data?.configuration || "",
 
           description_id: data?.data?.description_id || [],
-
         }}
         onFinish={onFinish}
         autoComplete="off"
@@ -295,10 +296,7 @@ const GameEditPage: React.FC = () => {
         >
           <Select mode="multiple" placeholder="Chọn tên danh mục">
             {filtersList.map((filter: any) => (
-              <Select.Option
-                key={filter.filter_id}
-                value={filter.filter_id}
-              >
+              <Select.Option key={filter.filter_id} value={filter.filter_id}>
                 {filter.name}
               </Select.Option>
             ))}
@@ -352,7 +350,7 @@ const GameEditPage: React.FC = () => {
         <Form.Item label="Giá sau giảm giá">
           <InputNumber value={finalPrice} disabled style={{ width: "100%" }} />
         </Form.Item>
-        
+
         <Form.Item
           label="Hình ảnh"
           name="image"
@@ -378,7 +376,6 @@ const GameEditPage: React.FC = () => {
           ) : null}
         </Form.Item>
 
-
         <Form.Item label="Mô tả game" name="description_id">
           <TextArea rows={5} />
         </Form.Item>
@@ -386,8 +383,6 @@ const GameEditPage: React.FC = () => {
         <Form.Item label="Cấu hình" name="configuration">
           <TextArea rows={5} />
         </Form.Item>
-
-
 
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
           <Button type="primary" htmlType="submit">
@@ -399,7 +394,4 @@ const GameEditPage: React.FC = () => {
   );
 };
 
-export default GameEditPage
-
-
-
+export default GameEditPage;
