@@ -308,7 +308,7 @@ const GameAddPage: React.FC = () => {
           <TextArea rows={5} />
         </Form.Item>
 
-        <Form.Item<FieldType> label="Cấu hình tối thiểu" name="configuration">
+        <Form.Item<FieldType> label="Cấu hình" name="configuration">
           <TextArea rows={5} />
         </Form.Item>
 

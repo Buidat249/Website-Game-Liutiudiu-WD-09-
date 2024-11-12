@@ -458,8 +458,8 @@ body {
 }
 
 .logo img {
-  width: 40px;
-  height: 40px;
+  width: 60px;
+  height: 60px;
   margin-right: 10px;
 }
 
@@ -572,20 +572,26 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  list-style: none;
 }
 
 .main-nav a {
+  display: grid;
   color: white;
   margin: 0 58px;
   text-decoration: none;
-  font-size: 16px;
-
+  font-size: 12px;
+  font-weight: bold;
 }
 
 .main-nav a:hover {
-  text-decoration: underline;
+  background-color: red;
+  border-radius: 7px;
+  transition: all .5s ease;
+  bottom: 0;
+  left: 0;
 }
-
 .banner {
   display: grid;
   grid-template-columns: 76.5% 23.5%;

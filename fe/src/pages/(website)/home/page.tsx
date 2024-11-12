@@ -16,6 +16,7 @@ interface Game {
   image: string;
   title: string;
   description: string;
+  configuration?: string;
 }
 
 const HomePage = () => {
@@ -67,7 +68,7 @@ const HomePage = () => {
           </div>
         </div>
         <section className="games">
-          <h1 style={{ fontSize: "32px", fontWeight: "bold", color: "black" }}>
+          <h1 style={{ fontSize: "27px", fontWeight: "bold", color: "black" }}>
             Game nổi bật
           </h1>
           <div className="game-grid">
@@ -101,8 +102,8 @@ const HomePage = () => {
         </section>
         <hr />
         <section className="games">
-          <h1 style={{ fontSize: "32px", fontWeight: "bold", color: "black" }}>
-            Game nổi bật
+          <h1 style={{ fontSize: "27px", fontWeight: "bold", color: "black" }}>
+            Game bán chạy
           </h1>
           <div className="game-grid">
             {featuredGames.length > 0 ? (
@@ -135,8 +136,8 @@ const HomePage = () => {
         </section>
         <hr />
         <section className="games">
-          <h1 style={{ fontSize: "32px", fontWeight: "bold", color: "black" }}>
-            Game nổi bật
+          <h1 style={{ fontSize: "27px", fontWeight: "bold", color: "black" }}>
+            Game mới
           </h1>
           <div className="game-grid">
             {featuredGames.length > 0 ? (
@@ -169,8 +170,42 @@ const HomePage = () => {
         </section>
         <hr />
         <section className="games">
-          <h1 style={{ fontSize: "32px", fontWeight: "bold", color: "black" }}>
-            Game nổi bật
+          <h1 style={{ fontSize: "27px", fontWeight: "bold", color: "black" }}>
+            Game miễn phí
+          </h1>
+          <div className="game-grid">
+            {featuredGames.length > 0 ? (
+              featuredGames.map((game) => (
+                <div key={game.game_id} className="game">
+                  <Link to={`/productgame/${game.game_id}`}>
+                    <img src={game.image} alt={game.name} />
+                    <p style={{ fontWeight: "bold", fontSize: "17px" }}>
+                      {game.name}
+                    </p>
+                    <div className="flex gap-2 final_price-price-discount-container">
+                      <p className="final_price">
+                        {new Intl.NumberFormat("vi-VN", {}).format(
+                          game.final_price
+                        )}
+                        đ
+                      </p>
+                      <p className="price">
+                        {new Intl.NumberFormat("vi-VN", {}).format(game.price)}đ
+                      </p>
+                      <p className="discount">-{game.discount}%</p>
+                    </div>
+                  </Link>
+                </div>
+              ))
+            ) : (
+              <p>Không có sản phẩm nổi bật nào.</p>
+            )}
+          </div>
+        </section>
+        <hr/>
+        <section className="games">
+          <h1 style={{ fontSize: "27px", fontWeight: "bold", color: "black" }}>
+            Game của năm
           </h1>
           <div className="game-grid">
             {featuredGames.length > 0 ? (

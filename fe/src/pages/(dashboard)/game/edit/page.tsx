@@ -35,6 +35,7 @@ type FieldType = {
   rating?: number;
   image?: string;
   description?: string;
+  configuration?: string;
 };
 
 const GameEditPage: React.FC = () => {
@@ -114,6 +115,7 @@ const GameEditPage: React.FC = () => {
       image: imageUrl || data?.data?.image,
     }; // Nếu không có ảnh mới, giữ ảnh cũ
     mutate(gameData);
+    window.localStorage.roload();
   };
 
   // Fetch lists for brands, categories, platforms, and filters
@@ -207,6 +209,7 @@ const GameEditPage: React.FC = () => {
           discount: data?.data?.discount || 0,
           image: data?.data?.image || "",
           description: data?.data?.description || "",
+          configuration: data?.data?.configuration || "",
         }}
         onFinish={onFinish}
         autoComplete="off"
@@ -298,7 +301,7 @@ const GameEditPage: React.FC = () => {
             name="file"
             action=""
             listType="picture"
-            customRequest={handleImageUpload}
+            beforeUpload={handleImageUpload}
             maxCount={1}
           >
             <Button icon={<PlusOutlined />}>Tải lên ảnh</Button>
@@ -313,6 +316,10 @@ const GameEditPage: React.FC = () => {
         </Form.Item>
 
         <Form.Item label="Mô tả game" name="description">
+          <TextArea rows={5} />
+        </Form.Item>
+
+        <Form.Item label="Cấu hình" name="configuration">
           <TextArea rows={5} />
         </Form.Item>
 

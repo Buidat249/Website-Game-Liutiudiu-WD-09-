@@ -1,6 +1,6 @@
 import React from 'react'
 import '../styles/style.scss'
-import logo from './public/external/logoliu.png';
+import logo from './public/external/Remove-bg.ai_1731345887334.png';
 import searchIcon from './public/external/timkiem.png';
 import userAvatar from './public/external/avatar-khach-hang-2-52544.png';
 import cartIcon from './public/external/cart icon.png';
@@ -42,9 +42,9 @@ const Header = (props: Props) => {
             </div>
             <div className="user-cart">
               <div className="user-info">
-                {user.username ? (
+                {user.username ? (   
                   // Nếu người dùng đã đăng nhập, hiển thị tên người dùng và liên kết đăng xuất
-                  <span>Xin chào, {user.username} </span>
+                  <span>{user.avatar}{user.username}</span>
                 ) : (
                   // Nếu chưa đăng nhập, hiển thị các liên kết đăng ký và đăng nhập
                   <>

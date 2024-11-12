@@ -17,6 +17,7 @@ interface Game {
   rating?: number;
   image?: string;
   description?: string;
+  configuration?: string;
 }
 
 interface Platform {
