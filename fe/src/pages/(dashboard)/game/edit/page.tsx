@@ -34,8 +34,12 @@ type FieldType = {
   final_price?: number;
   rating?: number;
   image?: string;
+<<<<<<< HEAD
   description?: string;
   configuration?: string;
+=======
+  description_id?: number;
+>>>>>>> bf111a6b89e07fbce6f37e8810f223dd274fa1ff
 };
 
 const GameEditPage: React.FC = () => {
@@ -115,7 +119,11 @@ const GameEditPage: React.FC = () => {
       image: imageUrl || data?.data?.image,
     }; // Nếu không có ảnh mới, giữ ảnh cũ
     mutate(gameData);
+<<<<<<< HEAD
     window.localStorage.roload();
+=======
+  
+>>>>>>> bf111a6b89e07fbce6f37e8810f223dd274fa1ff
   };
 
   // Fetch lists for brands, categories, platforms, and filters
@@ -150,6 +158,14 @@ const GameEditPage: React.FC = () => {
   });
 
   const filtersList = Array.isArray(filters.data) ? filters.data : [];
+  
+  const { data: descriptions = { data: [] } } = useQuery({
+    queryKey: ["descriptions"],
+    queryFn: () =>
+      axios.get("http://localhost:8080/descriptions").then((res) => res.data),
+  });
+
+  const descriptionList = Array.isArray(descriptions.data) ? descriptions.data : [];
 
   // Hàm tính toán final_price
   const calculateFinalPrice = (price: number, discount: number) => {
@@ -208,8 +224,12 @@ const GameEditPage: React.FC = () => {
           price: data?.data?.price || 0,
           discount: data?.data?.discount || 0,
           image: data?.data?.image || "",
+<<<<<<< HEAD
           description: data?.data?.description || "",
           configuration: data?.data?.configuration || "",
+=======
+          description_id: data?.data?.description_id || [],
+>>>>>>> bf111a6b89e07fbce6f37e8810f223dd274fa1ff
         }}
         onFinish={onFinish}
         autoComplete="off"
@@ -256,6 +276,57 @@ const GameEditPage: React.FC = () => {
         </Form.Item>
 
         <Form.Item
+          label="Tên nền tảng"
+          name="platform_id"
+          rules={[{ required: true, message: "Vui lòng chọn tên nền tảng" }]}
+        >
+          <Select mode="multiple" placeholder="Chọn tên nền tảng">
+            {platformsList.map((platform: any) => (
+              <Select.Option
+                key={platform.platform_id}
+                value={platform.platform_id}
+              >
+                {platform.name}
+              </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
+
+        <Form.Item
+          label="Tên danh mục"
+          name="filter_id"
+          rules={[{ required: true, message: "Vui lòng chọn tên danh mục" }]}
+        >
+          <Select mode="multiple" placeholder="Chọn tên danh mục">
+            {filtersList.map((filter: any) => (
+              <Select.Option
+                key={filter.filter_id}
+                value={filter.filter_id}
+              >
+                {filter.name}
+              </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
+
+        <Form.Item
+          label="Tên mô tả"
+          name="description_id"
+          rules={[{ required: true, message: "Vui lòng chọn tên mô tả" }]}
+        >
+          <Select mode="multiple" placeholder="Chọn tên mô tả">
+            {descriptionList.map((description: any) => (
+              <Select.Option
+                key={description.description_id}
+                value={description.description_id}
+              >
+                {description.name}
+              </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
+
+        <Form.Item
           label="Giá game"
           name="price"
           rules={[{ required: true, message: "Không được bỏ trống" }]}
@@ -285,11 +356,7 @@ const GameEditPage: React.FC = () => {
         <Form.Item label="Giá sau giảm giá">
           <InputNumber value={finalPrice} disabled style={{ width: "100%" }} />
         </Form.Item>
-
-        <Form.Item label="Mô tả" name="description">
-          <TextArea rows={4} />
-        </Form.Item>
-
+        
         <Form.Item
           label="Hình ảnh"
           name="image"
@@ -310,11 +377,12 @@ const GameEditPage: React.FC = () => {
             <img
               src={imageUrl || data?.data?.image}
               alt="Uploaded"
-              style={{ width: "20%", marginTop: 10 }}
+              style={{ width: "50%", marginTop: 10 }}
             />
           ) : null}
         </Form.Item>
 
+<<<<<<< HEAD
         <Form.Item label="Mô tả game" name="description">
           <TextArea rows={5} />
         </Form.Item>
@@ -323,6 +391,8 @@ const GameEditPage: React.FC = () => {
           <TextArea rows={5} />
         </Form.Item>
 
+=======
+>>>>>>> bf111a6b89e07fbce6f37e8810f223dd274fa1ff
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
           <Button type="primary" htmlType="submit">
             Cập nhật game

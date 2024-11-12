@@ -8,6 +8,7 @@ import axios from "axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ICategory } from "@/common/types/category";
 import { IPlatform } from "@/common/types/platform";
+import { IDescription } from "@/common/types/description";
 
 const GamePage = () => {
   const [messageApi, contextHolder] = message.useMessage();
@@ -39,6 +40,7 @@ const GamePage = () => {
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [platforms, setPlatforms] = useState<IPlatform[]>([]);
   const [filters, setFilter] = useState<IFilter[]>([]);
+  const [descriptions, setDescription] = useState<IDescription[]>([]);
 
   useEffect(() => {
     fetch("http://localhost:8080/brands/")
@@ -61,7 +63,12 @@ const GamePage = () => {
     fetch("http://localhost:8080/filters/")
       .then((response) => response.json())
       .then((data) => setFilter(data.data))
-      .catch((error) => console.error("Lỗi khi lấy dữ liệu filter:", error));
+      .catch((error) => console.error("Lỗi khi lấy dữ liệu filters:", error));
+
+      fetch("http://localhost:8080/descriptions/")
+      .then((response) => response.json())
+      .then((data) => setDescription(data.data))
+      .catch((error) => console.error("Lỗi khi lấy dữ liệu descriptions:", error));
   }, []);
 
   if (error) return <div>Lỗi: {error.message}</div>;
@@ -145,6 +152,31 @@ const GamePage = () => {
         } else {
           const filter = filters.find((p) => p.filter_id === filter_id);
           return filter ? filter.name : "Danh mục không xác định";
+        }
+      },
+      ellipsis: true,
+    },
+    {
+      key: "description_id",
+      title: "mô tả",
+      dataIndex: "description_id",
+      render: (description_id: any) => {
+        if (isLoading || !descriptions.length) {
+          return "Đang tải danh mục..."; // Nếu dữ liệu chưa có
+        }
+
+        if (Array.isArray(description_id)) {
+          return description_id
+            .map((id) => {
+              const description = descriptions.find((c) => c.description_id === id);
+              return description ? description.name : "mô tả không xác định";
+            })
+            .join(", ");
+        } else {
+          const description = descriptions.find(
+            (c) => c.description_id === description_id
+          );
+          return description ? description.name : "mô tả không xác định";
         }
       },
       ellipsis: true,

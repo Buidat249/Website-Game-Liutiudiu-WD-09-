@@ -16,6 +16,8 @@ import cart_itemRouter from "./routers/cart_item";
 import platformRouter from "./routers/platform";
 import roleRouter from "./routers/role";
 import filter from "./routers/filter";
+import description from "./routers/description";
+import description_detail from "./routers/desciption_detail";
 const app = express();
 // middleware
 app.use(express.json());
@@ -46,6 +48,8 @@ app.use("", cart_itemRouter);
 app.use("", platformRouter);
 app.use("", roleRouter);
 app.use("", filter);
+app.use("", description);
+app.use("", description_detail);
 export const viteNodeApp = app;
 
 app.listen(PORT, () => {
