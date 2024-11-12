@@ -29,16 +29,20 @@ const RegisterPage: React.FC = () => {
   };
 
   const { mutate } = useMutation({
-    mutationFn: (user: any) =>
-      axios.post(`http://localhost:8080/register`, user),
-    onSuccess: () => {
+    mutationFn: (user: any) => axios.post(`http://localhost:8080/register`, user),
+    onSuccess: async (response) => {
       queryClient.invalidateQueries({
         queryKey: ["users"],
       });
       messageApi.success("Đăng ký thành công");
+  
+      // Lấy user_id từ response của API đăng ký
+      const user_id = response.data.user.user_id;
+
+      // Gửi yêu cầu tạo giỏ hàng mới cho user
+      await axios.post(`http://localhost:8080/carts`, { user_id });
       form.resetFields();
-      // Chuyển hướng sang trang đăng nhập sau khi đăng ký thành công
-      navigate("/login"); // Dùng navigate để chuyển hướng đến trang đăng nhập
+      navigate("/login"); // Chuyển hướng sang trang đăng nhập
     },
     onError: (error) => {
       messageApi.open({
@@ -47,6 +51,7 @@ const RegisterPage: React.FC = () => {
       });
     },
   });
+  
 
   const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
     // Kiểm tra và chuyển đổi các giá trị số (phone, user_id, v.v.)

@@ -35,12 +35,22 @@ import Cart from "../models/cart";
  export const addCart = async (req, res) => {
     console.log(req.body);
     try {
-        const cart = await Cart.create(req.body);
+        const lastCart = await Cart.findOne({}, {}, { sort: { cart_id: -1 } });
+        const newCartId = lastCart ? lastCart.cart_id + 1 : 1;
+
+        const cartData = {
+            cart_id: newCartId,
+            ...req.body // Chứa các trường khác từ frontend
+        };
+
+
+        const cart = await Cart.create(cartData);
         return res.status(201).json({
             message: "Create Cart Done",
             data: cart,   
         });
     } catch (error) {
+        console.error("Error creating brand:", error);
         return res.status(500).json({ message: error.message });
     }
 };

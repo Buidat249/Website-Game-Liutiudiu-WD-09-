@@ -18,6 +18,12 @@ const orderSchema = new mongoose.Schema({
         required: true,
         unique: false,
     }],
+    game_id: [{
+        type: mongoose.Schema.Types.Number,
+        ref: "Game", // Tham chiếu đến mô hình Game
+        required: true,
+        unique: false,
+    }],
     total_price: {
         type: Number,
         required: true,

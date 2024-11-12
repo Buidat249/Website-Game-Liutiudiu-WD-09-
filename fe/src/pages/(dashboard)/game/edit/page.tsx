@@ -34,12 +34,8 @@ type FieldType = {
   final_price?: number;
   rating?: number;
   image?: string;
-<<<<<<< HEAD
-  description?: string;
   configuration?: string;
-=======
   description_id?: number;
->>>>>>> bf111a6b89e07fbce6f37e8810f223dd274fa1ff
 };
 
 const GameEditPage: React.FC = () => {
@@ -119,11 +115,11 @@ const GameEditPage: React.FC = () => {
       image: imageUrl || data?.data?.image,
     }; // Nếu không có ảnh mới, giữ ảnh cũ
     mutate(gameData);
-<<<<<<< HEAD
+
     window.localStorage.roload();
-=======
+
   
->>>>>>> bf111a6b89e07fbce6f37e8810f223dd274fa1ff
+
   };
 
   // Fetch lists for brands, categories, platforms, and filters
@@ -224,12 +220,12 @@ const GameEditPage: React.FC = () => {
           price: data?.data?.price || 0,
           discount: data?.data?.discount || 0,
           image: data?.data?.image || "",
-<<<<<<< HEAD
+
           description: data?.data?.description || "",
           configuration: data?.data?.configuration || "",
-=======
+
           description_id: data?.data?.description_id || [],
->>>>>>> bf111a6b89e07fbce6f37e8810f223dd274fa1ff
+
         }}
         onFinish={onFinish}
         autoComplete="off"
@@ -382,8 +378,8 @@ const GameEditPage: React.FC = () => {
           ) : null}
         </Form.Item>
 
-<<<<<<< HEAD
-        <Form.Item label="Mô tả game" name="description">
+
+        <Form.Item label="Mô tả game" name="description_id">
           <TextArea rows={5} />
         </Form.Item>
 
@@ -391,8 +387,8 @@ const GameEditPage: React.FC = () => {
           <TextArea rows={5} />
         </Form.Item>
 
-=======
->>>>>>> bf111a6b89e07fbce6f37e8810f223dd274fa1ff
+
+
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
           <Button type="primary" htmlType="submit">
             Cập nhật game

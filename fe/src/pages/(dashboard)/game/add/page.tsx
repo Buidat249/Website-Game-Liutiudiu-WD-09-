@@ -336,15 +336,12 @@ const GameAddPage: React.FC = () => {
           </Upload>
         </Form.Item>
 
-<<<<<<< HEAD
-        <Form.Item<FieldType> label="Mô tả game" name="description">
+
+        <Form.Item<FieldType> label="Mô tả game" name="description_id">
           <TextArea rows={5} />
         </Form.Item>
 
         <Form.Item<FieldType> label="Cấu hình" name="configuration">
-=======
-        <Form.Item<FieldType> label="Cấu hình tối thiểu" name="configuration">
->>>>>>> bf111a6b89e07fbce6f37e8810f223dd274fa1ff
           <TextArea rows={5} />
         </Form.Item>
 

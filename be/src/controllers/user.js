@@ -61,7 +61,7 @@ export const Register = async (req, res) => {
     const userData = {
       user_id: newUserId,
       role: "member", // Gán quyền mặc định là "member"
-      ...body, // Các trường khác từ frontend
+      ...req.body, // Các trường khác từ frontend
     };
 
     const userModel = new User(userData);

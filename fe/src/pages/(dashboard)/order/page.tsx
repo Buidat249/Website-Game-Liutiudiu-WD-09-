@@ -33,17 +33,29 @@ const OrderPage = () => {
       },
     });
 
-    const [users, setUsers] = useState<IUser[]>([]); // Ensure brands is initialized as an array
+    const [users, setUsers] = useState<IUser[]>([]); 
+    const [payment_methods, setPayment_methods] = useState<IPayment_method[]>([]);
 
   useEffect(() => {
     // Fetch dữ liệu users từ backend
     fetch("http://localhost:8080/users/") // Thay đường dẫn API phù hợp
       .then((response) => response.json())
       .then((data) => {
-        console.log("users fetched:", data.data); // Inspect the response
+        console.log("users fetched:", data.data);
         setUsers(data.data);
       })
       .catch((error) => console.error("Error fetching users:", error));
+  }, []);
+
+  useEffect(() => {
+    // Fetch dữ liệu users từ backend
+    fetch("http://localhost:8080/payment_methods/") // Thay đường dẫn API phù hợp
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("payment_methods fetched:", data.data);
+        setUsers(data.data);
+      })
+      .catch((error) => console.error("Error fetching payment_methods:", error));
   }, []);
   
     if (error) return <div>Error: {error.message}</div>;
@@ -52,7 +64,7 @@ const OrderPage = () => {
       { key: "order_id", title: "Order ID", dataIndex: "order_id" },
       {
         key: "user_id",
-        title: "Phương thức thanh toán",
+        title: "Ngươi dùng",
         dataIndex: "user_id",
         render: (user_id: any) => {
           if (Array.isArray(user_id)) {

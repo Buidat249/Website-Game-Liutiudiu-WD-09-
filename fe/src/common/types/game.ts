@@ -6,6 +6,7 @@ export interface IGame {
     name?: string;
     price?: number;
     discount?: number;
+    final_price?: number;
     rating?: number;
     image?: string;
     description?: string;

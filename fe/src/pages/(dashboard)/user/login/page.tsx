@@ -37,6 +37,7 @@ const LoginPage: React.FC = () => {
       // Lưu tất cả thông tin người dùng vào localStorage
       localStorage.setItem("user", JSON.stringify(data)); // Lưu toàn bộ thông tin người dùng vào localStorage
 
+      console.log(data)
       queryClient.invalidateQueries({
         queryKey: ["users"],
       });

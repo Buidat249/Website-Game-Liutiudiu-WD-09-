@@ -1,28 +1,35 @@
 import mongoose from "mongoose";
 
-const cartSchema = new mongoose.Schema({
+const cartSchema = new mongoose.Schema(
+  {
     cart_id: {
-        type: Number,
-        required: true,
-        unique: false,
+      type: Number,
+      unique: false,
+      default: function () {
+        return Date.now(); // hoặc bất kỳ giá trị nào đảm bảo tính duy nhất
+      },
     },
     user_id: {
+      type: mongoose.Schema.Types.Number,
+      ref: "User", // Tham chiếu đến model User
+      unique: false,
+      default: function () {
+        return Date.now(); // hoặc bất kỳ giá trị nào đảm bảo tính duy nhất
+      },
+    },
+    game_id: [
+      {
         type: mongoose.Schema.Types.Number,
-        required: true,
-        ref: 'User', // Tham chiếu đến model User
+        ref: "Game", // Tham chiếu đến model User
         unique: false,
-    },
-    total_price: {
-        type: Number,
-        required: true,
-        min: 0, // Tổng giá tiền không được âm
-    },
-    status: {
-        type: String,
-        required: true,
-        enum: ["pending", "completed", "canceled"], // Các trạng thái có thể
-        default: "pending",
-    },
-}, { timestamps: true });
+        default: function () {
+            return Date.now(); // hoặc bất kỳ giá trị nào đảm bảo tính duy nhất
+          },
+      },
+    ],
+    quantity: { type: Number },
+  },
+  { timestamps: true }
+);
 
 export default mongoose.model("Cart", cartSchema);

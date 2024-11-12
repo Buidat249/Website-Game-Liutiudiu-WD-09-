@@ -35,7 +35,15 @@ import Order from "../models/order"
  export const addOrder = async (req, res) => {
     console.log(req.body);
     try {
-        const order = await Order.create(req.body);
+        const lastOrder = await Game.findOne({}, {}, { sort: { order_id: -1 } });
+        const newOrderId = lastOrder ? lastOrder.order_id + 1 : 1;
+
+        const orderData = {
+            game_id: newOrderId,
+            ...req.body // Chứa các trường khác từ frontend
+        };
+
+        const order = await Order.create(orderData);
         return res.status(201).json({
             message: "Create Order Done",
             data: order,   

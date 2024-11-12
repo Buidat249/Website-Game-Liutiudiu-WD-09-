@@ -86,6 +86,18 @@ const ProductDetail = () => {
     }
   }, [game_id]);
 
+  async function handleAddToCart(game:any) {
+    try {
+      const response = await axios.post('http://localhost:8080/carts', {
+        game_id: game.game_id, // Truyền các dữ liệu cần thiết của sản phẩm
+        quantity: 1 // hoặc số lượng mà bạn muốn thêm vào giỏ
+      });
+      console.log('Thêm vào giỏ hàng thành công:', response.data);
+    } catch (error) {
+      console.error('Lỗi khi thêm vào giỏ hàng:', error);
+    }
+  }
+
   const getPlatformName = (platform_id: number | number[]) => {
     if (Array.isArray(platform_id)) {
       return platform_id
@@ -308,6 +320,7 @@ const ProductDetail = () => {
                           size="large"
                           type="primary"
                           style={{ marginRight: "5px", width: 219.67 }}
+                          onClick={() => handleAddToCart(game)}
                         >
                           <img
                             loading="lazy"
