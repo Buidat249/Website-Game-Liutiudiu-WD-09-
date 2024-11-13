@@ -22,9 +22,44 @@ interface Game {
   description: string;
 }
 
-const CartBoxLeft = () => {
+const CartBoxLeft = ({ setTotalPrice }: any) => {
   const [carts, setCarts] = useState<Cart[]>([]);
   const [games, setGames] = useState<Game[]>([]);
+  const [cartCount, setCartCount] = useState(0);
+  const [selectedGames, setSelectedGames] = useState<{
+    [gameId: number]: boolean;
+  }>({});
+
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>, gameId: number) => {
+    setSelectedGames((prevSelected) => ({
+      ...prevSelected,
+      [gameId]: event.target.checked,
+    }));
+  };
+
+  const calculateTotal = () => {
+    return carts.reduce((total, cart) => {
+      cart.games.forEach((gameItem) => {
+        if (selectedGames[gameItem.game_id]) {
+          const game = games.find((game) => game.game_id === gameItem.game_id);
+          if (game) {
+            total += game.final_price * gameItem.quantity;
+          }
+        }
+      });
+      return total;
+    }, 0);
+  };
+
+  const updateCartCount = () => {
+    const count = carts.reduce(
+      (total, cart) =>
+        total +
+        (cart.games?.reduce((count, game) => count + game.quantity, 0) || 0),
+      0
+    );
+    setCartCount(count);
+  };
 
   // Lấy dữ liệu giỏ hàng và sản phẩm
   useEffect(() => {
@@ -47,17 +82,30 @@ const CartBoxLeft = () => {
       });
   }, []);
 
+  useEffect(() => {
+    updateCartCount();
+  }, [carts]); // Cập nhật cartCount khi carts thay đổi
+
+  useEffect(() => {
+    setTotalPrice(calculateTotal()); // Cập nhật giá trị tổng mỗi khi giỏ hàng thay đổi
+  }, [selectedGames, carts, games]);
   // Hàm tìm game theo game_id
+  
   const getGameById = (game_id: number) => {
     return games.find((game) => game.game_id === game_id);
   };
 
   // Hàm cập nhật số lượng game trong giỏ hàng
-  const updateQuantity = (cart_id: number, game_id: number, quantity: number) => {
+  const updateQuantity = (
+    cart_id: number,
+    game_id: number,
+    quantity: number
+  ) => {
     axios
-      .put(`http://localhost:8080/carts/${cart_id}/game/${game_id}`, { quantity })
+      .put(`http://localhost:8080/carts/${cart_id}/game/${game_id}`, {
+        quantity,
+      })
       .then((response) => {
-        
         // Cập nhật lại giỏ hàng sau khi thay đổi
         setCarts((prevCarts) =>
           prevCarts.map((cart) =>
@@ -95,23 +143,65 @@ const CartBoxLeft = () => {
             ? game.quantity + 1
             : Math.max(1, game.quantity - 1);
         updateQuantity(cart_id, game_id, newQuantity);
+        updateCartCount(); // Gọi hàm cập nhật số lượng sản phẩm sau khi thay đổi
       }
     }
+  };
+
+  const removeGame = (cart_id: number, game_id: number, user_id: number) => {
+    axios
+      .delete(
+        `http://localhost:8080/carts/${cart_id}/game/${game_id}?user_id=${user_id}`
+      )
+      .then((response) => {
+        setCarts((prevCarts) =>
+          prevCarts.map((cart) =>
+            cart.cart_id === cart_id
+              ? {
+                  ...cart,
+                  games: cart.games.filter(
+                    (gameItem) => gameItem.game_id !== game_id
+                  ),
+                }
+              : cart
+          )
+        );
+        updateCartCount();
+        message.success("Xóa game khỏi giỏ hàng thành công");
+      })
+      .catch((error) => {
+        message.error("Xóa game thất bại");
+        console.error("Error removing game:", error);
+      });
   };
 
   // Render giao diện giỏ hàng
   return (
     <div className="flex-1 bg-white p-6 rounded-lg shadow-md mb-4 lg:mb-0 lg:mr-4">
-      <h2 className="text-xl font-bold mb-4">Giỏ hàng ({carts.length} sản phẩm)</h2>
+      <h2 className="text-xl font-bold mb-4">
+        Giỏ hàng (
+        {carts.reduce((total, cart) => total + (cart.games?.length || 0), 0)}{" "}
+        Game)
+      </h2>
+
       {carts.length === 0 ? (
         <p>Giỏ hàng của bạn đang trống.</p>
       ) : (
         carts.map((cart) => (
           <div key={cart.cart_id} className="mb-4">
             {cart.games.map((gameItem) => {
-              const game = getGameById(gameItem.game_id);
+              const game = games.find((g) => g.game_id === gameItem.game_id);
               return game ? (
-                <div key={gameItem.game_id} className="flex items-center border-b pb-4 mb-4">
+                <div
+                  key={gameItem.game_id}
+                  className="flex items-center border-b pb-4 mb-4"
+                >
+                  <input
+                    type="checkbox"
+                    checked={selectedGames[gameItem.game_id] || false}
+                    onChange={(e) => handleCheckboxChange(e, gameItem.game_id)}
+                    className="custom-checkbox"
+                  />
                   <Image
                     src={game.image}
                     alt={game.name}
@@ -125,7 +215,13 @@ const CartBoxLeft = () => {
                   <div className="flex items-center">
                     <Button
                       className="px-2 py-1 bg-gray-200 rounded"
-                      onClick={() => handleQuantityChange(cart.cart_id, gameItem.game_id, "decrease")}
+                      onClick={() =>
+                        handleQuantityChange(
+                          cart.cart_id,
+                          gameItem.game_id,
+                          "decrease"
+                        )
+                      }
                       disabled={gameItem.quantity <= 1} // Không cho giảm xuống dưới 1
                     >
                       -
@@ -138,18 +234,35 @@ const CartBoxLeft = () => {
                     />
                     <Button
                       className="px-2 py-1 bg-gray-200 rounded"
-                      onClick={() => handleQuantityChange(cart.cart_id, gameItem.game_id, "increase")}
+                      onClick={() =>
+                        handleQuantityChange(
+                          cart.cart_id,
+                          gameItem.game_id,
+                          "increase"
+                        )
+                      }
                     >
                       +
                     </Button>
                   </div>
                   <div className="text-right pl-4">
                     <p className="text-lg font-semibold text-red-500">
-                      {game.final_price.toLocaleString()}đ
+                      {(game.final_price * gameItem.quantity).toLocaleString()}đ
                     </p>
                     <p className="text-sm line-through text-gray-400">
-                      {game.price.toLocaleString()}đ
+                      {(game.price * gameItem.quantity).toLocaleString()}đ
                     </p>
+                  </div>
+                  <div className="flex items-center">
+                    {/* Nút xoá game */}
+                    <Button
+                      className="px-2 py-1 bg-red-500 text-white rounded ml-4"
+                      onClick={() =>
+                        removeGame(cart.cart_id, gameItem.game_id, cart.user_id)
+                      }
+                    >
+                      Xóa
+                    </Button>
                   </div>
                 </div>
               ) : (

@@ -1,19 +1,94 @@
-import React from 'react'
-import '../styles/style.scss'
-import logo from './public/external/Remove-bg.ai_1731345887334.png';
-import searchIcon from './public/external/timkiem.png';
-import userAvatar from './public/external/avatar-khach-hang-2-52544.png';
-import cartIcon from './public/external/cart icon.png';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import "../styles/style.scss";
+import logo from "./public/external/Remove-bg.ai_1731345887334.png";
+import searchIcon from "./public/external/timkiem.png";
+import userAvatar from "./public/external/avatar-khach-hang-2-52544.png";
+import cartIcon from "./public/external/cart icon.png";
+import { Link } from "react-router-dom";
+import axios from "axios";
 
-type Props = {}
+type Props = {};
+
+interface Cart {
+  cart_id: number;
+  user_id: number;
+  games: { game_id: number; quantity: number }[]; // Mảng game trong giỏ hàng
+}
+
+interface Game {
+  game_id: number;
+  brand_id: number;
+  category_id: number;
+  platform_id: number;
+  name: string;
+  price: number;
+  discount: number;
+  final_price: number;
+  image: string;
+  title: string;
+  description: string;
+}
 
 const Header = (props: Props) => {
+  const [carts, setCarts] = useState<Cart[]>([]);
+  const [games, setGames] = useState<Game[]>([]);
+  const [gameCount, setGameCount] = useState(0);
+
+  const updateGameCount = () => {
+    const count = carts.reduce((total, cart) => total + (cart.games?.length || 0), 0);
+    setGameCount(count);
+  };
+
+  const addGameToCart = (gameId:any) => {
+    // Tìm giỏ hàng của người dùng
+    const updatedCarts = [...carts];
+    const cartIndex = updatedCarts.findIndex(cart => cart.user_id === user.user_id);
+  
+    // Nếu tìm thấy giỏ hàng của người dùng, thêm game vào giỏ
+    if (cartIndex !== -1) {
+      const gameIndex = updatedCarts[cartIndex].games.findIndex(game => game.game_id === gameId);
+      if (gameIndex !== -1) {
+        // Nếu game đã có trong giỏ, tăng số lượng lên 1
+        updatedCarts[cartIndex].games[gameIndex].quantity += 1;
+      } else {
+        // Nếu game chưa có trong giỏ, thêm mới
+        updatedCarts[cartIndex].games.push({ game_id: gameId, quantity: 1 });
+      }
+    }
+  
+    // Cập nhật lại carts
+    setCarts(updatedCarts);
+  };
+  
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/carts")
+      .then((response) => {
+        setCarts(response.data.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching carts:", error);
+      });
+
+    axios
+      .get("http://localhost:8080/games")
+      .then((response) => {
+        setGames(response.data.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching games:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    updateGameCount();  // Tính lại số lượng game trong giỏ hàng
+  }, [carts]); // Mỗi khi `carts` thay đổi, hàm này sẽ được gọi
+  
 
   // Lấy thông tin người dùng từ localStorage
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
 
-  
   return (
     <div>
       <header>
@@ -42,17 +117,20 @@ const Header = (props: Props) => {
             </div>
             <div className="user-cart">
               <div className="user-info">
-                {user.username ? (   
+                {user.username ? (
                   // Nếu người dùng đã đăng nhập, hiển thị tên người dùng và liên kết đăng xuất
-                  <span>{user.avatar}{user.username}</span>
+                  <span>
+                    {user.avatar}
+                    {user.username}
+                  </span>
                 ) : (
                   // Nếu chưa đăng nhập, hiển thị các liên kết đăng ký và đăng nhập
                   <>
-                    <Link to="/register" style={{ marginRight: '15px' }}>
+                    <Link to="/register" style={{ marginRight: "15px" }}>
                       <span>Đăng kí</span>
                     </Link>
                     /
-                    <Link to="/login" style={{ marginLeft: '15px' }}>
+                    <Link to="/login" style={{ marginLeft: "15px" }}>
                       <span>Đăng nhập</span>
                     </Link>
                   </>
@@ -61,8 +139,10 @@ const Header = (props: Props) => {
               <div className="cart">
                 <Link to="/cart">
                   <img src={cartIcon} alt="Cart Icon" />
-                  <span>Giỏ hàng</span>
-                  <span className="cart-count">0</span>
+                  <span>
+                    Giỏ hàng({gameCount})
+                  </span>
+                  <span className="cart-count"></span>
                 </Link>
               </div>
             </div>
@@ -81,6 +161,6 @@ const Header = (props: Props) => {
       </header>
     </div>
   );
-}
+};
 
-export default Header
+export default Header;

@@ -1,10 +1,32 @@
-import PaymentMomo from "@/pages/(website)/pays/_components/paymm";
-import VnpayPayment from "@/pages/(website)/pays/_components/payvnpay";
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const CheckoutBoxRight = () => {
+interface Cart {
+  cart_id: number;
+  user_id: number;
+  games: { game_id: number; quantity: number }[]; // Mảng game trong giỏ hàng
+}
+
+interface Game {
+  game_id: number;
+  brand_id: number;
+  category_id: number;
+  platform_id: number;
+  name: string;
+  price: number;
+  discount: number;
+  final_price: number;
+  image: string;
+  title: string;
+  description: string;
+}
+
+const CheckoutBoxRight = ({ totalPrice }: any) => {  // Thêm prop totalPrice để nhận tổng giá trị
   const navigate = useNavigate();
+  const [carts, setCarts] = useState<Cart[]>([]);
+  const [games, setGames] = useState<Game[]>([]);
+  const [cartCount, setCartCount] = useState(0);
 
   // Hàm chuyển hướng đến các trang thanh toán
   const handlePayment = (method: any) => {
@@ -18,25 +40,56 @@ const CheckoutBoxRight = () => {
     }
   };
 
+  const updateCartCount = () => {
+    const count = carts.reduce(
+      (total, cart) =>
+        total +
+        (cart.games?.reduce((count, game) => count + game.quantity, 0) || 0),
+      0
+    );
+    setCartCount(count);
+  };
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:8080/carts")
+      .then((response) => {
+        setCarts(response.data.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching carts:", error);
+      });
+
+    axios
+      .get("http://localhost:8080/games")
+      .then((response) => {
+        setGames(response.data.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching games:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    updateCartCount();
+  }, [carts]); // Cập nhật cartCount khi carts thay đổi
+
   return (
     <div className="w-full lg:w-1/3 bg-white p-6 rounded-lg shadow-md">
       <h3 className="text-xl font-semibold mb-4">Thanh toán</h3>
       <div className="space-y-2">
+      <div className="flex justify-between">
+          <span>Tổng sản phẩm</span>
+          (
+        {carts.reduce((total, cart) => total + (cart.games?.length || 0), 0)}{" "})
+        </div>
         <div className="flex justify-between">
           <span>Tổng giá trị sản phẩm</span>
-          <span>39.000đ</span>
+          <span>{totalPrice.toLocaleString()}đ</span>  {/* Hiển thị tổng giá trị */}
         </div>
         <div className="flex justify-between">
           <span>Tổng giá trị phải thanh toán</span>
-          <span>39.000đ</span>
-        </div>
-        <div className="flex justify-between">
-          <span>Số dư hiện tại</span>
-          <span>0đ</span>
-        </div>
-        <div className="flex justify-between font-bold">
-          <span>Số tiền cần nạp thêm</span>
-          <span>39.000đ</span>
+          <span>{totalPrice.toLocaleString()}đ</span>  {/* Cập nhật tổng thanh toán */}
         </div>
       </div>
       <div className="mt-6 space-y-3">
