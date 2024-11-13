@@ -177,3 +177,38 @@ export const removeCart = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
+// DELETE /carts/:cart_id/game/:game_id
+export const removeGameFromCart = async (req, res) => {
+  try {
+    const { cart_id, game_id } = req.params;
+    const user_id = req.query.user_id; // Lấy `user_id` từ query params
+
+    console.log("cart_id:", cart_id, "game_id:", game_id, "user_id:", user_id);
+
+    // Tìm giỏ hàng có `cart_id` và `user_id`
+    const cart = await Cart.findOne({ cart_id, user_id });
+    if (!cart) {
+      return res.status(404).json({
+        message: "Giỏ hàng không tìm thấy hoặc không phải của người dùng này",
+      });
+    }
+
+    // Lọc ra các game không có `game_id` cần xóa
+    cart.games = cart.games.filter(
+      (gameItem) => gameItem.game_id !== parseInt(game_id)
+    );
+
+    // Lưu giỏ hàng sau khi đã xoá game
+    await cart.save();
+
+    return res.status(200).json({
+      message: "Game removed from cart successfully",
+      data: cart,
+    });
+  } catch (error) {
+    console.error("Error in removeGameFromCart:", error); // Kiểm tra lỗi cụ thể
+    return res.status(500).json({ message: error.message });
+  }
+};
+
