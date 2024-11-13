@@ -1,6 +1,7 @@
 import { Image, Skeleton, Button, message } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface Cart {
   cart_id: number;
@@ -25,18 +26,41 @@ interface Game {
 const CartBoxLeft = () => {
   const [carts, setCarts] = useState<Cart[]>([]);
   const [games, setGames] = useState<Game[]>([]);
+  const [loading, setLoading] = useState(true);
+  console.log(carts);
+  const navigate = useNavigate();
 
-  // Lấy dữ liệu giỏ hàng và sản phẩm
-  useEffect(() => {
-    axios
-      .get("http://localhost:8080/carts")
-      .then((response) => {
-        setCarts(response.data.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching carts:", error);
-      });
+  // Kiểm tra user khi đăng nhập
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
 
+  // Hàm lấy giỏ hàng từ API
+  const fetchCartData = () => {
+    if (user?.user_id) {
+      setLoading(true);
+      axios
+        .get(`http://localhost:8080/carts/${user.user_id}`)
+        .then((response) => {
+          console.log(response.data); // Kiểm tra dữ liệu trả về
+          if (response.data && response.data.data) {
+            setCarts([response.data.data]);  // Chuyển thành mảng nếu cần
+          } else {
+            setCarts([]);
+          }
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching carts:", error);
+          setLoading(false);
+        });
+    } else {
+      setCarts([]);
+      setLoading(false);
+    }
+  };
+  
+
+  // Hàm lấy sản phẩm
+  const fetchGameData = () => {
     axios
       .get("http://localhost:8080/games")
       .then((response) => {
@@ -45,7 +69,15 @@ const CartBoxLeft = () => {
       .catch((error) => {
         console.error("Error fetching games:", error);
       });
-  }, []);
+  };
+
+  // Gọi dữ liệu khi component load và khi user thay đổi
+  useEffect(() => {
+    if (user?.user_id) {
+      fetchCartData();
+      fetchGameData();
+    }
+  }, [user?.user_id]);
 
   // Hàm tìm game theo game_id
   const getGameById = (game_id: number) => {
@@ -56,23 +88,8 @@ const CartBoxLeft = () => {
   const updateQuantity = (cart_id: number, game_id: number, quantity: number) => {
     axios
       .put(`http://localhost:8080/carts/${cart_id}/game/${game_id}`, { quantity })
-      .then((response) => {
-        
-        // Cập nhật lại giỏ hàng sau khi thay đổi
-        setCarts((prevCarts) =>
-          prevCarts.map((cart) =>
-            cart.cart_id === cart_id
-              ? {
-                  ...cart,
-                  games: cart.games.map((gameItem) =>
-                    gameItem.game_id === game_id
-                      ? { ...gameItem, quantity }
-                      : gameItem
-                  ),
-                }
-              : cart
-          )
-        );
+      .then(() => {
+        fetchCartData(); // Tải lại giỏ hàng sau khi cập nhật
       })
       .catch((error) => {
         message.error("Cập nhật số lượng thất bại");
@@ -103,10 +120,12 @@ const CartBoxLeft = () => {
   return (
     <div className="flex-1 bg-white p-6 rounded-lg shadow-md mb-4 lg:mb-0 lg:mr-4">
       <h2 className="text-xl font-bold mb-4">Giỏ hàng ({carts.length} sản phẩm)</h2>
-      {carts.length === 0 ? (
+      {loading ? (
+        <Skeleton active />
+      ) : carts.length === 0 ? (
         <p>Giỏ hàng của bạn đang trống.</p>
       ) : (
-        carts.map((cart) => (
+        Array.isArray(carts) && carts.map((cart) => (
           <div key={cart.cart_id} className="mb-4">
             {cart.games.map((gameItem) => {
               const game = getGameById(gameItem.game_id);

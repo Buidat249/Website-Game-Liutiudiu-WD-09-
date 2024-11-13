@@ -13,13 +13,16 @@ export const getAllCarts = async (req, res) => {
   }
 };
 
-// GET /carts/:id
+// GET /carts/:user_id
 export const getCartDetail = async (req, res) => {
+
   try {
-    const cart = await Cart.findOne({ cart_id: req.params.id });
+    // Sử dụng user_id thay vì cart_id
+    const cart = await Cart.findOne({ user_id: req.params.id });
+    
     if (!cart) {
       return res.status(404).json({
-        message: "Cart Not Found",
+        message: "Giỏ hàng không tìm thấy",
       });
     }
     return res.status(200).json({
@@ -31,6 +34,8 @@ export const getCartDetail = async (req, res) => {
   }
 };
 
+
+// POST /carts
 // POST /carts
 export const addCart = async (req, res) => {
   const { gameId, userId } = req.body;
@@ -76,9 +81,11 @@ export const addCart = async (req, res) => {
   }
 };
 
+
 // PUT /carts/:id
+// PUT /carts/:user_id
 export const updateCart = async (req, res) => {
-  const { cart_id } = req.params;
+  const { user_id } = req.params;
   const { games } = req.body; // Mảng các game mới cần cập nhật vào giỏ hàng
 
   if (!games || !Array.isArray(games)) {
@@ -88,8 +95,8 @@ export const updateCart = async (req, res) => {
   }
 
   try {
-    // Tìm giỏ hàng theo cart_id
-    const cart = await Cart.findOne({ cart_id: cart_id });
+    // Tìm giỏ hàng theo user_id thay vì cart_id
+    const cart = await Cart.findOne({ user_id: user_id });
     if (!cart) {
       return res.status(404).json({
         message: "Giỏ hàng không tìm thấy",
@@ -110,6 +117,7 @@ export const updateCart = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
 
 // PUT /carts/:cart_id/game/:game_id
 export const updateGameQuantityInCart = async (req, res) => {
