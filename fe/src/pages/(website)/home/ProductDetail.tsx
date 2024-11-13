@@ -1,9 +1,12 @@
 import { Button, Image } from "antd";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import FAQ from "./_components/FAQ";
+import { message } from 'antd';
 import { AlignCenter } from "lucide-react";
+import { useNavigate } from 'react-router-dom';
+
 
 interface Game {
   game_id?: number;
@@ -31,6 +34,8 @@ const ProductDetail = () => {
   const [categoryName, setCategoryName] = useState<string | null>(null);
   const [relatedGames, setRelatedGames] = useState<Game[]>([]);
   const [platforms, setPlatforms] = useState<Platform[]>([]);
+  const [messageApi, contextHolder] = message.useMessage();
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -86,34 +91,73 @@ const ProductDetail = () => {
     }
   }, [game_id]);
 
-  async function handleAddToCart(game:any) {
-    try {
-      const response = await axios.post('http://localhost:8080/carts', {
-        game_id: game.game_id, // Truyền các dữ liệu cần thiết của sản phẩm
-        quantity: 1 // hoặc số lượng mà bạn muốn thêm vào giỏ
-      });
-      console.log('Thêm vào giỏ hàng thành công:', response.data);
-    } catch (error) {
-      console.error('Lỗi khi thêm vào giỏ hàng:', error);
-    }
-  }
+  const addToCart = async (gameId: number) => {
+    const userId = Number(localStorage.getItem("user_id"));
+    console.log("User ID từ localStorage:", userId);
 
-  const getPlatformName = (platform_id: number | number[]) => {
-    if (Array.isArray(platform_id)) {
-      return platform_id
-        .map((id) => {
-          const platform = platforms.find((p) => p.platform_id === id);
-          return platform ? platform.name : "Nền tảng không xác định";
-        })
-        .join(", ");
-    } else {
-      const platform = platforms.find((p) => p.platform_id === platform_id);
-      return platform ? platform.name : "Nền tảng không xác định";
+    if (!userId) {
+      messageApi.error("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng!");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/carts",
+        { gameId, userId },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      console.log("Phản hồi từ API:", response.data);
+      messageApi.success(response.data.message);
+    } catch (error: any) {
+      messageApi.error(
+        error.response?.data?.message || "Có lỗi xảy ra khi thêm vào giỏ hàng!"
+      );
+      console.error("Lỗi:", error);
     }
   };
 
+  const BuyToCart = async (gameId: number) => {
+    const userId = Number(localStorage.getItem("user_id"));
+    console.log("User ID từ localStorage:", userId);
+
+    if (!userId) {
+      messageApi.error("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng!");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/carts",
+        { gameId, userId },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      console.log("Phản hồi từ API:", response.data);
+      messageApi.success(response.data.message);
+      navigate('/cart');
+    } catch (error: any) {
+      messageApi.error(
+        error.response?.data?.message || "Có lỗi xảy ra khi thêm vào giỏ hàng!"
+      );
+      console.error("Lỗi:", error);
+    }
+  };
+
+
+
+
   return (
     <div>
+      {contextHolder}
       {game ? (
         <div className="flex flex-col justify-center items-center px-16 py-5 bg-white max-md:px-5">
           <div className="max-w-full w-[1495px]">
@@ -257,11 +301,11 @@ const ProductDetail = () => {
                               color: "black",
                             }}
                           >
-                            {new Intl.NumberFormat("vi-VN", {}).format(
-                              
-                              game.final_price
-                            )}
-                            đ
+                            <p className="final_price">
+                              {new Intl.NumberFormat("vi-VN").format(game.final_price ?? 0)}
+                            </p>
+
+
                           </h4>
                           <button className="flex flex-col justify-center py-1">
                             <img
@@ -292,7 +336,9 @@ const ProductDetail = () => {
                               color: "rgb(161, 159, 159)",
                             }}
                           >
-                            {new Intl.NumberFormat("vi-VN").format(game.price)}đ
+                            {game.price !== undefined
+                              ? new Intl.NumberFormat("vi-VN").format(game.price) + "đ"
+                              : "Giá không có sẵn"}
                           </h6>
 
                           {/* Phần trăm giảm giá */}
@@ -321,7 +367,7 @@ const ProductDetail = () => {
                           size="large"
                           type="primary"
                           style={{ marginRight: "5px", width: 219.67 }}
-                          onClick={() => handleAddToCart(game)}
+                          onClick={() => BuyToCart(game.game_id as any)}
                         >
                           <img
                             loading="lazy"
@@ -331,7 +377,10 @@ const ProductDetail = () => {
                           />
                           <span className="self-stretch my-auto">Mua ngay</span>
                         </Button>
-                        <Button size="large" style={{ width: 219.67 }}>
+                        <Button size="large"
+                          style={{ width: 219.67 }}
+                          onClick={() => addToCart(game.game_id as any)}
+                        >
                           <img
                             loading="lazy"
                             src="https://cdn.builder.io/api/v1/image/assets/TEMP/8aeae39e84b7d89e22be272674e27eeba5e611f315bdcf2da24e8140860bc80f?placeholderIfAbsent=true&apiKey=b147c62d1b404bf790d7133a5bf6ed3c"
@@ -372,15 +421,13 @@ const ProductDetail = () => {
                           </p>
                           <div className="flex gap-2 final_price-price-discount-container">
                             <p className="final_price">
-                              {new Intl.NumberFormat("vi-VN", {}).format(
-                                game.final_price
-                              )}
-                              
+                              {new Intl.NumberFormat("vi-VN").format(game.final_price ?? 0)}
                             </p>
+
                             <p className="price">
-                              {new Intl.NumberFormat("vi-VN", {}).format(
-                                game.price
-                              )}
+                              {game.price !== undefined
+                                ? new Intl.NumberFormat("vi-VN").format(game.price) + "đ"
+                                : "Giá không có sẵn"}
                               đ
                             </p>
                             <p className="discount">-{game.discount}%</p>

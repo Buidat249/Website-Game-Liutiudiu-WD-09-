@@ -1,96 +1,171 @@
 import Cart from "../models/cart";
 
- // GET / carts
- export const getAllCarts = async (req, res) => {
-    try {
-        const carts = await Cart.find();
-        return res.status(200).json({
-            message: "Get All Carts Done",
-            data: carts,
-        });
-    } catch (error) {
-        return res.status(500).json({ message: error.message });
-    }
+// GET /carts
+export const getAllCarts = async (req, res) => {
+  try {
+    const carts = await Cart.find();
+    return res.status(200).json({
+      message: "Get All Carts Done",
+      data: carts,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
 };
 
- // GET /carts/ : id
- export const getCartDetail = async (req, res) => {
-    try {
-        const cart = await Cart.findOne({cart_id:req.params.id});
-        if (!cart) {
-            return res.status(404).json({
-                message: "Cart Not Found",
-            });
-        }
-        return res.status(200).json({
-            message: "Get Cart Detail Done",
-            data: cart,
-        });
-    } catch (error) {
-        return res.status(500).json({ message: error.message });
+// GET /carts/:id
+export const getCartDetail = async (req, res) => {
+  try {
+    const cart = await Cart.findOne({ cart_id: req.params.id });
+    if (!cart) {
+      return res.status(404).json({
+        message: "Cart Not Found",
+      });
     }
+    return res.status(200).json({
+      message: "Get Cart Detail Done",
+      data: cart,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
 };
 
- // POST /carts
- export const addCart = async (req, res) => {
-    console.log(req.body);
-    try {
-        const lastCart = await Cart.findOne({}, {}, { sort: { cart_id: -1 } });
-        const newCartId = lastCart ? lastCart.cart_id + 1 : 1;
+// POST /carts
+export const addCart = async (req, res) => {
+  const { gameId, userId } = req.body;
 
-        const cartData = {
-            cart_id: newCartId,
-            ...req.body // Chứa các trường khác từ frontend
-        };
+  if (!userId || !gameId) {
+    return res
+      .status(400)
+      .json({ message: "Thiếu userId hoặc gameId trong yêu cầu." });
+  }
 
+  try {
+    let cart = await Cart.findOne({ user_id: userId });
 
-        const cart = await Cart.create(cartData);
-        return res.status(201).json({
-            message: "Create Cart Done",
-            data: cart,   
-        });
-    } catch (error) {
-        console.error("Error creating brand:", error);
-        return res.status(500).json({ message: error.message });
+    if (!cart) {
+      // Nếu không có giỏ hàng, tạo mới
+      cart = new Cart({
+        user_id: userId,
+        games: [{ game_id: gameId, quantity: 1 }],
+      });
+    } else {
+      // Kiểm tra xem game có trong giỏ hàng chưa
+      const gameInCart = cart.games.find((game) => game.game_id === gameId);
+
+      if (gameInCart) {
+        // Nếu có rồi thì tăng số lượng
+        gameInCart.quantity += 1;
+      } else {
+        // Nếu chưa có thì thêm mới vào mảng games
+        cart.games.push({ game_id: gameId, quantity: 1 });
+      }
     }
+
+    // Lưu lại giỏ hàng
+    await cart.save();
+    res
+      .status(200)
+      .json({ message: "Sản phẩm đã được thêm vào giỏ hàng!", data: cart });
+  } catch (error) {
+    console.error("Lỗi khi thêm sản phẩm vào giỏ hàng:", error);
+    res
+      .status(500)
+      .json({ message: "Lỗi khi thêm sản phẩm vào giỏ hàng", error });
+  }
 };
 
- // PUT / carts / :id
+// PUT /carts/:id
+export const updateCart = async (req, res) => {
+  const { cart_id } = req.params;
+  const { games } = req.body; // Mảng các game mới cần cập nhật vào giỏ hàng
 
- export const updateCart = async (req, res) => {
-    try {
-        const cart = await Cart.findOneAndUpdate({cart_id:req.params.id}, req.body, {
-            new: true,
-        });
-        if (!cart) {
-            return res.status(404).json({
-                message: "Cart Not Found",
-            });
-        }
-        return res.status(200).json({
-            message: "Update Cart Done",
-            data: cart,
-        });
-    } catch (error) {
-        return res.status(500).json({ message: error.message });
+  if (!games || !Array.isArray(games)) {
+    return res.status(400).json({
+      message: "Thiếu games trong yêu cầu hoặc games không phải là mảng",
+    });
+  }
+
+  try {
+    // Tìm giỏ hàng theo cart_id
+    const cart = await Cart.findOne({ cart_id: cart_id });
+    if (!cart) {
+      return res.status(404).json({
+        message: "Giỏ hàng không tìm thấy",
+      });
     }
+
+    // Cập nhật giỏ hàng với các game mới
+    cart.games = games;
+
+    // Lưu lại giỏ hàng
+    await cart.save();
+
+    return res.status(200).json({
+      message: "Cập nhật giỏ hàng thành công",
+      data: cart,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
 };
 
- // DELETE / carts / :id
+// PUT /carts/:cart_id/game/:game_id
+export const updateGameQuantityInCart = async (req, res) => {
+  const { cart_id, game_id } = req.params;
+  const { quantity } = req.body; // Số lượng mới cần cập nhật
 
- export const removeCart = async (req, res) => {
-    try {
-        const cart = await Cart.findOneAndDelete({cart_id:req.params.id});
-        if (!cart) {
-            return res.status(404).json({
-                message: "Cart Not Found",
-            });
-        }
-        return res.status(200).json({
-            message: "Delete Cart Done",
-            data: cart,
-        });
-    } catch (error) {
-        return res.status(500).json({ message: error.message });
+  if (!quantity) {
+    return res.status(400).json({ message: "Thiếu quantity trong yêu cầu" });
+  }
+
+  try {
+    // Tìm giỏ hàng theo cart_id
+    const cart = await Cart.findOne({ cart_id: cart_id });
+    if (!cart) {
+      return res.status(404).json({
+        message: "Giỏ hàng không tìm thấy",
+      });
     }
+
+    // Tìm game trong giỏ hàng
+    const game = cart.games.find((game) => game.game_id === parseInt(game_id)); // Đảm bảo game_id là số
+    if (!game) {
+      return res.status(404).json({
+        message: "Sản phẩm không có trong giỏ hàng",
+      });
+    }
+
+    // Cập nhật số lượng game trong giỏ hàng
+    game.quantity = quantity;
+
+    // Lưu lại giỏ hàng
+    await cart.save();
+
+    return res.status(200).json({
+      message: "Cập nhật số lượng sản phẩm thành công",
+      data: cart,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+// DELETE /carts/:id
+export const removeCart = async (req, res) => {
+  try {
+    const cart = await Cart.findOneAndDelete({ cart_id: req.params.id }); // Xóa giỏ hàng
+    if (!cart) {
+      return res.status(404).json({
+        message: "Cart Not Found",
+      });
+    }
+    return res.status(200).json({
+      message: "Delete Cart Done",
+      data: cart,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
 };

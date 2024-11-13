@@ -38,9 +38,8 @@ const RegisterPage: React.FC = () => {
   
       // Lấy user_id từ response của API đăng ký
       const user_id = response.data.user.user_id;
-
-      // Gửi yêu cầu tạo giỏ hàng mới cho user
-      await axios.post(`http://localhost:8080/carts`, { user_id });
+  
+      // Giờ chúng ta không cần tạo giỏ hàng ở đây nữa
       form.resetFields();
       navigate("/login"); // Chuyển hướng sang trang đăng nhập
     },
@@ -97,30 +96,21 @@ const RegisterPage: React.FC = () => {
               <Form.Item<FieldType>
                 label="Tên"
                 name="username"
-                rules={[{ required: true, message: "Không được bỏ trống" }]}
-              >
+                rules={[{ required: true, message: "Không được bỏ trống" }]}>
                 <Input placeholder="Nhập tên của bạn" />
               </Form.Item>
 
               <Form.Item<FieldType>
                 label="Email"
                 name="email"
-                rules={[
-                  { required: true, message: "Không được bỏ trống" },
-                  { type: "email", message: "Email không đúng định dạng" },
-                ]}
-              >
+                rules={[{ required: true, message: "Không được bỏ trống" }, { type: "email", message: "Email không đúng định dạng" }]}>
                 <Input placeholder="Nhập email của bạn" />
               </Form.Item>
 
               <Form.Item<FieldType>
                 label="Password"
                 name="password"
-                rules={[
-                  { required: true, message: "Không được bỏ trống" },
-                  { min: 6, message: "Mật khẩu tối thiểu phải có 6 kí tự" },
-                ]}
-              >
+                rules={[{ required: true, message: "Không được bỏ trống" }, { min: 6, message: "Mật khẩu tối thiểu phải có 6 kí tự" }]}>
                 <Input
                   type={showPassword ? "text" : "password"} // Đổi giữa 'text' và 'password' dựa trên trạng thái showPassword
                   style={{ width: "100%" }}
@@ -129,13 +119,8 @@ const RegisterPage: React.FC = () => {
                     <Button
                       type="link"
                       onClick={togglePasswordVisibility}
-                      style={{ padding: 0 }}
-                    >
-                      {showPassword ? (
-                        <p style={{ color: "red" }}>Ẩn</p>
-                      ) : (
-                        <p style={{ color: "blue" }}>Hiện</p>
-                      )}
+                      style={{ padding: 0 }}>
+                      {showPassword ? <p style={{ color: "red" }}>Ẩn</p> : <p style={{ color: "blue" }}>Hiện</p>}
                     </Button>
                   }
                 />
@@ -163,3 +148,4 @@ const RegisterPage: React.FC = () => {
 };
 
 export default RegisterPage;
+

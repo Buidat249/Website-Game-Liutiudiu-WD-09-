@@ -108,15 +108,9 @@ export const Login = async (req, res) => {
         status: true,
         message: "Đăng nhập thành công",
         token: token,
-
+        user_id : user.user_id,
+        email: user.email,
         username: user.username,
-        email: user.email,
-
-        email: user.email,
-
-        username: user.username,
-        email: user.email,
-
         role_id: user.role_id, // Trả về role_id của người dùng
       });
     } else {

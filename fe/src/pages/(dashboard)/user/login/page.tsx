@@ -32,21 +32,21 @@ const LoginPage: React.FC = () => {
     mutationFn: (user: FieldType) =>
       axios.post<LoginResponse>(`http://localhost:8080/login`, user),
     onSuccess: (response) => {
-      const data = response.data; // Lấy toàn bộ dữ liệu người dùng từ response
-
-      // Lưu tất cả thông tin người dùng vào localStorage
-      localStorage.setItem("user", JSON.stringify(data)); // Lưu toàn bộ thông tin người dùng vào localStorage
-
-      console.log(data)
+      const data = response.data; // Dữ liệu người dùng từ phản hồi
+    
+      // Lưu thông tin cần thiết vào localStorage
+      localStorage.setItem("user", JSON.stringify(data));
+      localStorage.setItem("user_id", data.user_id); // Giả sử phản hồi có trường `user_id`
+    
+      console.log(data);
       queryClient.invalidateQueries({
         queryKey: ["users"],
       });
-
+    
       messageApi.success("Đăng nhập thành công");
       form.resetFields();
-
-      // Chuyển hướng đến trang chính hoặc trang người dùng
-      navigate("/"); // Chuyển hướng đến trang chính (hoặc trang bạn muốn)
+    
+      navigate("/"); // Chuyển hướng đến trang chính
     },
     onError: (error) => {
       messageApi.open({
