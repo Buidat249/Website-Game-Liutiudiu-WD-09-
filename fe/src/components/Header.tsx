@@ -7,7 +7,6 @@ import cartIcon from "./public/external/cart icon.png";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-
 type Props = {};
 
 interface Cart {
@@ -35,29 +34,31 @@ const Header = (props: Props) => {
   const [games, setGames] = useState<Game[]>([]);
   const [gameCount, setGameCount] = useState(0);
   const navigate = useNavigate();
-  console.log('cart',carts)
+  console.log("cart", carts);
 
   const updateGameCount = () => {
-    const count = carts.reduce((total, cart) => total + (cart.games?.length || 0), 0);
+    const count = carts.reduce(
+      (total, cart) => total + (cart.games?.length || 0),
+      0
+    );
     setGameCount(count);
-    console.log('dem',count)
+    console.log("dem", count);
   };
- 
 
   useEffect(() => {
     axios
-    .get(`http://localhost:8080/carts/${user.user_id}`)
-    .then((response) => {
-      console.log(response.data); // Kiểm tra dữ liệu trả về
-      if (response.data && response.data.data) {
-        setCarts([response.data.data]);  // Chuyển thành mảng nếu cần
-      } else {
-        setCarts([]);
-      }
-    })
-    .catch((error) => {
-      console.error("Error fetching carts:", error);
-    });
+      .get(`http://localhost:8080/carts/${user.user_id}`)
+      .then((response) => {
+        console.log(response.data); // Kiểm tra dữ liệu trả về
+        if (response.data && response.data.data) {
+          setCarts([response.data.data]); // Chuyển thành mảng nếu cần
+        } else {
+          setCarts([]);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching carts:", error);
+      });
 
     axios
       .get("http://localhost:8080/games")
@@ -70,9 +71,8 @@ const Header = (props: Props) => {
   }, []);
 
   useEffect(() => {
-    updateGameCount();  // Tính lại số lượng game trong giỏ hàng
+    updateGameCount(); // Tính lại số lượng game trong giỏ hàng
   }, [carts]); // Mỗi khi `carts` thay đổi, hàm này sẽ được gọi
-  
 
   // Lấy thông tin người dùng từ localStorage
   const user = JSON.parse(localStorage.getItem("user") || "{}");
@@ -80,8 +80,8 @@ const Header = (props: Props) => {
   // Hàm đăng xuất
   const handleLogout = () => {
     // Xóa user khỏi localStorage
-    localStorage.removeItem('user');
-    localStorage.removeItem('cart'); // Xóa giỏ hàng khỏi localStorage nếu cần
+    localStorage.removeItem("user");
+    localStorage.removeItem("cart"); // Xóa giỏ hàng khỏi localStorage nếu cần
     window.location.reload(); // Refresh để cập nhật lại giao diện hoặc dùng state quản lý
     navigate("/login"); // Điều hướng về trang đăng nhập
   };
@@ -135,9 +135,7 @@ const Header = (props: Props) => {
               <div className="cart">
                 <Link to="/cart">
                   <img src={cartIcon} alt="Cart Icon" />
-                  <span>
-                    Giỏ hàng({gameCount})
-                  </span>
+                  <span>Giỏ hàng({gameCount})</span>
                   <span className="cart-count"></span>
                 </Link>
               </div>
@@ -150,7 +148,7 @@ const Header = (props: Props) => {
             <Link to="/">Trang chủ</Link>
             <Link to="/games">Sản phẩm</Link>
             <Link to="#">Tin tức</Link>
-            <Link to="#">Liên hệ</Link>
+            <Link to="/contact">Liên hệ</Link>
             <Link to="/paymentMethods">Hình thức thanh toán</Link>
           </div>
         </div>
