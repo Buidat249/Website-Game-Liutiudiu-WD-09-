@@ -131,6 +131,11 @@ const LayoutAdmin: React.FC = () => {
               icon: <TagsOutlined />,
               label: <NavLink to="/admin/description_details">Quản lý mô tả chi tiết</NavLink>,
             },
+            {
+              key: "15",
+              icon: <TagsOutlined />,
+              label: <NavLink to="/admin">Quản lý tài khoản</NavLink>,
+            },
           ]}
         />
       </Sider>
