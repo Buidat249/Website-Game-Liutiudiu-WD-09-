@@ -37,10 +37,10 @@ const Sidebar = () => {
             }`}
             onClick={() => setActiveIndex(index)}
           >
-            <Link to={item.path} className="flex items-center w-full">
+            
             <span className="text-xl mr-3">{item.icon}</span>
             <span className="font-medium">{item.label}</span>
-            </Link>
+           
           </li>
         ))}
       </ul>

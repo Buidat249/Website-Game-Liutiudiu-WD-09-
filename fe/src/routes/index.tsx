@@ -55,7 +55,7 @@ import CardBankForm from "@/pages/(website)/Payment_method/_components/card_Bank
 import NapTrucTiepForm from "@/pages/(website)/Payment_method/_components/naptructiep";
 import TheCaoForm from "@/pages/(website)/Payment_method/_components/thecao";
 import PagePayment_method from "@/pages/(website)/Payment_method/page";
-import PageProfile from "@/pages/(website)/User/page";
+import PageProfile from "@/pages/(website)/User_Profile/page";
 import PageCart from "@/pages/(website)/cart/page";
 import PageContact from "@/pages/(website)/contact/page";
 import ProductDetail from "@/pages/(website)/home/ProductDetail";
