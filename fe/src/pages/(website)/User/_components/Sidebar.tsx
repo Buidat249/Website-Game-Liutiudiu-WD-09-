@@ -25,7 +25,7 @@ const Sidebar = () => {
 
   return (
     
-      <div className="w-64 bg-white p-4 my-6 mr-6 h-1/4 rounded-lg shadow-md">
+      <div className="w-64 bg-white p-4 my-6 mr-8 h-1/4 rounded-lg shadow-md">
         <ul>
           {menuItems.map((item, index) => (
             <li
