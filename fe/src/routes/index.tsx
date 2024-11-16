@@ -65,8 +65,10 @@ import PagePayCofirm from "@/pages/(website)/paycofirm/page";
 import PaymentMomo from "@/pages/(website)/pays/_components/paymm";
 import VnpayPayment from "@/pages/(website)/pays/_components/payvnpay";
 import PagePay from "@/pages/(website)/pays/page";
-import ProductPage from "@/pages/(website)/product/page";
-import ProductGame from "@/pages/(website)/product/page";
+import {
+  default as ProductGame,
+  default as ProductPage,
+} from "@/pages/(website)/product/page";
 import { Route, Routes } from "react-router-dom";
 
 const Router = () => {
@@ -107,6 +109,7 @@ const Router = () => {
         <Route path="/contact" element={<PageContact />} />
 
         <Route path="/contact" element={<PageContact />} />
+        
       </Route>
       <Route path="/admin" element={<LayoutAdmin />}>
         <Route index element={<DashboardPage />} />
@@ -159,11 +162,20 @@ const Router = () => {
 
         <Route path="descriptions" element={<DescriptionPage />} />
         <Route path="descriptions/add" element={<DescriptionAddPage />} />
-        <Route path="descriptions/:description_id/edit" element={<DescriptionEditPage />} />
+        <Route
+          path="descriptions/:description_id/edit"
+          element={<DescriptionEditPage />}
+        />
 
         <Route path="description_details" element={<DescriptionDetailPage />} />
-        <Route path="description_details/add" element={<DescriptionDetailAddPage />} />
-        <Route path="description_details/:descriptiondetail_id/edit" element={<DescriptionDetailEditPage />} />
+        <Route
+          path="description_details/add"
+          element={<DescriptionDetailAddPage />}
+        />
+        <Route
+          path="description_details/:descriptiondetail_id/edit"
+          element={<DescriptionDetailEditPage />}
+        />
 
         <Route path="reviews" element={<ReviewPage />} />
         <Route path="reviews/add" element={<ReviewAddPage />} />
