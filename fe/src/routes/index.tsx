@@ -55,6 +55,7 @@ import CardBankForm from "@/pages/(website)/Payment_method/_components/card_Bank
 import NapTrucTiepForm from "@/pages/(website)/Payment_method/_components/naptructiep";
 import TheCaoForm from "@/pages/(website)/Payment_method/_components/thecao";
 import PagePayment_method from "@/pages/(website)/Payment_method/page";
+import PageProfile from "@/pages/(website)/User/page";
 import PageCart from "@/pages/(website)/cart/page";
 import PageContact from "@/pages/(website)/contact/page";
 import ProductDetail from "@/pages/(website)/home/ProductDetail";
@@ -101,6 +102,7 @@ const Router = () => {
         <Route path="/PayMoMOAuto" element={<PayMoMOForm />} />
         <Route path="/napthecao" element={<TheCaoForm />} />
         <Route path="/naptructiep" element={<NapTrucTiepForm />} />
+        <Route path="/user/profile" element={<PageProfile />} />
 
         <Route path="/contact" element={<PageContact />} />
 
