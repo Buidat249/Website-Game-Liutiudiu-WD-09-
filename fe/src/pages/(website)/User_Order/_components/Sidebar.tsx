@@ -9,14 +9,14 @@ import {
   FaHeart,
   FaShareAlt,
 } from "react-icons/fa";
-import { Link } from "react-router-dom";
+
 
 const Sidebar = () => {
   const [activeIndex, setActiveIndex] = useState(1);
 
   const menuItems = [
     { icon: <FaUser />, label: "Tài khoản", path:"/user/profile" },
-    { icon: <FaShoppingCart />, label: "Lịch sử đơn hàng", path:"/user/orders" },
+    { icon: <FaShoppingCart />, label: "Lịch sử đơn hàng", path:"/user/order" },
     { icon: <FaHistory />, label: "Lịch sử giao dịch" },
     { icon: <FaLock />, label: "Mật khẩu và bảo mật" },
     { icon: <FaCommentDots />, label: "Bình luận của tôi" },
