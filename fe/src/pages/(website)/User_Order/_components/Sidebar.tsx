@@ -12,7 +12,7 @@ import {
 import { Link } from "react-router-dom";
 
 const Sidebar = () => {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(1);
 
   const menuItems = [
     { icon: <FaUser />, label: "Tài khoản", path:"/user/profile" },
