@@ -1,14 +1,14 @@
 import React from "react";
 import Sidebar from "./_components/Sidebar";
-import Orders from "./_components/Orders";
+import Transactions from "./_components/Transaction";
 
-const OrderHistory = () => {
+const TransactionsHistory = () => {
   return (
     <div className="flex flex-col lg:flex-row bg-gray-100 p-6 mx-auto w-max">
       <Sidebar />
-      <Orders />
+      <Transactions />
     </div>
   );
 };
 
-export default OrderHistory;
+export default TransactionsHistory;

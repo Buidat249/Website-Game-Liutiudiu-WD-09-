@@ -16,7 +16,7 @@ const Sidebar = () => {
 
   const menuItems = [
     { icon: <FaUser />, label: "Tài khoản", path:"/user/profile" },
-    { icon: <FaShoppingCart />, label: "Lịch sử đơn hàng", path:"/user/order" },
+    { icon: <FaShoppingCart />, label: "Lịch sử đơn hàng", path:"/user/orders" },
     { icon: <FaHistory />, label: "Lịch sử giao dịch" },
     { icon: <FaLock />, label: "Mật khẩu và bảo mật" },
     { icon: <FaCommentDots />, label: "Bình luận của tôi" },

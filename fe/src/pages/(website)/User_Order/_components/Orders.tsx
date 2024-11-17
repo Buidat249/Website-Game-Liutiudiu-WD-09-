@@ -1,11 +1,11 @@
 import React from "react";
 
-const OrderHistory = () => {
+const Orders = () => {
   return (
-    <div className="bg-white shadow-md rounded-lg p-6">
+    <div className="p-6 bg-white rounded-lg shadow-md max-w-4xl mx-auto my-6">
       <h2 className="text-2xl font-semibold mb-4">Lịch sử đơn hàng</h2>
       <p className="text-gray-500 mb-6">
-        Hiển thị thông tin các sản phẩm bạn đã mua tại Divine Shop
+        Hiển thị thông tin các sản phẩm bạn đã mua tại Liutiudiu Shop
       </p>
 
       {/* Bộ lọc đơn hàng */}
@@ -84,4 +84,4 @@ const OrderHistory = () => {
   );
 };
 
-export default OrderHistory;
+export default Orders;
