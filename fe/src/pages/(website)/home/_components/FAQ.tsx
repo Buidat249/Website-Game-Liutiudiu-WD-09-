@@ -10,22 +10,26 @@ interface Game {
   discount?: number;
   rating?: number;
   image?: string;
-  description?: string;
+  description_id?: number,
   configuration?: string;
 }
 
+interface Description {
+  description_id?: number,
+  name?: string,
+  descriptiondetail_id?: number,
+}
+
 interface IFAQ {
+  description: Description;
   game: Game;
 }
 
-const FAQ: React.FC<IFAQ> = ({ game }) => {
+const FAQ: React.FC<IFAQ> = ({ game, description }) => {
   const productDetails = [
     {
-      title: "Khám Phá Vùng Đất Của Những Điều Kỳ Diệu",
-      quote:
-        "Thế giới chưa thấy, nơi kỳ quan lấp lánh, \nVà mỗi bước đi, một cảnh mới trải dài.",
-      description:
-        "Bước vào một cõi huyền bí đầy những kỳ quan và khám phá của thần thoại Trung Quốc cổ đại! Là Nhân Vật Được Định Mệnh Chọn Lựa, bạn sẽ băng qua nhiều phong cảnh tuyệt đẹp và độc đáo từ câu chuyện cổ điển, tạo nên một thiên anh hùng ca về cuộc phiêu lưu được nhìn nhận theo một cách hoàn toàn mới.",
+      title: "Cốt truyện :",
+      description: `${game.description_id}`,
       image: `${game.image}`,
     },
     {
@@ -41,38 +45,21 @@ const FAQ: React.FC<IFAQ> = ({ game }) => {
   const systemRequirements = [
     {
       title: "Tối thiểu:",
-      specs: game.configuration ? game.configuration.split("\n") : ["Không có dữ liệu"]
-    }
+      specs: game.configuration
+        ? game.configuration.split("\n")
+        : ["Không có dữ liệu"],
+    },
   ];
   return (
     <main className="flex flex-col py-4 px-6 w-full max-w-[992px] min-h-[348px] mx-auto">
       <section className="mt-4 max-w-full">
         <div className="flex gap-5 flex-col lg:flex-row">
-          <aside className="w-full lg:w-1/5">
-            <h2 className="text-xl font-medium text-black ">
-              Chi tiết sản phẩm
-            </h2>
-          </aside>
+          <h2 className="text-xl font-medium text-black ">
+            Chi tiết sản phẩm :
+          </h2>
           <div className="w-full lg:w-4/5">
-            <p className="text-sm max-w-full">{game.description}</p>
-
-            <img
-              src={game.image}
-              alt="Black Myth: Wukong game visual"
-              className="mt-4 w-full object-contain"
-            />
-
-            <img
-              src="https://cdn.builder.io/api/v1/image/assets/TEMP/a1554b4ec495c19e5849b57253906ff240297b4df52ef51ad4ec04037eacafd7?placeholderIfAbsent=true&apiKey=b147c62d1b404bf790d7133a5bf6ed3c"
-              alt="Black Myth: Wukong game visual"
-              className="mt-4 w-full object-contain"
-            />
-
-            <img
-              src={game.image}
-              alt="Black Myth: Wukong game visual"
-              className="mt-4 w-full object-contain"
-            />
+            <h2 className="text-xl font-medium text-black ">Mô tả game</h2>
+            <p className="text-sm max-w-full">{game.description_id}</p>
 
             {productDetails.map((detail, index) => (
               <article key={index} className="mt-4">
@@ -89,7 +76,9 @@ const FAQ: React.FC<IFAQ> = ({ game }) => {
               </article>
             ))}
 
-            <h2 className="mt-6 text-xl font-bold">Cấu hình yêu cầu:</h2>
+            <h2 className="text-xl font-medium text-black ">
+              Cấu hình yêu cầu:
+            </h2>
             {systemRequirements?.length > 0 ? (
               systemRequirements.map((requirement, index) => (
                 <div key={index} className="mt-4">

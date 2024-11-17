@@ -19,7 +19,7 @@ interface Game {
   final_price?: number | undefined;
   rating?: number;
   image?: string;
-  description?: string;
+  description_id?: number;
   configuration?: string;
 }
 
@@ -28,9 +28,18 @@ interface Platform {
   name: string;
 }
 
+
+interface Description {
+  description_id?: number,
+  name?: string,
+  descriptiondetail_id?: number,
+}
+
+
 const ProductDetail = () => {
   const { game_id } = useParams<{ game_id: string }>();
   const [game, setGame] = useState<Game | null>(null);
+  const [description, setDescription] = useState<Description | null>(null);
   const [categoryName, setCategoryName] = useState<string | null>(null);
   const [relatedGames, setRelatedGames] = useState<Game[]>([]);
   const [platforms, setPlatforms] = useState<Platform[]>([]);
@@ -49,7 +58,17 @@ const ProductDetail = () => {
           `http://localhost:8080/games/${game_id}`
         );
         const gameData = response.data.data;
+        const IdDescription = response.data.data.description_id;
+
         setGame(gameData);
+        console.log(IdDescription, "fdsafdsaffdsafs");
+
+        const responsedes = await axios.get<{ data: Description }>(
+          `http://localhost:8080/desctiptiondetail/${IdDescription}`
+        );
+        const desData = responsedes.data.data;
+        setDescription(desData);
+        console.log(IdDescription, "fdsafdsaffdsafs");
 
         // Kiểm tra nếu category_id tồn tại và là mảng
         const categoryId = gameData.category_id[0]; // Lấy giá trị đầu tiên của mảng category_id
@@ -151,9 +170,6 @@ const ProductDetail = () => {
       console.error("Lỗi:", error);
     }
   };
-
-
-
 
   return (
     <div>
@@ -301,8 +317,8 @@ const ProductDetail = () => {
                               color: "black",
                             }}
                           >
-                            <p className="final_price">
-                              {new Intl.NumberFormat("vi-VN").format(game.final_price ?? 0)}
+                            <p className="">
+                              {new Intl.NumberFormat("vi-VN").format(game.final_price ?? 0)}đ
                             </p>
 
 
@@ -446,6 +462,7 @@ const ProductDetail = () => {
       ) : (
         <p>Loading...</p>
       )}
+      
     </div>
   );
 };

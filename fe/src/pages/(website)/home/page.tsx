@@ -95,7 +95,7 @@ const HomePage = () => {
           <section key={filter.filter_id} className="games" style={{ position: "relative" }}>
             <h1 style={{ fontSize: "27px", fontWeight: "bold", color: "black" }}>
               <p style={{ fontSize: "20px" }}>{filter.name}</p>
-              <p style={{ fontSize: "13px", color: "gray", marginBottom: "20px" }}>jhihi</p>
+              <p style={{ fontSize: "13px", color: "gray", marginBottom: "20px" }}></p>
             </h1>
 
             {/* Khung ảnh nền dưới dữ liệu */}

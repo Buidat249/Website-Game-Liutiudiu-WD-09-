@@ -33,25 +33,38 @@ import Order from "../models/order"
 
  // POST /orders
  export const addOrder = async (req, res) => {
-    console.log(req.body);
     try {
-        const lastOrder = await Game.findOne({}, {}, { sort: { order_id: -1 } });
+        const { user_id, games, final_price } = req.body;
+
+        // Kiểm tra dữ liệu đầu vào
+        if (!user_id || !games || games.length === 0 || !final_price) {
+            return res.status(400).json({
+                message: "Invalid data. Please check user_id, games, and final_price.",
+            });
+        }
+
+        // Lấy order_id tiếp theo
+        const lastOrder = await Order.findOne({}, {}, { sort: { order_id: -1 } });
         const newOrderId = lastOrder ? lastOrder.order_id + 1 : 1;
 
         const orderData = {
-            game_id: newOrderId,
-            ...req.body // Chứa các trường khác từ frontend
+            order_id: newOrderId,
+            user_id,
+            games,
+            final_price,
+            status: "pending",
         };
 
         const order = await Order.create(orderData);
         return res.status(201).json({
             message: "Create Order Done",
-            data: order,   
+            data: order,
         });
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
 };
+
 
 // PUT / orders / :id
 
@@ -92,3 +105,5 @@ export const removeOrder = async (req, res) => {
         return res.status(500).json({ message: error.message });
     }
 };
+
+

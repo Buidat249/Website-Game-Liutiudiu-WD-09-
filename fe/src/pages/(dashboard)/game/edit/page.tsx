@@ -376,10 +376,6 @@ const GameEditPage: React.FC = () => {
           ) : null}
         </Form.Item>
 
-        <Form.Item label="Mô tả game" name="description_id">
-          <TextArea rows={5} />
-        </Form.Item>
-
         <Form.Item label="Cấu hình" name="configuration">
           <TextArea rows={5} />
         </Form.Item>

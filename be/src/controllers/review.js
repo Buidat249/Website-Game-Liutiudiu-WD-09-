@@ -36,7 +36,16 @@ import Review from "../models/review";
  export const addReview = async (req, res) => {
     console.log(req.body);
     try {
-        const review = await Review.create(req.body);
+        const lastReview = await Review.findOne({}, {}, { sort: { review_id: -1 } });
+        const newReviewId = lastReview ? lastReview.review_id + 1 : 1;
+
+        const reviewData = {
+            review_id: newReviewId,
+            ...req.body // Chứa các trường khác từ frontend
+        };
+
+
+        const review = await Review.create(reviewData);
         return res.status(201).json({
             message: "Create Review Done",
             data: review,   
@@ -86,3 +95,35 @@ export const updateReview = async (req, res) => {
         return res.status(500).json({ message: error.message });
     }
 };
+
+
+// GET /reviews?game_id={game_id}
+export const getReviewsByGameId = async (req, res) => {
+    try {
+        const { game_id } = req.query;
+
+        if (!game_id) {
+            return res.status(400).json({
+                message: "game_id is required",
+            });
+        }
+
+        const reviews = await Review.find({ game_id: Number(game_id) });
+
+        if (reviews.length === 0) {
+            return res.status(404).json({
+                message: "No reviews found for this game",
+            });
+        }
+
+        return res.status(200).json({
+            message: "Get reviews for game done",
+            data: reviews,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: error.message,
+        });
+    }
+};
+

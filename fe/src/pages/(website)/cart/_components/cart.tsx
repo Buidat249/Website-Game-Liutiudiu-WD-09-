@@ -26,16 +26,19 @@ interface Game {
 const CartBoxLeft = ({ setTotalPrice }: any) => {
   const [carts, setCarts] = useState<Cart[]>([]);
   const [games, setGames] = useState<Game[]>([]);
-
   const [loading, setLoading] = useState(true);
   console.log(carts);
   const navigate = useNavigate();
+  const [selectAll, setSelectAll] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   const [selectedGames, setSelectedGames] = useState<{
     [gameId: number]: boolean;
   }>({});
 
-  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>, gameId: number) => {
+  const handleCheckboxChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    gameId: number
+  ) => {
     setSelectedGames((prevSelected) => ({
       ...prevSelected,
       [gameId]: event.target.checked,
@@ -67,8 +70,9 @@ const CartBoxLeft = ({ setTotalPrice }: any) => {
   };
 
   // Kiểm tra user khi đăng nhập
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
 
+  console.log(user);
   // Hàm lấy giỏ hàng từ API
   const fetchCartData = () => {
     if (user?.user_id) {
@@ -76,9 +80,11 @@ const CartBoxLeft = ({ setTotalPrice }: any) => {
       axios
         .get(`http://localhost:8080/carts/${user.user_id}`)
         .then((response) => {
-          console.log(response.data); // Kiểm tra dữ liệu trả về
+          // Kiểm tra dữ liệu trả về
+
           if (response.data && response.data.data) {
-            setCarts([response.data.data]);  // Chuyển thành mảng nếu cần
+            setCarts([response.data.data]);
+            console.log(carts); // Chuyển thành mảng nếu cần
           } else {
             setCarts([]);
           }
@@ -93,7 +99,6 @@ const CartBoxLeft = ({ setTotalPrice }: any) => {
       setLoading(false);
     }
   };
-  
 
   // Hàm lấy sản phẩm
   const fetchGameData = () => {
@@ -123,7 +128,7 @@ const CartBoxLeft = ({ setTotalPrice }: any) => {
     setTotalPrice(calculateTotal()); // Cập nhật giá trị tổng mỗi khi giỏ hàng thay đổi
   }, [selectedGames, carts, games]);
   // Hàm tìm game theo game_id
-  
+
   const getGameById = (game_id: number) => {
     return games.find((game) => game.game_id === game_id);
   };
@@ -135,7 +140,9 @@ const CartBoxLeft = ({ setTotalPrice }: any) => {
     quantity: number
   ) => {
     axios
-      .put(`http://localhost:8080/carts/${cart_id}/game/${game_id}`, { quantity })
+      .put(`http://localhost:8080/carts/${cart_id}/game/${game_id}`, {
+        quantity,
+      })
       .then(() => {
         fetchCartData(); // Tải lại giỏ hàng sau khi cập nhật
       })
@@ -192,96 +199,135 @@ const CartBoxLeft = ({ setTotalPrice }: any) => {
       });
   };
 
+  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const isChecked = e.target.checked;
+    setSelectAll(isChecked);
+
+    const updatedSelectedGames: { [gameId: number]: boolean } = {};
+    if (isChecked) {
+      // Mark all games as selected
+      carts.forEach((cart) => {
+        cart.games.forEach((gameItem) => {
+          updatedSelectedGames[gameItem.game_id] = true;
+        });
+      });
+    } else {
+      // Unselect all games
+      setSelectedGames({});
+    }
+
+    setSelectedGames(updatedSelectedGames);
+  };
+
   // Render giao diện giỏ hàng
   return (
     <div className="flex-1 bg-white p-6 rounded-lg shadow-md mb-4 lg:mb-0 lg:mr-4">
-      <h2 className="text-xl font-bold mb-4">
+      <h2 className="text-xl font-bold mb-4" style={{paddingTop: "20px"}}>
+        <input
+          type="checkbox"
+          checked={selectAll}
+          onChange={handleSelectAll}
+          className="custom-checkbox"
+        />
         Giỏ hàng (
         {carts.reduce((total, cart) => total + (cart.games?.length || 0), 0)}{" "}
         Game)
       </h2>
-
       {carts.length === 0 ? (
         <p>Giỏ hàng của bạn đang trống.</p>
       ) : (
-        Array.isArray(carts) && carts.map((cart) => (
+        Array.isArray(carts) &&
+        carts.map((cart) => (
           <div key={cart.cart_id} className="mb-4">
             {cart.games.map((gameItem) => {
               const game = games.find((g) => g.game_id === gameItem.game_id);
               return game ? (
-                <div
-                  key={gameItem.game_id}
-                  className="flex items-center border-b pb-4 mb-4"
-                >
-                  <input
-                    type="checkbox"
-                    checked={selectedGames[gameItem.game_id] || false}
-                    onChange={(e) => handleCheckboxChange(e, gameItem.game_id)}
-                    className="custom-checkbox"
-                  />
-                  <Image
-                    src={game.image}
-                    alt={game.name}
-                    className="w-32 h-20 object-cover rounded"
-                  />
-                  <div className="flex flex-col flex-1 pl-4">
-                    <h3 className="text-lg font-semibold">{game.name}</h3>
-                    <p className="text-sm text-gray-500">{game.title}</p>
-                    <span className="text-green-500">Tình trạng: Còn hàng</span>
-                  </div>
-                  <div className="flex items-center">
-                    <Button
-                      className="px-2 py-1 bg-gray-200 rounded"
-                      onClick={() =>
-                        handleQuantityChange(
-                          cart.cart_id,
-                          gameItem.game_id,
-                          "decrease"
-                        )
-                      }
-                      disabled={gameItem.quantity <= 1} // Không cho giảm xuống dưới 1
-                    >
-                      -
-                    </Button>
+                <>
+                  <div
+                    key={gameItem.game_id}
+                    className="flex items-center border-b pb-4 mb-4"
+                  >
                     <input
-                      type="text"
-                      value={gameItem.quantity}
-                      className="w-12 text-center border mx-2"
-                      readOnly
+                      type="checkbox"
+                      checked={selectedGames[gameItem.game_id] || false}
+                      onChange={(e) =>
+                        handleCheckboxChange(e, gameItem.game_id)
+                      }
+                      className="custom-checkbox"
                     />
-                    <Button
-                      className="px-2 py-1 bg-gray-200 rounded"
-                      onClick={() =>
-                        handleQuantityChange(
-                          cart.cart_id,
-                          gameItem.game_id,
-                          "increase"
-                        )
-                      }
-                    >
-                      +
-                    </Button>
+                    <Image
+                      src={game.image}
+                      alt={game.name}
+                      className="w-32 h-20 object-cover rounded"
+                    />
+                    <div className="flex flex-col flex-1 pl-4">
+                      <h3 className="text-lg font-semibold">{game.name}</h3>
+                      <p className="text-sm text-gray-500">{game.title}</p>
+                      <span className="text-green-500">
+                        Tình trạng: Còn hàng
+                      </span>
+                    </div>
+                    <div className="flex items-center">
+                      <Button
+                        className="px-2 py-1 bg-gray-200 rounded"
+                        onClick={() =>
+                          handleQuantityChange(
+                            cart.cart_id,
+                            gameItem.game_id,
+                            "decrease"
+                          )
+                        }
+                        disabled={gameItem.quantity <= 1} // Không cho giảm xuống dưới 1
+                      >
+                        -
+                      </Button>
+                      <input
+                        type="text"
+                        value={gameItem.quantity}
+                        className="w-12 text-center border mx-2"
+                        readOnly
+                      />
+                      <Button
+                        className="px-2 py-1 bg-gray-200 rounded"
+                        onClick={() =>
+                          handleQuantityChange(
+                            cart.cart_id,
+                            gameItem.game_id,
+                            "increase"
+                          )
+                        }
+                      >
+                        +
+                      </Button>
+                    </div>
+                    <div className="text-right pl-4">
+                      <p className="text-lg font-semibold text-red-500">
+                        {(
+                          game.final_price * gameItem.quantity
+                        ).toLocaleString()}
+                        đ
+                      </p>
+                      <p className="text-sm line-through text-gray-400">
+                        {(game.price * gameItem.quantity).toLocaleString()}đ
+                      </p>
+                    </div>
+                    <div className="flex items-center">
+                      {/* Nút xoá game */}
+                      <Button
+                        className="px-2 py-1 bg-red-500 text-white rounded ml-4"
+                        onClick={() =>
+                          removeGame(
+                            cart.cart_id,
+                            gameItem.game_id,
+                            cart.user_id
+                          )
+                        }
+                      >
+                        Xóa
+                      </Button>
+                    </div>
                   </div>
-                  <div className="text-right pl-4">
-                    <p className="text-lg font-semibold text-red-500">
-                      {(game.final_price * gameItem.quantity).toLocaleString()}đ
-                    </p>
-                    <p className="text-sm line-through text-gray-400">
-                      {(game.price * gameItem.quantity).toLocaleString()}đ
-                    </p>
-                  </div>
-                  <div className="flex items-center">
-                    {/* Nút xoá game */}
-                    <Button
-                      className="px-2 py-1 bg-red-500 text-white rounded ml-4"
-                      onClick={() =>
-                        removeGame(cart.cart_id, gameItem.game_id, cart.user_id)
-                      }
-                    >
-                      Xóa
-                    </Button>
-                  </div>
-                </div>
+                </>
               ) : (
                 <Skeleton key={gameItem.game_id} active />
               );

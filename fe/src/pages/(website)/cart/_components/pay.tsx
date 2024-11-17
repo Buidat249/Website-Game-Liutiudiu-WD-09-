@@ -1,3 +1,4 @@
+import { message } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -23,10 +24,15 @@ interface Game {
 }
 
 const CheckoutBoxRight = ({ totalPrice }: any) => {  // Thêm prop totalPrice để nhận tổng giá trị
-  const navigate = useNavigate();
   const [carts, setCarts] = useState<Cart[]>([]);
   const [games, setGames] = useState<Game[]>([]);
+  const [loading, setLoading] = useState(true);
+  console.log(carts);
+  const navigate = useNavigate();
   const [cartCount, setCartCount] = useState(0);
+  const [selectedGames, setSelectedGames] = useState<{
+    [gameId: number]: boolean;
+  }>({});
 
   // Hàm chuyển hướng đến các trang thanh toán
   const handlePayment = (method: any) => {
@@ -40,6 +46,27 @@ const CheckoutBoxRight = ({ totalPrice }: any) => {  // Thêm prop totalPrice đ
     }
   };
 
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>, gameId: number) => {
+    setSelectedGames((prevSelected) => ({
+      ...prevSelected,
+      [gameId]: event.target.checked,
+    }));
+  };
+
+  const calculateTotal = () => {
+    return carts.reduce((total, cart) => {
+      cart.games.forEach((gameItem) => {
+        if (selectedGames[gameItem.game_id]) {
+          const game = games.find((game) => game.game_id === gameItem.game_id);
+          if (game) {
+            total += game.final_price * gameItem.quantity;
+          }
+        }
+      });
+      return total;
+    }, 0);
+  };
+
   const updateCartCount = () => {
     const count = carts.reduce(
       (total, cart) =>
@@ -50,16 +77,39 @@ const CheckoutBoxRight = ({ totalPrice }: any) => {  // Thêm prop totalPrice đ
     setCartCount(count);
   };
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:8080/carts")
-      .then((response) => {
-        setCarts(response.data.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching carts:", error);
-      });
+  // Kiểm tra user khi đăng nhập
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
 
+  console.log(user)
+  // Hàm lấy giỏ hàng từ API
+  const fetchCartData = () => {
+    
+    if (user?.user_id) {
+      setLoading(true);
+      axios
+        .get(`http://localhost:8080/carts/${user.user_id}`)
+        .then((response) => { // Kiểm tra dữ liệu trả về
+          
+          if (response.data && response.data.data) {
+            setCarts([response.data.data]);
+            console.log(carts);  // Chuyển thành mảng nếu cần
+          } else {
+            setCarts([]);
+          }
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching carts:", error);
+          setLoading(false);
+        });
+    } else {
+      setCarts([]);
+      setLoading(false);
+    }
+  };
+
+  // Hàm lấy sản phẩm
+  const fetchGameData = () => {
     axios
       .get("http://localhost:8080/games")
       .then((response) => {
@@ -68,11 +118,88 @@ const CheckoutBoxRight = ({ totalPrice }: any) => {  // Thêm prop totalPrice đ
       .catch((error) => {
         console.error("Error fetching games:", error);
       });
-  }, []);
+  };
+
+  // Gọi dữ liệu khi component load và khi user thay đổi
+  useEffect(() => {
+    if (user?.user_id) {
+      fetchCartData();
+      fetchGameData();
+    }
+  }, [user?.user_id]);
 
   useEffect(() => {
     updateCartCount();
   }, [carts]); // Cập nhật cartCount khi carts thay đổi
+
+
+  const getGameById = (game_id: number) => {
+    return games.find((game) => game.game_id === game_id);
+  };
+
+  // Hàm cập nhật số lượng game trong giỏ hàng
+  const updateQuantity = (
+    cart_id: number,
+    game_id: number,
+    quantity: number
+  ) => {
+    axios
+      .put(`http://localhost:8080/carts/${cart_id}/game/${game_id}`, { quantity })
+      .then(() => {
+        fetchCartData(); // Tải lại giỏ hàng sau khi cập nhật
+      })
+      .catch((error) => {
+        message.error("Cập nhật số lượng thất bại");
+        console.error("Error updating quantity:", error);
+      });
+  };
+
+  // Hàm xử lý tăng giảm số lượng
+  const handleQuantityChange = (
+    cart_id: number,
+    game_id: number,
+    action: "increase" | "decrease"
+  ) => {
+    const cart = carts.find((cart) => cart.cart_id === cart_id);
+    if (cart) {
+      const game = cart.games.find((gameItem) => gameItem.game_id === game_id);
+      if (game) {
+        const newQuantity =
+          action === "increase"
+            ? game.quantity + 1
+            : Math.max(1, game.quantity - 1);
+        updateQuantity(cart_id, game_id, newQuantity);
+        updateCartCount(); // Gọi hàm cập nhật số lượng sản phẩm sau khi thay đổi
+      }
+    }
+  };
+
+  const removeGame = (cart_id: number, game_id: number, user_id: number) => {
+    axios
+      .delete(
+        `http://localhost:8080/carts/${cart_id}/game/${game_id}?user_id=${user_id}`
+      )
+      .then((response) => {
+        setCarts((prevCarts) =>
+          prevCarts.map((cart) =>
+            cart.cart_id === cart_id
+              ? {
+                  ...cart,
+                  games: cart.games.filter(
+                    (gameItem) => gameItem.game_id !== game_id
+                  ),
+                }
+              : cart
+          )
+        );
+        updateCartCount();
+        message.success("Xóa game khỏi giỏ hàng thành công");
+      })
+      .catch((error) => {
+        message.error("Xóa game thất bại");
+        console.error("Error removing game:", error);
+      });
+  };
 
   return (
     <div className="w-full lg:w-1/3 bg-white p-6 rounded-lg shadow-md">
@@ -81,7 +208,8 @@ const CheckoutBoxRight = ({ totalPrice }: any) => {  // Thêm prop totalPrice đ
       <div className="flex justify-between">
           <span>Tổng sản phẩm</span>
           (
-        {carts.reduce((total, cart) => total + (cart.games?.length || 0), 0)}{" "})
+        {carts.reduce((total, cart) => total + (cart.games?.length || 0), 0)}{" "}
+        Game)
         </div>
         <div className="flex justify-between">
           <span>Tổng giá trị sản phẩm</span>

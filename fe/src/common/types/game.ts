@@ -9,7 +9,7 @@ export interface IGame {
     final_price?: number;
     rating?: number;
     image?: string;
-    description?: string;
+    description_id?: number,
     configuration?: string;
 }
 
