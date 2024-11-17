@@ -55,7 +55,13 @@ import CardBankForm from "@/pages/(website)/Payment_method/_components/card_Bank
 import NapTrucTiepForm from "@/pages/(website)/Payment_method/_components/naptructiep";
 import TheCaoForm from "@/pages/(website)/Payment_method/_components/thecao";
 import PagePayment_method from "@/pages/(website)/Payment_method/page";
+import OrderHistory from "@/pages/(website)/User_Order/Page";
 import PageProfile from "@/pages/(website)/User_Profile/page";
+import PageAffiliate from "@/pages/(website)/User_affiliate/Page";
+import Mycomment from "@/pages/(website)/User_comments/page";
+import SecuritySettings from "@/pages/(website)/User_security/page";
+import TransactionsHistory from "@/pages/(website)/User_transactions/page";
+import Wishlist from "@/pages/(website)/User_wishlist/page";
 import PageCart from "@/pages/(website)/cart/page";
 import PageContact from "@/pages/(website)/contact/page";
 import ProductDetail from "@/pages/(website)/home/ProductDetail";
@@ -105,6 +111,12 @@ const Router = () => {
         <Route path="/napthecao" element={<TheCaoForm />} />
         <Route path="/naptructiep" element={<NapTrucTiepForm />} />
         <Route path="/user/profile" element={<PageProfile />} />
+        <Route path="/user/orders" element={<OrderHistory />} />
+        <Route path="/user/transactions" element={<TransactionsHistory />} />
+        <Route path="/user/security" element={<SecuritySettings />} />
+        <Route path="/user/comments" element={<Mycomment />} />
+        <Route path="/user/wishlist" element={<Wishlist />} />
+        <Route path="/user/affiliate" element={<PageAffiliate />} />
 
         <Route path="/contact" element={<PageContact />} />
 

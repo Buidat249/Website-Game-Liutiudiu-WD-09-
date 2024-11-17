@@ -12,7 +12,7 @@ import {
 
 
 const Sidebar = () => {
-  const [activeIndex, setActiveIndex] = useState(1);
+  const [activeIndex, setActiveIndex] = useState(6);
 
   const menuItems = [
     { icon: <FaUser />, label: "Tài khoản", path:"/user/profile" },
