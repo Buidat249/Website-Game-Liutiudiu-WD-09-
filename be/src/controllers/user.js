@@ -114,6 +114,7 @@ export const Login = async (req, res) => {
         avatar: user.avatar,
         role_id: user.role_id, // Trả về role_id của người dùng
       });
+     
     } else {
       res.status(401).send({ status: false, message: "Sai mật khẩu" });
     }

@@ -58,17 +58,14 @@ const ProductDetail = () => {
           `http://localhost:8080/games/${game_id}`
         );
         const gameData = response.data.data;
-        const IdDescription = response.data.data.description_id;
-
         setGame(gameData);
-        console.log(IdDescription, "fdsafdsaffdsafs");
 
-        const responsedes = await axios.get<{ data: Description }>(
-          `http://localhost:8080/desctiptiondetail/${IdDescription}`
-        );
-        const desData = responsedes.data.data;
-        setDescription(desData);
-        console.log(IdDescription, "fdsafdsaffdsafs");
+        // const responsedes = await axios.get<{ data: Description }>(
+        //   `http://localhost:8080/desctiptiondetail/${IdDescription}`
+        // );
+        // const desData = responsedes.data.data;
+        // setDescription(desData);
+        // console.log(IdDescription, "fdsafdsaffdsafs");
 
         // Kiểm tra nếu category_id tồn tại và là mảng
         const categoryId = gameData.category_id[0]; // Lấy giá trị đầu tiên của mảng category_id
