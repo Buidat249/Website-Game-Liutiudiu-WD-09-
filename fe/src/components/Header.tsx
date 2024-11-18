@@ -34,7 +34,6 @@ const Header = (props: Props) => {
   const [games, setGames] = useState<Game[]>([]);
   const [gameCount, setGameCount] = useState(0);
   const navigate = useNavigate();
-  console.log("cart", carts);
 
   const updateGameCount = () => {
     const count = carts.reduce(
@@ -42,7 +41,6 @@ const Header = (props: Props) => {
       0
     );
     setGameCount(count);
-    console.log("dem", count);
   };
 
   useEffect(() => {
@@ -119,7 +117,12 @@ const Header = (props: Props) => {
             <div className="user-cart">
               <div className="user-info">
                 {user.username ? (
-                  <span>{user.username}</span>
+                  <div className="flex justify-between items-center">
+                    <Link to="/user/profile" style={{ marginRight: "15px" }}>
+                      <img src={user.avatar}></img>
+                    </Link>
+                    <span>{user.username}</span>
+                  </div>
                 ) : (
                   <>
                     <Link to="/register" style={{ marginRight: "15px" }}>

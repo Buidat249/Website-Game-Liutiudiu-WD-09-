@@ -111,6 +111,7 @@ export const Login = async (req, res) => {
         user_id : user.user_id,
         email: user.email,
         username: user.username,
+        avatar: user.avatar,
         role_id: user.role_id, // Trả về role_id của người dùng
       });
     } else {
