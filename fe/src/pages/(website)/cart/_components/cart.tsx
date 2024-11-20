@@ -303,13 +303,13 @@ const CartBoxLeft = ({ setTotalPrice, setTotalQuantity }: any) => {
                   <div className="text-right pl-4">
                     <p className="text-lg font-semibold text-red-500">
                       {(
-                        game.final_price * gameItem.quantity
+                        game.final_price
                       ).toLocaleString()}
 
                       đ
                     </p>
                     <p className="text-sm line-through text-gray-400">
-                      {(game.price * gameItem.quantity).toLocaleString()}đ
+                      {(game.price).toLocaleString()}đ
                     </p>
                   </div>
                   <div className="flex items-center">

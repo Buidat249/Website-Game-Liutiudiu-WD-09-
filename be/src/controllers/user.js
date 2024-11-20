@@ -61,6 +61,7 @@ export const Register = async (req, res) => {
     const userData = {
       user_id: newUserId,
       role: "member", // Gán quyền mặc định là "member"
+      money: 0, // Thiết lập giá trị mặc định cho money
       ...req.body, // Các trường khác từ frontend
     };
 
@@ -112,6 +113,7 @@ export const Login = async (req, res) => {
         email: user.email,
         username: user.username,
         avatar: user.avatar,
+        money: user.money,
         role_id: user.role_id, // Trả về role_id của người dùng
       });
      
