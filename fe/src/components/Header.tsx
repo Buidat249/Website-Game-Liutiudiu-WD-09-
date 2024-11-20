@@ -6,6 +6,7 @@ import userAvatar from "./public/external/avatar-khach-hang-2-52544.png";
 import cartIcon from "./public/external/cart icon.png";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { message } from "antd"; // Đảm bảo bạn đã import message từ antd
 
 type Props = {};
 
@@ -44,20 +45,27 @@ const Header = (props: Props) => {
   };
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:8080/carts/${user.user_id}`)
-      .then((response) => {
-        console.log(response.data); // Kiểm tra dữ liệu trả về
-        if (response.data && response.data.data) {
-          setCarts([response.data.data]); // Chuyển thành mảng nếu cần
-        } else {
-          setCarts([]);
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching carts:", error);
-      });
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
 
+    // Kiểm tra nếu người dùng đã đăng nhập
+    if (user.user_id) {
+      // Nếu đã đăng nhập, thực hiện yêu cầu API
+      axios
+        .get(`http://localhost:8080/carts/${user.user_id}`)
+        .then((response) => {
+          console.log(response.data); // Kiểm tra dữ liệu trả về
+          if (response.data && response.data.data) {
+            setCarts([response.data.data]); // Chuyển thành mảng nếu cần
+          } else {
+            setCarts([]);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching carts:", error);
+        });
+    }
+
+    // Lấy thông tin game
     axios
       .get("http://localhost:8080/games")
       .then((response) => {
@@ -66,7 +74,7 @@ const Header = (props: Props) => {
       .catch((error) => {
         console.error("Error fetching games:", error);
       });
-  }, []);
+  }, []); // Dependency array rỗng vì không cần phải chạy lại khi dữ liệu thay đổi
 
   useEffect(() => {
     updateGameCount(); // Tính lại số lượng game trong giỏ hàng
@@ -82,6 +90,20 @@ const Header = (props: Props) => {
     localStorage.removeItem("cart"); // Xóa giỏ hàng khỏi localStorage nếu cần
     window.location.reload(); // Refresh để cập nhật lại giao diện hoặc dùng state quản lý
     navigate("/login"); // Điều hướng về trang đăng nhập
+  };
+
+  // Hàm xử lý khi người dùng click vào giỏ hàng
+  const handleGoToCart = () => {
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+    if (!user.user_id) {
+      // Nếu chưa đăng nhập, hiển thị thông báo yêu cầu đăng nhập
+      message.warning("Vui lòng đăng nhập để tiếp tục đến giỏ hàng!");
+      navigate("/login"); // Chuyển hướng về trang đăng nhập
+    } else {
+      // Nếu đã đăng nhập, chuyển đến trang giỏ hàng
+      navigate("/cart");
+    }
   };
 
   return (
@@ -119,7 +141,7 @@ const Header = (props: Props) => {
                 {user.username ? (
                   <div className="flex justify-between items-center">
                     <Link to="/user/profile" style={{ marginRight: "15px" }}>
-                      <img src={user.avatar}></img>
+                      <img src={user.avatar} alt="User Avatar"></img>
                     </Link>
                     <span>{user.username}</span>
                   </div>
@@ -136,11 +158,10 @@ const Header = (props: Props) => {
                 )}
               </div>
               <div className="cart">
-                <Link to="/cart">
+                <a onClick={handleGoToCart}> {/* Gọi hàm xử lý khi click vào giỏ hàng */}
                   <img src={cartIcon} alt="Cart Icon" />
                   <span>Giỏ hàng({gameCount})</span>
-                  <span className="cart-count"></span>
-                </Link>
+                </a>
               </div>
             </div>
           </div>

@@ -35,7 +35,27 @@ const userSchema = new mongoose.Schema({
     },
     avatar:{
         type: String,
-    }
+    },
+    fullname:{
+        type: String,
+    },
+    idCard:{
+        type: Number,
+    },
+    gender:{
+        type: String,
+    },
+    district:{
+        type: String,
+    },
+    ward:{
+        type: String,
+    },
+    city:{
+        type: String,
+    },
+
+    
 }, { timestamps: true });
 
 export default mongoose.model("User", userSchema);

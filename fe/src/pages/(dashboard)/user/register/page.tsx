@@ -11,7 +11,6 @@ type FieldType = {
   email?: string;
   password?: string;
   phone?: number;
-  address?: string;
   avatar?: string;
 };
 
@@ -35,9 +34,7 @@ const RegisterPage: React.FC = () => {
         queryKey: ["users"],
       });
       messageApi.success("Đăng ký thành công");
-  
-      // Lấy user_id từ response của API đăng ký
-      const user_id = response.data.user.user_id;
+      
   
       // Giờ chúng ta không cần tạo giỏ hàng ở đây nữa
       form.resetFields();
@@ -128,10 +125,6 @@ const RegisterPage: React.FC = () => {
 
               <Form.Item<FieldType> label="Số điện thoại" name="phone">
                 <Input placeholder="Nhập số điện thoại" />
-              </Form.Item>
-
-              <Form.Item<FieldType> label="Địa chỉ" name="address">
-                <Input placeholder="Nhập địa chỉ của bạn" />
               </Form.Item>
 
               <Form.Item wrapperCol={{ offset: 8, span: 16 }}>

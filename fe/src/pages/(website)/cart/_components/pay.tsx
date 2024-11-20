@@ -35,6 +35,8 @@ const CheckoutBoxRight = ({ totalPrice, totalQuantity }: any) => {
 
   // Kiểm tra user khi đăng nhập
   const user = JSON.parse(localStorage.getItem('user') || '{}');
+  console.log('tt',totalPrice.toLocaleString() )
+  console.log('sod',user.money.toLocaleString() )
 
   // Hàm lấy giỏ hàng từ API
   const fetchCartData = () => {
@@ -149,7 +151,7 @@ const CheckoutBoxRight = ({ totalPrice, totalQuantity }: any) => {
       <div className="mt-6 space-y-3">
         {!showPaymentButton && (
           <>
-            {user.money.toLocaleString() > totalPrice.toLocaleString() ? (
+            {user.money >= totalPrice ? (
               <button
                 className="w-full bg-green-600 text-white py-2 rounded"
                 onClick={() => handlePayment("confirm")}

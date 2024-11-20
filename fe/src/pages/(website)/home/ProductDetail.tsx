@@ -44,6 +44,7 @@ const ProductDetail = () => {
   const [relatedGames, setRelatedGames] = useState<Game[]>([]);
   const [platforms, setPlatforms] = useState<Platform[]>([]);
   const [messageApi, contextHolder] = message.useMessage();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -107,7 +108,18 @@ const ProductDetail = () => {
     }
   }, [game_id]);
 
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user'); // Lấy thông tin người dùng từ localStorage
+    if (storedUser) {
+      setIsLoggedIn(true); // Nếu có thông tin người dùng thì đặt là đã đăng nhập
+    }
+  }, []);
+
   const addToCart = async (gameId: number) => {
+    if (!isLoggedIn) {
+      message.error("Bạn cần đăng nhập để thực hiện thao tác này!");
+      return;
+    }
     const userId = Number(localStorage.getItem("user_id"));
     console.log("User ID từ localStorage:", userId);
 
@@ -138,6 +150,10 @@ const ProductDetail = () => {
   };
 
   const BuyToCart = async (gameId: number) => {
+    if (!isLoggedIn) {
+      message.error("Bạn cần đăng nhập để thực hiện thao tác này!");
+      return;
+    }
     const userId = Number(localStorage.getItem("user_id"));
     console.log("User ID từ localStorage:", userId);
 
@@ -168,6 +184,25 @@ const ProductDetail = () => {
     }
   };
 
+  const handleBuyNow = (gameId: number) => {
+    const storedUser = localStorage.getItem('user'); // Kiểm tra trong localStorage
+    if (!storedUser) {
+      message.error('Bạn cần đăng nhập để thực hiện thao tác này!');
+      return;
+    }
+    // Tiến hành mua ngay nếu đã đăng nhập
+    BuyToCart(gameId);
+  };
+
+  const handleAddToCart = (gameId: number) => {
+    const storedUser = localStorage.getItem('user'); // Kiểm tra trong localStorage
+    if (!storedUser) {
+      message.error('Bạn cần đăng nhập để thực hiện thao tác này!');
+      return;
+    }
+    // Tiến hành thêm vào giỏ nếu đã đăng nhập
+    addToCart(gameId);
+   };
   return (
     <div>
       {contextHolder}
@@ -380,7 +415,7 @@ const ProductDetail = () => {
                           size="large"
                           type="primary"
                           style={{ marginRight: "5px", width: 219.67 }}
-                          onClick={() => BuyToCart(game.game_id as any)}
+                          onClick={() => handleBuyNow(game.game_id as any)}
                         >
                           <img
                             loading="lazy"
@@ -392,7 +427,7 @@ const ProductDetail = () => {
                         </Button>
                         <Button size="large"
                           style={{ width: 219.67 }}
-                          onClick={() => addToCart(game.game_id as any)}
+                          onClick={() => handleAddToCart(game.game_id as any)}
                         >
                           <img
                             loading="lazy"
@@ -459,7 +494,7 @@ const ProductDetail = () => {
       ) : (
         <p>Loading...</p>
       )}
-      
+
     </div>
   );
 };

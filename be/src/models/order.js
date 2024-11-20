@@ -4,41 +4,57 @@ const orderSchema = new mongoose.Schema({
     order_id: {
         type: Number,
         required: true,
-        unique: false,
+        unique: true,
     },
     user_id: {
         type: mongoose.Schema.Types.Number,
         ref: "User", // Tham chiếu đến mô hình User
         required: true,
-        unique: false,
     },
-    payment_method_id: [{
-        type: mongoose.Schema.Types.Number,
-        ref: "Payment_Method", // Tham chiếu đến mô hình PaymentMethod
-        required: true,
-        unique: false,
-    }],
-    game_id: [{
-        type: mongoose.Schema.Types.Number,
-        ref: "Game", // Tham chiếu đến mô hình Game
-        required: true,
-        unique: false,
-    }],
+    games: [
+        {
+            game_id: {
+                type: mongoose.Schema.Types.Number,
+                ref: "Game", // Tham chiếu đến mô hình Game
+                required: true,
+            },
+            name: {
+                type: String,
+                required: true,
+            },
+            price: {
+                type: Number,
+                required: true,
+                min: 0,
+            },
+            discount: {
+                type: Number,
+                required: true,
+                min: 0,
+                max: 100,
+            },
+            final_price: {
+                type: Number,
+                required: true,
+                min: 0,
+            },
+            quantity: {
+                type: Number,
+                required: true,
+                min: 1,
+            },
+        },
+    ],
     total_price: {
         type: Number,
         required: true,
-        min: 0, // Tổng giá tiền không được âm
+        min: 0,
     },
     status: {
         type: String,
         required: true,
         enum: ["pending", "completed", "canceled"], // Các trạng thái có thể
         default: "pending",
-    },
-    quantity: {
-        type: Number,
-        required: true,
-        min: 1, // Số lượng ít nhất là 1
     },
 }, { timestamps: true });
 

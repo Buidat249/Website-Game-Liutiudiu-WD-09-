@@ -1,7 +1,6 @@
 import { message } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useCartContext } from "../../cart/_components/cartcontext";
 
 interface Game {
   game_id: number;
@@ -16,7 +15,6 @@ interface CheckoutSummaryProps {
   games: Game[]; // Nhận danh sách game đã chọn
 }
 
-
 const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({ games }) => {
   const navigate = useNavigate();
   const totalQuantity = games.reduce((acc, game) => acc + game.quantity, 0);
@@ -24,29 +22,69 @@ const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({ games }) => {
     (acc, game) => acc + game.final_price * game.quantity,
     0
   );
-  console.log('gameee', games)
+  console.log('tong tien',totalPrice)
+
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
 
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
-
-
-  // Hàm xử lý xác nhận thanh toán
-  const handleConfirmPayment = () => {
-    if (totalPrice === 0) {
+  const handleConfirmPayment = async () => {
+    if (totalQuantity < 1) {
       message.warning("Bạn chưa chọn sản phẩm nào để thanh toán!");
       return;
     }
 
-    // Giả sử thanh toán thành công
-    setPaymentSuccess(true);
+    if (user.mone< totalPrice) {
+      message.error("Số dư không đủ để thanh toán!");
+      return;
+    }
 
-    // Sau khi xác nhận thanh toán, chuyển hướng về trang chủ sau 2 giây
-    setTimeout(() => {
-      navigate("/");
-    }, 2000);
+    // Dữ liệu gửi lên backend
+    const orderData = {
+      user_id: user.user_id, // ID người dùng
+      games: games.map((game) => ({
+        game_id: game.game_id,
+        name: game.name,
+        quantity: game.quantity,
+        price: game.price,
+        discount: game.discount,
+        final_price: game.final_price,
+      })),
+      total_price: totalPrice, // Tổng tiền
+    };
+    console.log('dataa',orderData)
+    
+
+    try {
+      const response = await fetch("http://localhost:8080/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(orderData),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Đơn hàng đã được tạo:", data);
+
+        // Giả sử thanh toán thành công
+        setPaymentSuccess(true);
+
+        // Sau khi xác nhận thanh toán, chuyển hướng về trang chủ sau 2 giây
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
+
+        message.success("Thanh toán thành công!");
+      } else {
+        message.error("Thanh toán thất bại!");
+      }
+    } catch (error) {
+      console.error("Lỗi khi tạo đơn hàng:", error);
+      message.error("Đã có lỗi xảy ra, vui lòng thử lại!");
+    }
   };
 
-  // Hàm chuyển hướng về trang giỏ hàng
   const handleBackToCart = () => {
     navigate("/cart");
   };
@@ -63,7 +101,9 @@ const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({ games }) => {
         </div>
         <div className="flex justify-between text-sm text-gray-600">
           <span>Số dư hiện tại</span>
-          <span className="font-medium text-gray-900">{user.money.toLocaleString()}đ</span>
+          <span className="font-medium text-gray-900">
+            {user.money.toLocaleString()}đ
+          </span>
         </div>
       </div>
       <button
@@ -78,7 +118,6 @@ const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({ games }) => {
       >
         🔙 Trở về giỏ hàng
       </button>
-      {/* Hiển thị thông báo thanh toán thành công nếu state paymentSuccess là true */}
       {paymentSuccess && (
         <div className="mt-4 text-center text-green-500 font-semibold">
           Thanh toán thành công! Bạn sẽ được chuyển hướng về trang chủ...
@@ -87,7 +126,5 @@ const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({ games }) => {
     </div>
   );
 };
-
-
 
 export default CheckoutSummary;
