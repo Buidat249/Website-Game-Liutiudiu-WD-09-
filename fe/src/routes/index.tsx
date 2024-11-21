@@ -66,11 +66,11 @@ import Layout from "@/pages/(website)/layout";
 import PagePayCofirm from "@/pages/(website)/paycofirm/page";
 import PagePayMomo from "@/pages/(website)/paymomo/page";
 import PagePayVnPay from "@/pages/(website)/payvnpay/page";
-
 import {
   default as ProductGame,
   default as ProductPage,
 } from "@/pages/(website)/product/page";
+
 import NewsPage from "@/pages/(website)/tintuc/page";
 import NewsDetailPage from "@/pages/(website)/tintuc/tintucchitiet";
 import OrderHistory from "@/pages/(website)/users/User_Order/Page";
