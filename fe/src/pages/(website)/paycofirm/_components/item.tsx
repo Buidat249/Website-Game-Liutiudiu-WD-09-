@@ -1,32 +1,50 @@
-import React from "react";
+import React from 'react';
 
-const CartItem = () => (
-  <div className="flex bg-white p-6 rounded-lg shadow-md mb-4">
-    <img
-      src="https://via.placeholder.com/150"
-      alt="Product"
-      className="w-32 h-20 object-cover rounded"
-    />
-    <div className="flex flex-col flex-1 pl-4">
-      <h3 className="text-lg font-semibold">GTA Grand Theft Auto V</h3>
-      <p className="text-sm text-gray-500">Premium Online Edition - CD</p>
-      <span className="text-green-500">Tình trạng: Còn hàng</span>
-    </div>
-    <div className="flex items-center">
-      <button className="px-2 py-1 bg-gray-200 rounded">-</button>
-      <input
-        type="text"
-        value="1"
-        className="w-12 text-center border mx-2"
-        readOnly
+interface CartItemProps {
+  game: { 
+    game_id: number;
+    name: string;
+    price: number;
+    final_price: number;
+    image: string;
+    description: string;
+  };
+  quantity: number;
+}
+
+const CartItem: React.FC<CartItemProps> = ({ game, quantity }) => {
+  return (
+    <div className="flex items-center border-b pb-4 mb-4">
+      {/* Hình ảnh sản phẩm */}
+      <img
+        src={game.image}
+        alt={game.name}
+        className="w-32 h-20 object-cover rounded"
       />
-      <button className="px-2 py-1 bg-gray-200 rounded">+</button>
+      
+      {/* Thông tin sản phẩm */}
+      <div className="flex flex-col flex-1 pl-4">
+        <h3 className="text-lg font-semibold">{game.name}</h3>
+        <p className="text-sm text-gray-500">{game.description}</p>
+        <span className="text-green-500">Tình trạng: Còn hàng</span>
+      </div>
+      
+      {/* Số lượng */}
+      <div className="flex items-center mx-4">
+        <span>Số lượng: {quantity}</span>
+      </div>
+      
+      {/* Tổng giá */}
+      <div className="text-right pl-4">
+        <p className="text-lg font-semibold text-red-500">
+          {(game.final_price * quantity).toLocaleString()}đ
+        </p>
+        <p className="text-sm line-through text-gray-400">
+          {(game.price * quantity).toLocaleString()}đ
+        </p>
+      </div>
     </div>
-    <div className="text-right pl-4">
-      <p className="text-lg font-semibold text-red-500">490.000đ</p>
-      <p className="text-sm line-through text-gray-400">280.000đ</p>
-    </div>
-  </div>
-);
+  );
+};
 
 export default CartItem;

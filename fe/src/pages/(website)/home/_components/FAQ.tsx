@@ -14,18 +14,12 @@ interface Game {
   configuration?: string;
 }
 
-interface Description {
-  description_id?: number,
-  name?: string,
-  descriptiondetail_id?: number,
-}
 
 interface IFAQ {
-  description: Description;
   game: Game;
 }
 
-const FAQ: React.FC<IFAQ> = ({ game, description }) => {
+const FAQ: React.FC<IFAQ> = ({ game }) => {
   const productDetails = [
     {
       title: "Cốt truyện :",

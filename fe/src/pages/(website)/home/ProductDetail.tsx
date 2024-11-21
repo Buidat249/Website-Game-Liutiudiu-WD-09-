@@ -44,6 +44,7 @@ const ProductDetail = () => {
   const [relatedGames, setRelatedGames] = useState<Game[]>([]);
   const [platforms, setPlatforms] = useState<Platform[]>([]);
   const [messageApi, contextHolder] = message.useMessage();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -58,17 +59,14 @@ const ProductDetail = () => {
           `http://localhost:8080/games/${game_id}`
         );
         const gameData = response.data.data;
-        const IdDescription = response.data.data.description_id;
-
         setGame(gameData);
-        console.log(IdDescription, "fdsafdsaffdsafs");
 
-        const responsedes = await axios.get<{ data: Description }>(
-          `http://localhost:8080/desctiptiondetail/${IdDescription}`
-        );
-        const desData = responsedes.data.data;
-        setDescription(desData);
-        console.log(IdDescription, "fdsafdsaffdsafs");
+        // const responsedes = await axios.get<{ data: Description }>(
+        //   `http://localhost:8080/desctiptiondetail/${IdDescription}`
+        // );
+        // const desData = responsedes.data.data;
+        // setDescription(desData);
+        // console.log(IdDescription, "fdsafdsaffdsafs");
 
         // Kiểm tra nếu category_id tồn tại và là mảng
         const categoryId = gameData.category_id[0]; // Lấy giá trị đầu tiên của mảng category_id
@@ -110,7 +108,18 @@ const ProductDetail = () => {
     }
   }, [game_id]);
 
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user'); // Lấy thông tin người dùng từ localStorage
+    if (storedUser) {
+      setIsLoggedIn(true); // Nếu có thông tin người dùng thì đặt là đã đăng nhập
+    }
+  }, []);
+
   const addToCart = async (gameId: number) => {
+    if (!isLoggedIn) {
+      message.error("Bạn cần đăng nhập để thực hiện thao tác này!");
+      return;
+    }
     const userId = Number(localStorage.getItem("user_id"));
     console.log("User ID từ localStorage:", userId);
 
@@ -141,6 +150,10 @@ const ProductDetail = () => {
   };
 
   const BuyToCart = async (gameId: number) => {
+    if (!isLoggedIn) {
+      message.error("Bạn cần đăng nhập để thực hiện thao tác này!");
+      return;
+    }
     const userId = Number(localStorage.getItem("user_id"));
     console.log("User ID từ localStorage:", userId);
 
@@ -171,6 +184,25 @@ const ProductDetail = () => {
     }
   };
 
+  const handleBuyNow = (gameId: number) => {
+    const storedUser = localStorage.getItem('user'); // Kiểm tra trong localStorage
+    if (!storedUser) {
+      message.error('Bạn cần đăng nhập để thực hiện thao tác này!');
+      return;
+    }
+    // Tiến hành mua ngay nếu đã đăng nhập
+    BuyToCart(gameId);
+  };
+
+  const handleAddToCart = (gameId: number) => {
+    const storedUser = localStorage.getItem('user'); // Kiểm tra trong localStorage
+    if (!storedUser) {
+      message.error('Bạn cần đăng nhập để thực hiện thao tác này!');
+      return;
+    }
+    // Tiến hành thêm vào giỏ nếu đã đăng nhập
+    addToCart(gameId);
+   };
   return (
     <div>
       {contextHolder}
@@ -383,7 +415,7 @@ const ProductDetail = () => {
                           size="large"
                           type="primary"
                           style={{ marginRight: "5px", width: 219.67 }}
-                          onClick={() => BuyToCart(game.game_id as any)}
+                          onClick={() => handleBuyNow(game.game_id as any)}
                         >
                           <img
                             loading="lazy"
@@ -395,7 +427,7 @@ const ProductDetail = () => {
                         </Button>
                         <Button size="large"
                           style={{ width: 219.67 }}
-                          onClick={() => addToCart(game.game_id as any)}
+                          onClick={() => handleAddToCart(game.game_id as any)}
                         >
                           <img
                             loading="lazy"
@@ -462,7 +494,7 @@ const ProductDetail = () => {
       ) : (
         <p>Loading...</p>
       )}
-      
+
     </div>
   );
 };

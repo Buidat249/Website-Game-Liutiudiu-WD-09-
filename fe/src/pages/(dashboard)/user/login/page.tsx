@@ -36,7 +36,8 @@ const LoginPage: React.FC = () => {
     
       // Lưu thông tin cần thiết vào localStorage
       localStorage.setItem("user", JSON.stringify(data));
-      localStorage.setItem("user_id", data.user_id); // Giả sử phản hồi có trường `user_id`
+      localStorage.setItem("user_id", JSON.stringify(data?.user_id));
+      console.log('user Id',data?.user_id);
     
       console.log(data);
       queryClient.invalidateQueries({

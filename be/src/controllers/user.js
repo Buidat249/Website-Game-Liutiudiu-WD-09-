@@ -46,11 +46,6 @@ export const Register = async (req, res) => {
     const body = req.body;
 
     // Băm mật khẩu trước khi lưu
-
-    // Hash password trước khi lưu
-
-    // Băm mật khẩu trước khi lưu
-
     body.password = await bcryptjs.hash(body.password, 6);
 
     // Lấy user_id cuối cùng để tạo user_id tự động tăng
@@ -61,7 +56,15 @@ export const Register = async (req, res) => {
     const userData = {
       user_id: newUserId,
       role: "member", // Gán quyền mặc định là "member"
-      ...req.body, // Các trường khác từ frontend
+      money: 0, // Thiết lập giá trị mặc định cho money
+      fullname: body.fullname || "", // Gán chuỗi rỗng nếu fullname không được điền
+      idCard: body.idCard || "", // Gán chuỗi rỗng nếu idCard không được điền
+      gender: body.gender || "", // Gán chuỗi rỗng nếu gender không được điền
+      city: body.city || "", // Gán chuỗi rỗng nếu city không được điền
+      district: body.district || "", // Gán chuỗi rỗng nếu district không được điền
+      ward: body.ward || "", // Gán chuỗi rỗng nếu ward không được điền
+      avatar: body.avatar || "", 
+      ...body, // Các trường khác từ frontend
     };
 
     const userModel = new User(userData);
@@ -73,6 +76,7 @@ export const Register = async (req, res) => {
     res.status(500).send({ message: "Đăng ký thất bại: " + error.message });
   }
 };
+
 
 // POST / login
 export const Login = async (req, res) => {
@@ -111,8 +115,11 @@ export const Login = async (req, res) => {
         user_id : user.user_id,
         email: user.email,
         username: user.username,
+        avatar: user.avatar,
+        money: user.money,
         role_id: user.role_id, // Trả về role_id của người dùng
       });
+     
     } else {
       res.status(401).send({ status: false, message: "Sai mật khẩu" });
     }

@@ -42,6 +42,9 @@ import ReviewPage from "@/pages/(dashboard)/review/page";
 import RoleAddPage from "@/pages/(dashboard)/role/add/page";
 import RoleEditPage from "@/pages/(dashboard)/role/edit/page";
 import RolePage from "@/pages/(dashboard)/role/page";
+import TintucAddPage from "@/pages/(dashboard)/tintuc/add/page";
+import TintucEditPage from "@/pages/(dashboard)/tintuc/edit/page";
+import TintucPage from "@/pages/(dashboard)/tintuc/page";
 import UserEditPage from "@/pages/(dashboard)/user/edit/page";
 import LoginPage from "@/pages/(dashboard)/user/login/page";
 import UserPage from "@/pages/(dashboard)/user/page";
@@ -55,26 +58,28 @@ import CardBankForm from "@/pages/(website)/Payment_method/_components/card_Bank
 import NapTrucTiepForm from "@/pages/(website)/Payment_method/_components/naptructiep";
 import TheCaoForm from "@/pages/(website)/Payment_method/_components/thecao";
 import PagePayment_method from "@/pages/(website)/Payment_method/page";
-import OrderHistory from "@/pages/(website)/User_Order/Page";
-import PageProfile from "@/pages/(website)/User_Profile/page";
-import PageAffiliate from "@/pages/(website)/User_affiliate/Page";
-import Mycomment from "@/pages/(website)/User_comments/page";
-import SecuritySettings from "@/pages/(website)/User_security/page";
-import TransactionsHistory from "@/pages/(website)/User_transactions/page";
-import Wishlist from "@/pages/(website)/User_wishlist/page";
 import PageCart from "@/pages/(website)/cart/page";
 import PageContact from "@/pages/(website)/contact/page";
 import ProductDetail from "@/pages/(website)/home/ProductDetail";
 import HomePage from "@/pages/(website)/home/page";
 import Layout from "@/pages/(website)/layout";
 import PagePayCofirm from "@/pages/(website)/paycofirm/page";
-import PaymentMomo from "@/pages/(website)/pays/_components/paymm";
-import VnpayPayment from "@/pages/(website)/pays/_components/payvnpay";
-import PagePay from "@/pages/(website)/pays/page";
+import PagePayMomo from "@/pages/(website)/paymomo/page";
+import PagePayVnPay from "@/pages/(website)/payvnpay/page";
+
 import {
   default as ProductGame,
   default as ProductPage,
 } from "@/pages/(website)/product/page";
+import NewsPage from "@/pages/(website)/tintuc/page";
+import NewsDetailPage from "@/pages/(website)/tintuc/tintucchitiet";
+import OrderHistory from "@/pages/(website)/users/User_Order/Page";
+import PageProfile from "@/pages/(website)/users/User_Profile/page";
+import PageAffiliate from "@/pages/(website)/users/User_affiliate/Page";
+import Mycomment from "@/pages/(website)/users/User_comments/page";
+import SecuritySettings from "@/pages/(website)/users/User_security/page";
+import TransactionsHistory from "@/pages/(website)/users/User_transactions/page";
+import Wishlist from "@/pages/(website)/users/User_wishlist/page";
 import { Route, Routes } from "react-router-dom";
 
 const Router = () => {
@@ -86,9 +91,8 @@ const Router = () => {
         <Route path="login" element={<LoginPage />} />
         <Route path="productgame/:game_id" element={<ProductDetail />} />
 
-        <Route path="pay" element={<PagePay />} />
-        <Route path="/pay-vnpay" element={<VnpayPayment />} />
-        <Route path="/pay-momo" element={<PaymentMomo />} />
+        <Route path="/pay-vnpay" element={<PagePayVnPay />} />
+        <Route path="/pay-momo" element={<PagePayMomo />} />
         <Route path="/payconfirm" element={<PagePayCofirm />} />
 
         <Route path="games" element={<ProductGame />} />
@@ -121,6 +125,8 @@ const Router = () => {
         <Route path="/contact" element={<PageContact />} />
 
         <Route path="/contact" element={<PageContact />} />
+        <Route path="/tintucs" element={<NewsPage />} />
+        <Route path="/tintucs/:tintuc_id" element={<NewsDetailPage />} />
         
       </Route>
       <Route path="/admin" element={<LayoutAdmin />}>
@@ -197,6 +203,9 @@ const Router = () => {
         <Route path="roles/:role_id/edit" element={<RoleEditPage />} />
         <Route path="users" element={<UserPage />} />
         <Route path="users/:user_id/edit" element={<UserEditPage />} />
+        <Route path="tintucs/add" element={<TintucAddPage/>}/>
+        <Route path="tintucs" element={<TintucPage/>}/>
+        <Route path="tintucs/:tintuc_id/edit" element={<TintucEditPage/>}/>
       </Route>
     </Routes>
   );
