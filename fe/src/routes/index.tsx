@@ -61,7 +61,9 @@ import ProductDetail from "@/pages/(website)/home/ProductDetail";
 import HomePage from "@/pages/(website)/home/page";
 import Layout from "@/pages/(website)/layout";
 import PagePayCofirm from "@/pages/(website)/paycofirm/page";
+import PaymentMomo from "@/pages/(website)/paymomo/_components/paymm";
 import PagePayMomo from "@/pages/(website)/paymomo/page";
+import VnpayPayment from "@/pages/(website)/payvnpay/_components/payvnpay";
 import PagePayVnPay from "@/pages/(website)/payvnpay/page";
 
 import {
@@ -86,8 +88,11 @@ const Router = () => {
         <Route path="login" element={<LoginPage />} />
         <Route path="productgame/:game_id" element={<ProductDetail />} />
 
-        <Route path="/pay-vnpay" element={<PagePayVnPay />} />
-        <Route path="/pay-momo" element={<PagePayMomo />} />
+        <Route path="/vnpayconfirm" element={<PagePayVnPay />} />
+        <Route path="/vnpayment" element={<VnpayPayment />} />
+
+        <Route path="/momoconfirm" element={<PagePayMomo />} />
+        <Route path="/momoment" element={<PaymentMomo />} />
         <Route path="/payconfirm" element={<PagePayCofirm />} />
 
         <Route path="games" element={<ProductGame />} />
@@ -120,7 +125,7 @@ const Router = () => {
         <Route path="/contact" element={<PageContact />} />
 
         <Route path="/contact" element={<PageContact />} />
-        
+
       </Route>
       <Route path="/admin" element={<LayoutAdmin />}>
         <Route index element={<DashboardPage />} />

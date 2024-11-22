@@ -2,7 +2,7 @@ import React from "react";
 
 const Favoritelist = () => {
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md max-w-full mx-auto my-6 ">
+    <div className="p-6 bg-white rounded-lg shadow-md max-w-4xl w-[800px] my-6 mx-auto">
       <h2 className="text-2xl font-semibold mb-2">Sản phẩm yêu thích</h2>
       <p className="text-gray-600 mb-4">
         Danh sách các sản phẩm mà bạn đã đánh dấu "yêu thích"

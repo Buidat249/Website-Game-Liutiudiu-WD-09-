@@ -19,7 +19,7 @@ const Transactions = () => {
   };
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md max-w-4xl mx-auto my-6">
+    <div className="p-6 bg-white rounded-lg shadow-md max-w-4xl w-[800px] my-6 mx-auto">
       <h2 className="text-2xl font-semibold mb-4">Lịch sử giao dịch</h2>
       <p className="text-gray-600 mb-6">
         Hiển thị tất cả các giao dịch bạn đã thực hiện tại Liutiudiu Shop

@@ -1,6 +1,7 @@
 import React from "react";
 import Profile from "./_components/Profile";
-import Sidebar from "./_components/Sidebar";
+import Sidebar from "../layoutUser";
+
 
 const PageProfile = () => {
   return (

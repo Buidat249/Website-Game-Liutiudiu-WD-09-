@@ -10,40 +10,51 @@ import { Link } from "react-router-dom";
 const OrderPage = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const queryClient = useQueryClient();
-  const { mutate } = useMutation({
-    mutationFn: (order_id: number) =>
-      axios.delete(`http://localhost:8080/orders/${order_id}`),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["orders"],
-      });
-      messageApi.success("Xóa đơn hàng thành công");
-    },
-  });
 
+  // Fetch orders
   const { data, isLoading, error } = useQuery({
     queryKey: ["orders"],
     queryFn: async () => {
-      const { data } = await axios.get(`http://localhost:8080/orders`);
-      return data.data.map((order: any) => ({
+      const response = await axios.get("http://localhost:8080/orders");
+      return response.data.data.map((order: any) => ({
         key: order.order_id,
         ...order,
       }));
     },
   });
 
+  // Fetch users for mapping user_id to username
   const [users, setUsers] = useState<IUser[]>([]);
-
   useEffect(() => {
-    // Fetch dữ liệu người dùng từ backend (thay API phù hợp nếu cần)
-    fetch("http://localhost:8080/users") // Đảm bảo API này trả về danh sách người dùng
+    fetch("http://localhost:8080/users")
       .then((response) => response.json())
-      .then((data) => {
-        console.log("Users fetched:", data.data);
-        setUsers(data.data); // Cập nhật danh sách người dùng
-      })
+      .then((data) => setUsers(data.data))
       .catch((error) => console.error("Error fetching users:", error));
   }, []);
+
+  // Handle updating order status
+  const handleChangeStatus = async (e: React.ChangeEvent<HTMLSelectElement>, order_id: number) => {
+    const newStatus = e.target.value;
+    try {
+      await axios.put(`http://localhost:8080/orders/${order_id}`, { status: newStatus });
+      messageApi.success("Cập nhật trạng thái thành công");
+
+      // Invalidate queries to refetch data
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+    } catch (error) {
+      messageApi.error("Cập nhật trạng thái thất bại");
+      console.error(error);
+    }
+  };
+
+  // Mutation for deleting an order
+  const { mutate: deleteOrder } = useMutation({
+    mutationFn: (order_id: number) => axios.delete(`http://localhost:8080/orders/${order_id}`),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["orders"] });
+      messageApi.success("Xóa đơn hàng thành công");
+    },
+  });
 
   if (error) return <div>Error: {error.message}</div>;
 
@@ -62,45 +73,53 @@ const OrderPage = () => {
     {
       key: "games",
       title: "Games",
-      render: (_: any, order: any) => {
-        return (
-          <ul>
-            {order.games.map((game: any) => (
-              <li key={game.game_id}>
-                {game.name}({game.quantity}) 
-              </li>
-            ))}
-          </ul>
-        );
-      },
+      render: (_: any, order: any) => (
+        <ul>
+          {order.games.map((game: any) => (
+            <li key={game.game_id}>
+              {game.name} ({game.quantity})
+            </li>
+          ))}
+        </ul>
+      ),
+    },
+    {
+      key: "status",
+      title: "Trạng thái",
+      render: (_: any, order: any) => (
+        <select
+          value={order.status}
+          onChange={(e) => handleChangeStatus(e, order.order_id)}
+        >
+          <option value="pending">Chưa thanh toán</option>
+          <option value="completed">Hoàn thành</option>
+          <option value="cancelled">Đã hủy</option>
+        </select>
+      ),
     },
     {
       key: "action",
       title: "Action",
-      render: (_: any, order: any) => {
-        return (
-          <>
-            <Popconfirm
-              title="Delete the task"
-              description="Bạn có chắc muốn xóa không?"
-              onConfirm={() => {
-                console.log("Deleting order with ID:", order.order_id);
-                mutate(order.order_id);
-              }}
-              okText="Yes"
-              cancelText="No"
-            >
-              <Button danger>Xóa</Button>
-            </Popconfirm>
-            <Link to={`/admin/orders/${order.order_id}/edit`}>
-              <Button>Cập nhật</Button>
-            </Link>
-          </>
-        );
-      },
+      render: (_: any, order: any) => (
+        <>
+          <Popconfirm
+            title="Xóa đơn hàng?"
+            description="Bạn có chắc muốn xóa không?"
+            onConfirm={() => {
+              deleteOrder(order.order_id);
+            }}
+            okText="Yes"
+            cancelText="No"
+          >
+            <Button danger>Xóa</Button>
+          </Popconfirm>
+          <Link to={`/admin/orders/${order.order_id}/edit`}>
+            <Button>Cập nhật</Button>
+          </Link>
+        </>
+      ),
     },
   ];
-  
 
   return (
     <div>

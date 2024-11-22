@@ -20,7 +20,7 @@ const Security = () => {
   };
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md max-w-4xl mx-auto my-6">
+    <div className="p-6 bg-white rounded-lg shadow-md max-w-4xl w-[800px] my-6 mx-auto">
       <h2 className="text-2xl font-semibold mb-4">Mật khẩu & Bảo mật</h2>
       <p className="text-gray-600 mb-8">
         Vì sự an toàn, Liutiudiu Shop khuyến khích khách hàng sử dụng mật khẩu mạnh

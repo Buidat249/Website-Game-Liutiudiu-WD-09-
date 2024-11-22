@@ -31,6 +31,25 @@ export const getOrderDetail = async (req, res) => {
   }
 };
 
+//Get status oders
+export const getOrderStatus = async (req, res) => {
+  try {
+    const order = await Order.findOne({ order_id: parseInt(req.params.id) });
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    return res.status(200).json({
+      message: 'Order found',
+      status: order.status,
+      payment_status: order.payment_status, // Trả về payment_status
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+
 // POST /orders
 export const addOrder = async (req, res) => {
   try {

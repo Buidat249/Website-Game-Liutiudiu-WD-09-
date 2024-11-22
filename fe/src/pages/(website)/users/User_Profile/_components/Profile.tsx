@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { FaRegAddressCard } from "react-icons/fa";
 
 const Profile = () => {
   const [formData, setFormData] = useState({
@@ -21,41 +20,19 @@ const Profile = () => {
     displayName: true,
   });
 
-  // Lấy user_id từ localStorage
   const userId = localStorage.getItem("user_id");
-  console.log(userId);
 
   useEffect(() => {
     if (userId) {
-      // Gửi yêu cầu đến backend để lấy dữ liệu người dùng
       fetch(`http://localhost:8080/users/${userId}`)
         .then((response) => response.json())
         .then((data) => {
-          console.log('data', data?.data);
-          // Cập nhật formData với dữ liệu trả về từ API
           setFormData({
-            user_id: data?.data.user_id || "",
-            role_id: data?.data.role_id || "",
-            password: data?.data.password || "",
-            email: data?.data.email || "",
-            money: data?.data.money || "",
-            address: data?.data.address || "",
-            avatar: data?.data.avatar || "",
-            fullname: data?.data.fullname || "",
-            phone: data?.data.phone || "",
-            username: data?.data.username || "",
-            idCard: data?.data.idCard || "",
-            gender: data?.data.gender || "",
-            city: data?.data.city || "",
-            district: data?.data.district || "",
-            ward: data?.data.ward || "",
-            displayName: data?.data.displayName ?? true, // Mặc định là true nếu không có
+            ...data?.data,
+            displayName: data?.data?.displayName ?? true,
           });
-          
         })
-        .catch((error) => {
-          console.error("Error fetching user data:", error);
-        });
+        .catch((error) => console.error("Error fetching user data:", error));
     }
   }, [userId]);
 
@@ -66,13 +43,35 @@ const Profile = () => {
       [name]: type === "checkbox" ? checked : value,
     });
   };
-  console.log('tt', formData);
+
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      try {
+        const response = await fetch("http://localhost:8080/upload-avatar", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setFormData((prev) => ({ ...prev, avatar: data.avatarUrl }));
+          alert("Cập nhật ảnh đại diện thành công!");
+        } else {
+          alert("Tải ảnh lên thất bại!");
+        }
+      } catch (error) {
+        console.error("Lỗi khi tải ảnh lên:", error);
+        alert("Đã có lỗi xảy ra, vui lòng thử lại!");
+      }
+    }
+  };
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    console.log("Thông tin đã cập nhật:", formData);
-    localStorage.setItem("user", JSON.stringify(formData));
-
     const userId = localStorage.getItem("user_id");
     if (!userId) {
       alert("Không tìm thấy user_id. Vui lòng đăng nhập lại.");
@@ -82,21 +81,14 @@ const Profile = () => {
     try {
       const response = await fetch(`http://localhost:8080/users/${userId}`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
-      if (!response.ok) {
-        // In ra lỗi chi tiết từ backend
-        const errorData = await response.json();
-        console.error("Cập nhật thất bại:", errorData);
-        alert("Cập nhật thất bại!");
-      } else {
-        const data = await response.json();
-        console.log("Thông tin đã cập nhật thành công:", data);
+      if (response.ok) {
         alert("Cập nhật thông tin thành công!");
+      } else {
+        alert("Cập nhật thất bại!");
       }
     } catch (error) {
       console.error("Lỗi khi gửi PUT request:", error);
@@ -104,12 +96,10 @@ const Profile = () => {
     }
   };
 
-
-
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md max-w-4xl mr-0 ml-auto my-6  w-[800px] ">
-      {/* Phần tổng quan */}
-      <h2 className="text-xl font-bold mb-4">Tổng quan</h2>
+    <div className="p-6 bg-white rounded-lg shadow-md max-w-4xl w-[800px] my-6 mx-auto">
+        {/* Phần tổng quan */}
+        <h2 className="text-xl font-bold mb-4">Tổng quan</h2>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
         <div>
           <p className="text-gray-600">Tên đăng nhập</p>
@@ -273,10 +263,8 @@ const Profile = () => {
             Cho phép hiển thị tên của bạn trên các hoạt động
           </label>
         </div>
-        <button
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-6 hover:bg-blue-600"
-        >
+      
+        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-6 hover:bg-blue-600">
           Lưu thay đổi
         </button>
       </form>

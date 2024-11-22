@@ -25,7 +25,7 @@ export const getUserDetail = async (req, res) => {
     }
 
     // Tìm người dùng theo user_id
-    const user = await User.findOne({ user_id: userId });
+    const user = await User.findOne({ user_id: userId },  '-password');
     if (!user) {
       return res.status(404).json({
         message: "User Not Found",
@@ -63,7 +63,7 @@ export const Register = async (req, res) => {
       city: body.city || "", // Gán chuỗi rỗng nếu city không được điền
       district: body.district || "", // Gán chuỗi rỗng nếu district không được điền
       ward: body.ward || "", // Gán chuỗi rỗng nếu ward không được điền
-      avatar: body.avatar || "", 
+      avatar: body.avatar || "",
       ...body, // Các trường khác từ frontend
     };
 
@@ -76,7 +76,6 @@ export const Register = async (req, res) => {
     res.status(500).send({ message: "Đăng ký thất bại: " + error.message });
   }
 };
-
 
 // POST / login
 export const Login = async (req, res) => {
@@ -112,14 +111,13 @@ export const Login = async (req, res) => {
         status: true,
         message: "Đăng nhập thành công",
         token: token,
-        user_id : user.user_id,
+        user_id: user.user_id,
         email: user.email,
         username: user.username,
         avatar: user.avatar,
         money: user.money,
         role_id: user.role_id, // Trả về role_id của người dùng
       });
-     
     } else {
       res.status(401).send({ status: false, message: "Sai mật khẩu" });
     }
@@ -133,7 +131,6 @@ export const Login = async (req, res) => {
 export const updateUser = async (req, res) => {
   try {
     // Chuyển đổi user_id sang kiểu số
-
     const userId = parseInt(req.params.id, 10);
     if (isNaN(userId)) {
       return res.status(400).json({ message: "ID người dùng không hợp lệ" });
@@ -141,17 +138,23 @@ export const updateUser = async (req, res) => {
 
     // Kiểm tra nếu mật khẩu được cập nhật trong yêu cầu
     if (req.body.password) {
-      req.body.password = await bcryptjs.hash(req.body.password, 6); // Băm mật khẩu mới
+      // Chỉ băm mật khẩu nếu nó chưa được băm
+      if (
+        req.body.password.length !== 60 ||
+        !req.body.password.startsWith("$2b$")
+      ) {
+        req.body.password = await bcryptjs.hash(req.body.password, 6);
+      }
     }
 
     // Cập nhật thông tin người dùng
     const user = await User.findOneAndUpdate({ user_id: userId }, req.body, {
-      new: true,
+      new: true, // Trả về bản ghi đã cập nhật
     });
 
     if (!user) {
       return res.status(404).json({
-        message: "User Not Found",
+        message: "Không tìm thấy người dùng",
       });
     }
 
@@ -163,6 +166,7 @@ export const updateUser = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
 // DELETE / users / :id
 
 export const removeUser = async (req, res) => {

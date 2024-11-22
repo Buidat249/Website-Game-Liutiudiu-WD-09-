@@ -1,14 +1,69 @@
-import React, { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { message } from "antd";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 
-const PaymentMomo = ({ selectedItems }: { selectedItems: any[] }) => {
+
+const PaymentMomo = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const selectedItems = location.state?.selectedItems || [];
+  const orderId = location.state?.order_id;
+  const [paymentStatus, setPaymentStatus] = useState<string>("pending");
+  const [countdown, setCountdown] = useState<number>(5); // Đếm ngược 5 giây
+
+  // Hàm lấy trạng thái thanh toán từ API
+  const fetchPaymentStatus = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/orders/status/${orderId}`
+      );
+      const status = response.data.status || "pending";
+      setPaymentStatus(status);
+
+      // Nếu thanh toán thành công, bắt đầu đếm ngược
+      if (status === "completed") {
+        startCountdown();
+      }
+    } catch (error) {
+      console.error("Error fetching payment status:", error);
+      message.error("Không thể lấy trạng thái thanh toán!");
+    }
+  };
+
+  // Hàm bắt đầu đếm ngược
+  const startCountdown = () => {
+    const interval = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval); // Dừng đếm ngược khi về 0
+          navigate("/"); // Chuyển hướng về trang chủ
+        }
+        return prev - 1;
+      });
+    }, 1000); // Mỗi giây giảm 1
+  };
+
+  // Polling (lặp lại mỗi 3 giây)
   useEffect(() => {
-    // Kiểm tra xem selectedItems đã được truyền đúng chưa
-    console.log("Selected Items in PaymentMomo:", selectedItems);
-  }, [selectedItems]);
+    if (orderId) {
+      // Gọi hàm lấy trạng thái ngay lần đầu tiên
+      fetchPaymentStatus();
+
+      const interval = setInterval(() => {
+        fetchPaymentStatus(); // Lặp lại gọi API sau mỗi 3 giây
+      }, 3000);
+
+      // Dọn dẹp khi component bị unmount
+      return () => clearInterval(interval);
+    }
+  }, [orderId]);
 
   // Tính tổng tiền và phí giao dịch
-  const totalAmount = selectedItems.reduce((total, item) => total + item.final_price * item.quantity, 0);
+  const totalAmount = selectedItems.reduce(
+    (total: any, item: any) => total + item.final_price * item.quantity,
+    0
+  );
   const transactionFee = totalAmount * 0.05; // Phí 5%
   const totalPayment = totalAmount + transactionFee;
 
@@ -33,17 +88,39 @@ const PaymentMomo = ({ selectedItems }: { selectedItems: any[] }) => {
         </div>
       </div>
 
-      {/* Thông tin thanh toán */}
-      <div className="mb-4">
-        <div className="flex justify-between text-gray-700">
+       {/* Hiển thị trạng thái thanh toán */}
+       <div className="mt-6">
+        <p className="text-lg">
+          <span className="font-semibold">Trạng thái thanh toán:</span>{" "}
+          <span
+            className={`${
+              paymentStatus === "pending"
+                ? "text-yellow-600"
+                : paymentStatus === "failed"
+                ? "text-red-600"
+                : "text-green-600"
+            }`}
+          >
+            {paymentStatus === "completed"
+              ? `Đã thanh toán thành công. Quay về trang chủ trong ${countdown}s`
+              : paymentStatus === "canceled"
+              ? "Thanh toán thất bại"
+              : "Chưa thanh toán"}
+          </span>
+        </p>
+      </div>
+
+     {/* Thông tin giao dịch */}
+     <div className="mb-8">
+        <div className="flex justify-between text-gray-700 mb-2">
           <p>Số tiền:</p>
           <p className="font-semibold">{totalAmount.toLocaleString()}đ</p>
         </div>
-        <div className="flex justify-between text-gray-700">
+        <div className="flex justify-between text-gray-700 mb-2">
           <p>Phí giao dịch (5%):</p>
           <p className="font-semibold">{transactionFee.toLocaleString()}đ</p>
         </div>
-        <div className="flex justify-between text-gray-700 border-t pt-2">
+        <div className="flex justify-between text-gray-700 border-t pt-4">
           <p className="font-bold">Tổng tiền:</p>
           <p className="font-bold">{totalPayment.toLocaleString()}đ</p>
         </div>
@@ -89,7 +166,7 @@ const PaymentMomo = ({ selectedItems }: { selectedItems: any[] }) => {
             </tr>
           </thead>
           <tbody>
-            {selectedItems.map((item) => (
+            {selectedItems.map((item : any) => (
               <tr key={item.game_id} className="border-t">
                 <td className="py-2 px-4">{item.name}</td>
                 <td className="py-2 px-4">{item.quantity}</td>

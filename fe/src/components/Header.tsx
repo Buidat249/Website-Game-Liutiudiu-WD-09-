@@ -32,10 +32,10 @@ interface Game {
 
 const Header = (props: Props) => {
   const [carts, setCarts] = useState<Cart[]>([]);
-  const [games, setGames] = useState<Game[]>([]);
   const [gameCount, setGameCount] = useState(0);
   const navigate = useNavigate();
 
+  // Cập nhật số lượng game trong giỏ hàng
   const updateGameCount = () => {
     const count = carts.reduce(
       (total, cart) => total + (cart.games?.length || 0),
@@ -47,49 +47,39 @@ const Header = (props: Props) => {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user") || "{}");
 
-    // Kiểm tra nếu người dùng đã đăng nhập
     if (user.user_id) {
-      // Nếu đã đăng nhập, thực hiện yêu cầu API
-      axios
-        .get(`http://localhost:8080/carts/${user.user_id}`)
-        .then((response) => {
-          console.log(response.data); // Kiểm tra dữ liệu trả về
-          if (response.data && response.data.data) {
-            setCarts([response.data.data]); // Chuyển thành mảng nếu cần
-          } else {
-            setCarts([]);
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching carts:", error);
-        });
-    }
+      const intervalId = setInterval(() => {
+        // Polling giỏ hàng mỗi 5 giây
+        axios
+          .get(`http://localhost:8080/carts/${user.user_id}`)
+          .then((response) => {
+            if (response.data && response.data.data) {
+              setCarts([response.data.data]); // Cập nhật lại giỏ hàng
+            } else {
+              setCarts([]);
+            }
+          })
+          .catch((error) => {
+            console.error("Error fetching carts:", error);
+          });
+      }, 1000); // Cập nhật giỏ hàng mỗi 5 giây
 
-    // Lấy thông tin game
-    axios
-      .get("http://localhost:8080/games")
-      .then((response) => {
-        setGames(response.data.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching games:", error);
-      });
-  }, []); // Dependency array rỗng vì không cần phải chạy lại khi dữ liệu thay đổi
+      return () => {
+        clearInterval(intervalId); // Dọn dẹp interval khi component bị hủy
+      };
+    }
+  }, []); // Chạy một lần khi component mount
 
   useEffect(() => {
-    updateGameCount(); // Tính lại số lượng game trong giỏ hàng
-  }, [carts]); // Mỗi khi `carts` thay đổi, hàm này sẽ được gọi
-
-  // Lấy thông tin người dùng từ localStorage
-  const user = JSON.parse(localStorage.getItem("user") || "{}");
+    updateGameCount(); // Cập nhật số lượng game trong giỏ hàng khi carts thay đổi
+  }, [carts]);
 
   // Hàm đăng xuất
   const handleLogout = () => {
-    // Xóa user khỏi localStorage
     localStorage.removeItem("user");
-    localStorage.removeItem("cart"); // Xóa giỏ hàng khỏi localStorage nếu cần
+    localStorage.removeItem("cart");
     window.location.reload(); // Refresh để cập nhật lại giao diện hoặc dùng state quản lý
-    navigate("/login"); // Điều hướng về trang đăng nhập
+    navigate("/login");
   };
 
   // Hàm xử lý khi người dùng click vào giỏ hàng
@@ -97,14 +87,13 @@ const Header = (props: Props) => {
     const user = JSON.parse(localStorage.getItem("user") || "{}");
 
     if (!user.user_id) {
-      // Nếu chưa đăng nhập, hiển thị thông báo yêu cầu đăng nhập
       message.warning("Vui lòng đăng nhập để tiếp tục đến giỏ hàng!");
-      navigate("/login"); // Chuyển hướng về trang đăng nhập
+      navigate("/login");
     } else {
-      // Nếu đã đăng nhập, chuyển đến trang giỏ hàng
       navigate("/cart");
     }
   };
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   return (
     <div>
@@ -141,7 +130,7 @@ const Header = (props: Props) => {
                 {user.username ? (
                   <div className="flex justify-between items-center">
                     <Link to="/user/profile" style={{ marginRight: "15px" }}>
-                      <img src={user.avatar} alt="User Avatar"></img>
+                      <img src={user.avatar} alt="User Avatar" />
                     </Link>
                     <span>{user.username}</span>
                   </div>
@@ -158,7 +147,7 @@ const Header = (props: Props) => {
                 )}
               </div>
               <div className="cart">
-                <a onClick={handleGoToCart}> {/* Gọi hàm xử lý khi click vào giỏ hàng */}
+                <a onClick={handleGoToCart}>
                   <img src={cartIcon} alt="Cart Icon" />
                   <span>Giỏ hàng({gameCount})</span>
                 </a>

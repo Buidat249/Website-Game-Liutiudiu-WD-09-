@@ -12,55 +12,22 @@ interface Cart {
 
 interface Game {
   game_id: number;
-  brand_id: number;
-  category_id: number;
-  platform_id: number;
   name: string;
   price: number;
   discount: number;
   final_price: number;
   image: string;
   title: string;
-  description: string;
 }
 
 const CheckoutBoxRight = ({ totalPrice, totalQuantity }: any) => {
-  const [carts, setCarts] = useState<Cart[]>([]);
   const [games, setGames] = useState<Game[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [showPaymentButton, setShowPaymentButton] = useState(false);
-  const { selectedGames, setSelectedGames } = useCartContext(); // Sử dụng CartContext
+  const { selectedGames } = useCartContext(); // Sử dụng CartContext
   const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
   const navigate = useNavigate();
 
   // Kiểm tra user khi đăng nhập
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
-  console.log('tt',totalPrice.toLocaleString() )
-  console.log('sod',user.money.toLocaleString() )
-
-  // Hàm lấy giỏ hàng từ API
-  const fetchCartData = () => {
-    if (user?.user_id) {
-      setLoading(true);
-      axios
-        .get(`http://localhost:8080/carts/${user.user_id}`)
-        .then((response) => {
-          if (response.data && response.data.data) {
-            setCarts([response.data.data]);
-          } else {
-            setCarts([]);
-          }
-          setLoading(false);
-        })
-        .catch((error) => {
-          console.error("Error fetching carts:", error);
-          setLoading(false);
-        });
-    } else {
-      setCarts([]);
-      setLoading(false);
-    }
-  };
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   // Hàm lấy sản phẩm
   const fetchGameData = () => {
@@ -74,35 +41,10 @@ const CheckoutBoxRight = ({ totalPrice, totalQuantity }: any) => {
       });
   };
 
-  // Gọi dữ liệu khi component load và khi user thay đổi
+  // Gọi dữ liệu khi component load
   useEffect(() => {
-    if (user?.user_id) {
-      fetchCartData();
-      fetchGameData();
-    }
-  }, [user?.user_id]);
-
-  // Lắng nghe sự thay đổi của carts và log ra khi cập nhật
-  useEffect(() => {
-  }, [carts]); // Khi carts thay đổi, useEffect này sẽ được gọi
-
-  // Xử lý khi bấm nút xác nhận thanh toán
-  const handleConfirmPayment = () => {
-    const selectedItems = games
-      .filter((game) => selectedGames[game.game_id]?.selected)
-      .map((game) => ({
-        ...game,
-        quantity: selectedGames[game.game_id]?.quantity || 1,
-      }));
-  
-    console.log("Selected Items for Momo:", selectedItems); // Kiểm tra lại selectedItems
-  
-    if (paymentMethod === "vnpay") {
-      navigate("/pay-vnpay", { state: { selectedItems } });
-    } else if (paymentMethod === "momo") {
-      navigate("/pay-momo", { state: { selectedItems } });
-    }
-  };
+    fetchGameData();
+  }, []);
 
   // Hàm xử lý chọn phương thức thanh toán
   const handlePayment = (method: string) => {
@@ -118,9 +60,10 @@ const CheckoutBoxRight = ({ totalPrice, totalQuantity }: any) => {
       return;
     }
 
-    if (method === "vnpay" || method === "momo") {
-      setPaymentMethod(method); // Lưu phương thức thanh toán
-      setShowPaymentButton(true); // Hiện nút Xác Nhận Thanh Toán
+    if (method === "vnpay") {
+      navigate("/vnpayconfirm", { state: { selectedItems } });
+    } else if (method === "momo") {
+      navigate("/momoconfirm", { state: { selectedItems } });
     } else {
       navigate("/payconfirm", { state: { selectedItems } });
     }
@@ -132,7 +75,7 @@ const CheckoutBoxRight = ({ totalPrice, totalQuantity }: any) => {
       <div className="space-y-2">
         <div className="flex justify-between">
           <span>Tổng sản phẩm</span>
-          {totalQuantity.toLocaleString()}
+          <span>{totalQuantity.toLocaleString()}</span>
         </div>
         <div className="flex justify-between">
           <span>Tổng giá trị sản phẩm</span>
@@ -140,7 +83,9 @@ const CheckoutBoxRight = ({ totalPrice, totalQuantity }: any) => {
         </div>
         <div className="flex justify-between">
           <span>Số dư hiện tại</span>
-          <span className="font-medium text-gray-900">{user.money.toLocaleString()}đ</span>
+          <span className="font-medium text-gray-900">
+            {user.money.toLocaleString()}đ
+          </span>
         </div>
         <div className="flex justify-between">
           <span>Tổng giá trị phải thanh toán</span>
@@ -149,50 +94,51 @@ const CheckoutBoxRight = ({ totalPrice, totalQuantity }: any) => {
       </div>
 
       <div className="mt-6 space-y-3">
-        {!showPaymentButton && (
-          <>
-            {user.money >= totalPrice ? (
-              <button
-                className="w-full bg-green-600 text-white py-2 rounded"
-                onClick={() => handlePayment("confirm")}
-              >
-                Thanh Toán
-              </button>
-            ) : (
-              <button
-                className="w-full bg-blue-600 text-white py-2 rounded"
-                onClick={() => navigate("/paymentMethods")}
-              >
-                Nạp tiền vào tài khoản
-              </button>
-            )}
-            <p style={{ textAlign: "center", fontSize: "13px", padding: "10px" }}>
-              Quét mã. Thanh toán. Không cần nạp tiền
-            </p>
-            <button
-              className="w-full bg-blue-700 text-white py-2 rounded flex items-center justify-center"
-              onClick={() => handlePayment("vnpay")}
-            >
-              <span className="mr-2">📱</span> Mua siêu tốc qua Mobile Banking
-            </button>
-            <button
-              className="w-full bg-pink-500 text-white py-2 rounded flex items-center justify-center"
-              onClick={() => handlePayment("momo")}
-            >
-              <span className="mr-2">💸</span> Mua siêu tốc với MoMo
-            </button>
-          </>
-        )}
+  {user.money >= totalPrice ? (
+    <button
+      className="w-full bg-green-600 text-white py-2 rounded"
+      onClick={() => handlePayment("confirm")}
+    >
+      Thanh Toán
+    </button>
+  ) : (
+    <button
+      className="w-full bg-blue-600 text-white py-2 rounded"
+      onClick={() => navigate("/paymentMethods")}
+    >
+      Nạp tiền vào tài khoản
+    </button>
+  )}
 
-        {showPaymentButton && (
-          <button
-            className="w-full bg-green-600 text-white py-2 rounded"
-            onClick={handleConfirmPayment}
-          >
-            Xác Nhận Thanh Toán
-          </button>
-        )}
-      </div>
+  <p
+    style={{
+      textAlign: "center",
+      fontSize: "13px",
+      padding: "10px",
+    }}
+  >
+    Quét mã. Thanh toán. Không cần nạp tiền
+  </p>
+
+  {/* Hiển thị nút MoMo và VNPAY nếu totalPrice > 0 */}
+  {totalPrice > 0 && (
+    <>
+      <button
+        className="w-full bg-pink-500 text-white py-2 rounded flex items-center justify-center"
+        onClick={() => handlePayment("momo")}
+      >
+        <span className="mr-2">💸</span> Mua siêu tốc với MoMo
+      </button>
+      <button
+        className="w-full bg-blue-700 text-white py-2 rounded flex items-center justify-center"
+        onClick={() => handlePayment("vnpay")}
+      >
+        <span className="mr-2">📱</span> Mua siêu tốc qua Mobile Banking
+      </button>
+    </>
+  )}
+</div>
+
     </div>
   );
 };

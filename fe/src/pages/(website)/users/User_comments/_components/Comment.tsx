@@ -17,7 +17,7 @@ const Comment = () => {
   };
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md max-w-5xl mx-auto my-6">
+    <div className="p-6 bg-white rounded-lg shadow-md max-w-4xl w-[800px] my-6 mx-auto">
       <h2 className="text-2xl font-semibold mb-2">Bình luận của tôi</h2>
       <p className="text-gray-600 mb-4">
         Bình luận và trả lời mà bạn đã viết trên Liutiudiu Shop
