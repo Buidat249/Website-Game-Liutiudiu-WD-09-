@@ -68,7 +68,7 @@ const PaymentMomo = () => {
   const totalPayment = totalAmount + transactionFee;
 
   return (
-    <div className="max-w-5xl mx-auto bg-white shadow-lg rounded-lg p-6 my-8">
+    <div className="w-[1000px] mx-auto bg-white shadow-lg rounded-lg p-5 my-6 ">
       {/* Header */}
       <div className="flex items-center justify-between border-b pb-4 mb-4">
         <div className="flex items-center">

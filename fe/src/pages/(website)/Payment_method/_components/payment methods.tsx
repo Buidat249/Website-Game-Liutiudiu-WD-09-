@@ -58,29 +58,31 @@ const PaymentPage: React.FC = () => {
     }
   }
   return (
-    <Card style={{ maxWidth: 800, margin: "20px auto", padding: "20px" }}>
-      <Typography.Title level={3}>Nạp tiền vào tài khoản</Typography.Title>
-      <Typography.Paragraph>
-        Bạn có thể chọn các phương thức thanh toán khả dụng bên dưới owr
-      </Typography.Paragraph>
-      <Divider />
-      <List
-        itemLayout="horizontal"
-        dataSource={paymentMethods}
-        renderItem={(item) => (
-          <List.Item
-          onClick={() => handleItemClick(item.route)}
-            style={{ cursor: item.route ? "pointer" : "default" }}
-          >
-            <List.Item.Meta
-              avatar={<Avatar src={item.icon} />}
-              title={item.title}
-              description={item.description}
-            />
-          </List.Item>
-        )}
-      />
-    </Card>
+    <div className="bg-gray-100  mx-auto w-[1048px]">
+      <Card >
+        <Typography.Title level={3}>Nạp tiền vào tài khoản</Typography.Title>
+        <Typography.Paragraph>
+          Bạn có thể chọn các phương thức thanh toán khả dụng bên dưới owr
+        </Typography.Paragraph>
+        <Divider />
+        <List
+          itemLayout="horizontal"
+          dataSource={paymentMethods}
+          renderItem={(item) => (
+            <List.Item
+              onClick={() => handleItemClick(item.route)}
+              style={{ cursor: item.route ? "pointer" : "default" }}
+            >
+              <List.Item.Meta
+                avatar={<Avatar src={item.icon} />}
+                title={item.title}
+                description={item.description}
+              />
+            </List.Item>
+          )}
+        />
+      </Card>
+    </div>
   );
 };
 

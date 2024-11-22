@@ -19,7 +19,7 @@ const PagePayCofirm = () => {
   }, [location.state]); // Đảm bảo lắng nghe thay đổi của location.state
 
   return (
-    <div className="flex flex-col lg:flex-row bg-gray-100 p-6 mx-auto w-4/5 space-y-6 lg:space-y-0 lg:space-x-6">
+    <div className="flex flex-col lg:flex-row bg-gray-100 p-6 mx-auto w-[1048px] space-y-6 lg:space-y-0 lg:space-x-6">
       {/* Hộp bên trái: Các sản phẩm trong giỏ */}
       <div className="flex-1 bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-semibold mb-4">

@@ -5,7 +5,7 @@ const { Title, Text, Link } = Typography;
 
 const NapTrucTiepForm: React.FC = () => {
   return (
-    <div style={{ maxWidth: 800, margin: "auto", padding: "20px" }}>
+    <div className="bg-gray-100 p-6  mx-auto w-[1048px]">
       <Card>
         <div
           style={{ display: "flex", alignItems: "center", marginBottom: 20 }}

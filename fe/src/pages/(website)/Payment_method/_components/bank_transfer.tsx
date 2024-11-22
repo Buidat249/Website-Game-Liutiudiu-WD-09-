@@ -64,73 +64,75 @@ const BankingPage: React.FC = () => {
   }, [countdown]);
 
   return (
-    <Card style={{ maxWidth: 900, margin: "20px auto", padding: "20px" }}>
-      <Typography.Title level={3}>Nạp tiền vào tài khoản</Typography.Title>
-      <Typography.Paragraph>
-        Bạn có thể chọn các phương thức thanh toán khả dụng bên dưới
-      </Typography.Paragraph>
-      <List
-        itemLayout="horizontal"
-        dataSource={[
-          {
-            title: "Chuyển Khoản Ngân Hàng 24/7",
-            description:
-              "Chuyển khoản ngân hàng online hoặc tại quầy giao dịch",
-            icon: "https://cdn.divineshop.vn/image/catalog/Logo-bank/bank.png?hash=1604888771",
-          },
-        ]}
-        renderItem={(item) => (
-          <List.Item>
-            <List.Item.Meta
-              avatar={<Avatar src={item.icon} />}
-              title={item.title}
-              description={item.description}
-            />
-          </List.Item>
-        )}
-      />
-      <Typography.Title level={4} style={{ marginTop: "20px" }}>
-        Danh sách ngân hàng
-      </Typography.Title>
-      <Row gutter={[16, 16]} justify="start">
-        {bankLogos.map((bank) => (
-          <Col key={bank.name} xs={24} sm={12} md={8}>
-            <Avatar src={bank.logo} size={64} />
-          </Col>
-        ))}
-      </Row>
-      <Typography.Title level={4} style={{ marginTop: "20px" }}>
-        Thông tin nạp tiền
-      </Typography.Title>
-      <Table
-        columns={columns}
-        dataSource={transferInfo}
-        pagination={false}
-        bordered
-      />
-
-      <Button type="primary" style={{ marginTop: "20px" }} onClick={showQrCode}>
-        Nạp tiền
-      </Button>
-
-      <Modal
-        title="Mã QR để chuyển khoản"
-        visible={isModalVisible}
-        onCancel={handleModalClose}
-        footer={[
-          <Button key="close" onClick={handleModalClose}>
-            Đóng
-          </Button>,
-        ]}
-      >
-        <img
-          src="https://cdn.pixabay.com/photo/2023/02/28/01/51/qr-code-7819654_640.jpg"
-          alt="QR Code"
-          style={{ width: "150px", height: "auto", marginBottom: "20px", margin:"auto" }}
+    <div className="bg-gray-100 p-6  mx-auto w-[1048px]">
+      <Card>
+        <Typography.Title level={3}>Nạp tiền vào tài khoản</Typography.Title>
+        <Typography.Paragraph>
+          Bạn có thể chọn các phương thức thanh toán khả dụng bên dưới
+        </Typography.Paragraph>
+        <List
+          itemLayout="horizontal"
+          dataSource={[
+            {
+              title: "Chuyển Khoản Ngân Hàng 24/7",
+              description:
+                "Chuyển khoản ngân hàng online hoặc tại quầy giao dịch",
+              icon: "https://cdn.divineshop.vn/image/catalog/Logo-bank/bank.png?hash=1604888771",
+            },
+          ]}
+          renderItem={(item) => (
+            <List.Item>
+              <List.Item.Meta
+                avatar={<Avatar src={item.icon} />}
+                title={item.title}
+                description={item.description}
+              />
+            </List.Item>
+          )}
         />
-        <Typography.Text>Thời gian còn lại: {countdown} giây</Typography.Text>
-      </Modal>
-    </Card>
+        <Typography.Title level={4} style={{ marginTop: "20px" }}>
+          Danh sách ngân hàng
+        </Typography.Title>
+        <Row gutter={[16, 16]} justify="start">
+          {bankLogos.map((bank) => (
+            <Col key={bank.name} xs={24} sm={12} md={8}>
+              <Avatar src={bank.logo} size={64} />
+            </Col>
+          ))}
+        </Row>
+        <Typography.Title level={4} style={{ marginTop: "20px" }}>
+          Thông tin nạp tiền
+        </Typography.Title>
+        <Table
+          columns={columns}
+          dataSource={transferInfo}
+          pagination={false}
+          bordered
+        />
+
+        <Button type="primary" style={{ marginTop: "20px" }} onClick={showQrCode}>
+          Nạp tiền
+        </Button>
+
+        <Modal
+          title="Mã QR để chuyển khoản"
+          visible={isModalVisible}
+          onCancel={handleModalClose}
+          footer={[
+            <Button key="close" onClick={handleModalClose}>
+              Đóng
+            </Button>,
+          ]}
+        >
+          <img
+            src="https://cdn.pixabay.com/photo/2023/02/28/01/51/qr-code-7819654_640.jpg"
+            alt="QR Code"
+            style={{ width: "150px", height: "auto", marginBottom: "20px", margin: "auto" }}
+          />
+          <Typography.Text>Thời gian còn lại: {countdown} giây</Typography.Text>
+        </Modal>
+      </Card>
+    </div>
   );
 };
 

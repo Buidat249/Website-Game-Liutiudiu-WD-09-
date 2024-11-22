@@ -13,23 +13,27 @@ export const getAllOrders = async (req, res) => {
   }
 };
 
-// GET /orders/ : id
+// GET /orders/:user_id
 export const getOrderDetail = async (req, res) => {
   try {
-    const order = await Order.findOne({ order_id: req.params.id });
-    if (!order) {
-      return res.status(404).json({
-        message: "Order Not Found",
-      });
+    const userId = req.params.userId;
+    
+    // Chỉ cần gửi tất cả dữ liệu mà không lọc trên backend
+    const orders = await Order.find({ user_id: userId });
+
+    if (orders.length === 0) {
+      return res.status(200).json({ data: [] }); // Trả về mảng rỗng nếu không có đơn hàng
     }
-    return res.status(200).json({
-      message: "Get Order Detail Done",
-      data: order,
-    });
+
+    return res.status(200).json({ data: orders });
   } catch (error) {
-    return res.status(500).json({ message: error.message });
+    console.error(error);
+    return res.status(500).json({ message: "Có lỗi xảy ra khi lấy đơn hàng" });
   }
 };
+
+
+
 
 //Get status oders
 export const getOrderStatus = async (req, res) => {

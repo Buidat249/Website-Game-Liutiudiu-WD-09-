@@ -18,7 +18,7 @@ const PayMoMOForm: React.FC = () => {
   };
 
   return (
-    <div style={{ maxWidth: 600, margin: "auto", padding: "20px" }}>
+    <div className="bg-gray-100 p-6  mx-auto w-[1048px]">
       <Title level={3}>Nạp tiền vào tài khoản</Title>
       <Text>Bạn có thể chọn các phương thức thanh toán khả dụng bên dưới</Text>
       <Card style={{ marginTop: 20 }}>

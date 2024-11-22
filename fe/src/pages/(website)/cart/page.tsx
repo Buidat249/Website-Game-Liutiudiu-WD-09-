@@ -8,7 +8,7 @@ const PageCart = () => {
   const [totalQuantity, setTotalQuantity] = useState(0);
 
   return (
-    <div className='flex flex-col lg:flex-row bg-gray-100 p-6 mx-auto w-4/5'>
+    <div className='flex flex-col lg:flex-row bg-gray-100 p-6 mx-auto w-[1048px]'>
       <CartProvider>
         <CartBoxLeft setTotalPrice={setTotalPrice} setTotalQuantity={setTotalQuantity} />
         <CheckoutBoxRight totalPrice={totalPrice} totalQuantity={totalQuantity} />

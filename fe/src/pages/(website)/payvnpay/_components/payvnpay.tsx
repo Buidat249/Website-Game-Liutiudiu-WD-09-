@@ -67,7 +67,7 @@ const VnpayPayment = () => {
   const totalPayment = totalAmount + transactionFee;
 
   return (
-    <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-8 my-10">
+    <div className="w-[1000px] mx-auto bg-white shadow-lg rounded-lg p-6 my-6">
       {/* Thông tin Thanh toán VNPAY-QR */}
       <div className="flex items-center justify-between border-b pb-4 mb-6">
         <div className="flex items-center">

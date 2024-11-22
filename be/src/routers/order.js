@@ -5,8 +5,9 @@ import { addOrder, getAllOrders, getOrderDetail, getOrderStatus, removeOrder, up
 const router = Router();
 
 
+
 router.get(`/orders`, getAllOrders);
-router.get(`/orders/:id`, getOrderDetail);
+router.get(`/orders/:userId`, getAllOrders); // Sửa route thành :userId thay vì :id
 router.get(`/orders/status/:id`, getOrderStatus);
 router.post(`/orders`, addOrder);
 router.put(`/orders/:id`, updateOrder);
