@@ -3,7 +3,7 @@ import React from "react";
 
 const Menu = () => {
   return (
-    <aside className="bg-white w-64 p-6 shadow-lg h-screen">
+    <aside className="bg-white w-64 pt-6 pb-6 pr-6 pl-6 shadow-lg h-screen">
       <h3 className="text-lg font-bold mb-4">GIỚI THIỆU</h3>
       <ul className="space-y-2">
         <li>

@@ -92,6 +92,7 @@ const Router = () => {
         <Route path="register" element={<RegisterPage />} />
         <Route path="login" element={<LoginPage />} />
         <Route path="productgame/:game_id" element={<ProductDetail />} />
+        <Route path="/tintucs" element={<NewsPage />} />
 
         <Route path="/vnpayconfirm" element={<PagePayVnPay />} />
         <Route path="/vnpayment" element={<VnpayPayment />} />
