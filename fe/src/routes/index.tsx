@@ -42,6 +42,9 @@ import ReviewPage from "@/pages/(dashboard)/review/page";
 import RoleAddPage from "@/pages/(dashboard)/role/add/page";
 import RoleEditPage from "@/pages/(dashboard)/role/edit/page";
 import RolePage from "@/pages/(dashboard)/role/page";
+import TintucAddPage from "@/pages/(dashboard)/tintuc/add/page";
+import TintucEditPage from "@/pages/(dashboard)/tintuc/edit/page";
+import TintucPage from "@/pages/(dashboard)/tintuc/page";
 import UserEditPage from "@/pages/(dashboard)/user/edit/page";
 import LoginPage from "@/pages/(dashboard)/user/login/page";
 import UserPage from "@/pages/(dashboard)/user/page";
@@ -65,11 +68,13 @@ import PaymentMomo from "@/pages/(website)/paymomo/_components/paymm";
 import PagePayMomo from "@/pages/(website)/paymomo/page";
 import VnpayPayment from "@/pages/(website)/payvnpay/_components/payvnpay";
 import PagePayVnPay from "@/pages/(website)/payvnpay/page";
-
 import {
   default as ProductGame,
   default as ProductPage,
 } from "@/pages/(website)/product/page";
+
+import NewsPage from "@/pages/(website)/tintuc/page";
+import NewsDetailPage from "@/pages/(website)/tintuc/tintucchitiet";
 import OrderHistory from "@/pages/(website)/users/User_Order/Page";
 import PageProfile from "@/pages/(website)/users/User_Profile/page";
 import PageAffiliate from "@/pages/(website)/users/User_affiliate/Page";
@@ -125,7 +130,6 @@ const Router = () => {
         <Route path="/contact" element={<PageContact />} />
 
         <Route path="/contact" element={<PageContact />} />
-
       </Route>
       <Route path="/admin" element={<LayoutAdmin />}>
         <Route index element={<DashboardPage />} />
@@ -201,6 +205,9 @@ const Router = () => {
         <Route path="roles/:role_id/edit" element={<RoleEditPage />} />
         <Route path="users" element={<UserPage />} />
         <Route path="users/:user_id/edit" element={<UserEditPage />} />
+        <Route path="tintucs/add" element={<TintucAddPage/>}/>
+        <Route path="tintucs" element={<TintucPage/>}/>
+        <Route path="tintucs/:tintuc_id/edit" element={<TintucEditPage/>}/>
       </Route>
     </Routes>
   );

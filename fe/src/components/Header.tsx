@@ -160,7 +160,7 @@ const Header = (props: Props) => {
           <div className="main-nav-content">
             <Link to="/">Trang chủ</Link>
             <Link to="/games">Sản phẩm</Link>
-            <Link to="#">Tin tức</Link>
+            <Link to="/tintucs">Tin tức</Link>
             <Link to="/contact">Liên hệ</Link>
             <Link to="/paymentMethods">Hình thức thanh toán</Link>
           </div>
