@@ -1,12 +1,8 @@
-import { Button, Image } from "antd";
-import axios, { AxiosError } from "axios";
+import { Button, Image, message } from "antd";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import FAQ from "./_components/FAQ";
-import { message } from 'antd';
-import { AlignCenter } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
-
 
 interface Game {
   game_id?: number;
@@ -19,7 +15,7 @@ interface Game {
   final_price?: number | undefined;
   rating?: number;
   image?: string;
-  description_id?: number;
+  description_id?: number[];
   configuration?: string;
 }
 
@@ -28,18 +24,25 @@ interface Platform {
   name: string;
 }
 
-
 interface Description {
-  description_id?: number,
-  name?: string,
-  descriptiondetail_id?: number,
+  description_id?: any;
+  name?: string;
+  descriptiondetail_id?: number;
 }
 
+interface DescriptionDetail {
+  description_id?: number;
+  name?: string;
+  content?: string;
+  image?: string;
+  descriptiondetail_id?: number;
+}
 
 const ProductDetail = () => {
   const { game_id } = useParams<{ game_id: string }>();
   const [game, setGame] = useState<Game | null>(null);
-  const [description, setDescription] = useState<Description | null>(null);
+  const [description, setDescription] = useState<Description[] | null>([]);
+  const [descriptionDetail, setDescriptionDetail] = useState<DescriptionDetail[] | null>([]);
   const [categoryName, setCategoryName] = useState<string | null>(null);
   const [relatedGames, setRelatedGames] = useState<Game[]>([]);
   const [platforms, setPlatforms] = useState<Platform[]>([]);
@@ -55,49 +58,25 @@ const ProductDetail = () => {
 
     const fetchGame = async () => {
       try {
-        const response = await axios.get<{ data: Game }>(
-          `http://localhost:8080/games/${game_id}`
-        );
+        const response = await axios.get<{ data: Game }>(`http://localhost:8080/games/${game_id}`);
         const gameData = response.data.data;
         setGame(gameData);
 
-        // const responsedes = await axios.get<{ data: Description }>(
-        //   `http://localhost:8080/desctiptiondetail/${IdDescription}`
-        // );
-        // const desData = responsedes.data.data;
-        // setDescription(desData);
-        // console.log(IdDescription, "fdsafdsaffdsafs");
-
-        // Kiểm tra nếu category_id tồn tại và là mảng
         const categoryId = gameData.category_id[0]; // Lấy giá trị đầu tiên của mảng category_id
-
         if (categoryId) {
-          const categoryResponse = await axios.get<{ data: { name: string } }>(
-            `http://localhost:8080/categories/${categoryId}`
-          );
+          const categoryResponse = await axios.get<{ data: { name: string } }>(`http://localhost:8080/categories/${categoryId}`);
           setCategoryName(categoryResponse.data.data.name);
         }
 
-        // Tạo danh sách các category ID
         const categoryIds = gameData.category_id.join(",");
-
-        // Lấy danh sách game liên quan
-        const relatedResponse = await axios.get<{ data: Game[] }>(
-          `http://localhost:8080/games?category_id=${categoryIds}`
-        );
-
-        // Lọc danh sách game liên quan
+        const relatedResponse = await axios.get<{ data: Game[] }>(`http://localhost:8080/games?category_id=${categoryIds}`);
         const relatedGamesList = relatedResponse.data.data.filter(
           (relatedGame) =>
             relatedGame.game_id !== gameData.game_id &&
-            Array.isArray(relatedGame.category_id) && // Kiểm tra category_id của game liên quan tồn tại và là mảng
-            relatedGame.category_id.some(
-              (catId) => gameData.category_id.includes(catId) // Kiểm tra xem category_id của game liên quan có bao gồm category_id của game hiện tại
-            )
+            Array.isArray(relatedGame.category_id) &&
+            relatedGame.category_id.some((catId) => gameData.category_id.includes(catId))
         );
         setRelatedGames(relatedGamesList);
-
-        console.log("Related games:", relatedGamesList);
       } catch (error) {
         console.error("Error fetching game details:", error);
       }
@@ -109,11 +88,51 @@ const ProductDetail = () => {
   }, [game_id]);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user'); // Lấy thông tin người dùng từ localStorage
+    const storedUser = localStorage.getItem('user');
     if (storedUser) {
-      setIsLoggedIn(true); // Nếu có thông tin người dùng thì đặt là đã đăng nhập
+      setIsLoggedIn(true);
     }
   }, []);
+
+  useEffect(() => {
+    const fetchDescriptions = async () => {
+      if (game && Array.isArray(game.description_id) && game.description_id.length > 0) {
+        const descriptionIds = game.description_id.join(",");
+        try {
+          const descriptionResponse = await axios.get<{ data: Description[] | Description }>(
+            `http://localhost:8080/descriptions/${descriptionIds}`
+          );
+
+          // Kiểm tra xem response có phải là một mảng hay đối tượng
+          const descriptions = Array.isArray(descriptionResponse.data.data)
+            ? descriptionResponse.data.data
+            : [descriptionResponse.data.data]; // Nếu là đối tượng, biến thành mảng
+
+          setDescription(descriptions);
+
+          // Lấy tất cả descriptiondetails từ descriptiondetail_id
+          const allDescriptionDetailIds = descriptions
+            .map((desc) => desc.descriptiondetail_id)
+            .flat()
+            .filter((id) => id !== undefined);
+
+          if (allDescriptionDetailIds.length > 0) {
+            const descriptionDetailResponse = await axios.get<{ data: DescriptionDetail[] }>(
+              `http://localhost:8080/descriptiondetails/${allDescriptionDetailIds.join(",")}`
+            );
+            setDescriptionDetail(descriptionDetailResponse.data.data);
+          }
+        } catch (error) {
+          console.error("Error fetching descriptions or description details:", error);
+        }
+      }
+    };
+
+    fetchDescriptions();
+  }, [game]);
+
+
+
 
   const addToCart = async (gameId: number) => {
     if (!isLoggedIn) {
@@ -121,7 +140,6 @@ const ProductDetail = () => {
       return;
     }
     const userId = Number(localStorage.getItem("user_id"));
-    console.log("User ID từ localStorage:", userId);
 
     if (!userId) {
       messageApi.error("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng!");
@@ -129,22 +147,12 @@ const ProductDetail = () => {
     }
 
     try {
-      const response = await axios.post(
-        "http://localhost:8080/carts",
-        { gameId, userId },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-
-      console.log("Phản hồi từ API:", response.data);
+      const response = await axios.post("http://localhost:8080/carts", { gameId, userId }, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
       messageApi.success(response.data.message);
     } catch (error: any) {
-      messageApi.error(
-        error.response?.data?.message || "Có lỗi xảy ra khi thêm vào giỏ hàng!"
-      );
+      messageApi.error(error.response?.data?.message || "Có lỗi xảy ra khi thêm vào giỏ hàng!");
       console.error("Lỗi:", error);
     }
   };
@@ -155,7 +163,6 @@ const ProductDetail = () => {
       return;
     }
     const userId = Number(localStorage.getItem("user_id"));
-    console.log("User ID từ localStorage:", userId);
 
     if (!userId) {
       messageApi.error("Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng!");
@@ -163,54 +170,25 @@ const ProductDetail = () => {
     }
 
     try {
-      const response = await axios.post(
-        "http://localhost:8080/carts",
-        { gameId, userId },
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-
-      console.log("Phản hồi từ API:", response.data);
+      const response = await axios.post("http://localhost:8080/carts", { gameId, userId }, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
       messageApi.success(response.data.message);
       navigate('/cart');
     } catch (error: any) {
-      messageApi.error(
-        error.response?.data?.message || "Có lỗi xảy ra khi thêm vào giỏ hàng!"
-      );
+      messageApi.error(error.response?.data?.message || "Có lỗi xảy ra khi thêm vào giỏ hàng!");
       console.error("Lỗi:", error);
     }
   };
 
-  const handleBuyNow = (gameId: number) => {
-    const storedUser = localStorage.getItem('user'); // Kiểm tra trong localStorage
-    if (!storedUser) {
-      message.error('Bạn cần đăng nhập để thực hiện thao tác này!');
-      return;
-    }
-    // Tiến hành mua ngay nếu đã đăng nhập
-    BuyToCart(gameId);
-  };
-
-  const handleAddToCart = (gameId: number) => {
-    const storedUser = localStorage.getItem('user'); // Kiểm tra trong localStorage
-    if (!storedUser) {
-      message.error('Bạn cần đăng nhập để thực hiện thao tác này!');
-      return;
-    }
-    // Tiến hành thêm vào giỏ nếu đã đăng nhập
-    addToCart(gameId);
-   };
   return (
     <div>
       {contextHolder}
       {game ? (
-        <div className="flex flex-col justify-center items-center px-16 py-5 bg-white max-md:px-5">
-          <div className="max-w-full w-[1495px]">
-            <div className="flex flex-col justify-center items-center px-16 py-5 bg-white max-md:px-5">
-              <div className="max-w-full w-[1495px]">
+        <div className="w-[1000px] mx-auto bg-white shadow-lg rounded-lg p-6 my-6">
+          <div className="max-w-full w-[1048px]">
+            <div className=" p-6">
+              <div className="max-w-full  ">
                 <div className="flex gap-5 max-md:flex-col">
                   <div className="flex flex-col w-[37%] max-md:ml-0 max-md:w-full">
                     <div className="flex flex-col text-sm font-medium text-center text-blue-600 max-md:mt-4 max-md:max-w-full">
@@ -415,7 +393,7 @@ const ProductDetail = () => {
                           size="large"
                           type="primary"
                           style={{ marginRight: "5px", width: 219.67 }}
-                          onClick={() => handleBuyNow(game.game_id as any)}
+                          onClick={() => BuyToCart(game.game_id as any)}
                         >
                           <img
                             loading="lazy"
@@ -427,7 +405,7 @@ const ProductDetail = () => {
                         </Button>
                         <Button size="large"
                           style={{ width: 219.67 }}
-                          onClick={() => handleAddToCart(game.game_id as any)}
+                          onClick={() => addToCart(game.game_id as any)}
                         >
                           <img
                             loading="lazy"
@@ -445,7 +423,44 @@ const ProductDetail = () => {
                 </div>
               </div>
             </div>
-            <FAQ game={game} />
+            {/* Mô tả*/}
+            {description && description.length > 0 && (
+              <div className="mt-8">
+                <h2 className="text-3xl font-semibold text-gray-800 mb-4">Mô tả sản phẩm</h2>
+                {description.map((desc) => (
+                  <div key={desc.description_id} className="bg-white shadow-lg rounded-lg p-6 mb-6">
+
+
+                    {/* Kiểm tra xem descriptiondetail_id có phải là mảng hay không */}
+                    {Array.isArray(desc.descriptiondetail_id) && desc.descriptiondetail_id.length > 0 && (
+                      <div className="mt-4">
+                        <h4 className="text-xl font-semibold text-gray-700 mb-3">Description Details</h4>
+                        {descriptionDetail && descriptionDetail.length > 0 && (
+                          <ul className="space-y-4">
+                            {descriptionDetail
+                              .filter((detail) =>
+                                // Kiểm tra xem desc.descriptiondetail_id có phải là mảng và có chứa detail.descriptiondetail_id không
+                                Array.isArray(desc.descriptiondetail_id) &&
+                                desc.descriptiondetail_id.includes(detail.descriptiondetail_id)
+                              )
+                              .map((detail) => (
+                                <li key={detail.descriptiondetail_id} className="border-t pt-4">
+                                  <h5 className="text-xl font-medium text-gray-800">{detail.name}</h5>
+                                  <p className="text-gray-600">{detail.content}</p>
+                                  {detail.image && <img src={detail.image} alt={detail.name} className="mt-2 w-full max-w-xs rounded-md" />}
+                                </li>
+                              ))}
+                          </ul>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+
+
+
             {/* Các Game cùng thể loại */}
             <div className="games">
               <section className="games">

@@ -28,25 +28,15 @@ const NewsPage = () => {
   if (error) return <div>Lỗi: {(error as Error).message}</div>;
 
   return (
-    <div className="">
-      <div
-        style={{
-
-        }}
-      >
-        <h1
-          style={{
-            paddingRight: "1500px",
-            fontSize: "23px",
-            fontWeight: "bold",
-          }}
-        >
+    <div className=" bg-gray-100 p-6 mx-auto w-[1048px]">
+      <div>
+        <h1 className="text-lg font-bold mb-4">
           Tin nổi bật
         </h1>
         <Skeleton loading={isLoading} active>
-          <div className="news-container">
+          <div className="game-grid">
             {tintucs?.map((tintuc) => (
-              <div className="news-card">
+              <div className="game">
                 <Card
                   key={tintuc.tintuc_id}
                   hoverable
@@ -55,119 +45,12 @@ const NewsPage = () => {
                       <Image
                         src={tintuc.image}
                         alt={tintuc.title}
-                        className="news-image"
+                        width={233.8}
+                        
                       />
                     </Link>
                   }
-                ></Card>
-                <div className="news-content">
-                  <Card.Meta
-                    title={
-                      <Link
-                        to={`/tintucs/${tintuc.tintuc_id}`}
-                        className="news-title"
-                      >
-                        {tintuc.title}
-                      </Link>
-                    }
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </Skeleton>
-      </div>
-      <div
-        style={{
-
-        }}
-      >
-        <h1
-          style={{
-            marginRight: "1500px",
-            fontSize: "23px",
-            fontWeight: "bold",
-          }}
-        >
-          Tin hot
-        </h1>
-        <Skeleton loading={isLoading} active>
-          <div className="news-container">
-            {tintucs?.map((tintuc) => (
-              <div className="news-card">
-                <Card
-                  key={tintuc.tintuc_id}
-                  hoverable
-                  cover={
-                    <Link to={`/tintucs/${tintuc.tintuc_id}`}>
-                      <Image
-                        src={tintuc.image}
-                        alt={tintuc.title}
-                        className="news-image"
-                      />
-                    </Link>
-                  }
-                ></Card>
-                <div className="news-content">
-                  <Card.Meta
-                    title={
-                      <Link
-                        to={`/tintucs/${tintuc.tintuc_id}`}
-                        className="news-title"
-                      >
-                        {tintuc.title}
-                      </Link>
-                    }
-                  />
-                </div>
-              </div>
-            ))}
-          </div>
-        </Skeleton>
-      </div>
-      <div
-        style={{
-
-        }}
-      >
-        <h1
-          style={{
-            marginRight: "1500px",
-            fontSize: "23px",
-            fontWeight: "bold",
-          }}
-        >
-          Tin mới
-        </h1>
-        <Skeleton loading={isLoading} active>
-          <div className="news-container">
-            {tintucs?.map((tintuc) => (
-              <div className="news-card">
-                <Card
-                  key={tintuc.tintuc_id}
-                  hoverable
-                  cover={
-                    <Link to={`/tintucs/${tintuc.tintuc_id}`}>
-                      <Image
-                        src={tintuc.image}
-                        alt={tintuc.title}
-                        className="news-image"
-                      />
-                    </Link>
-                  }
-                ></Card>
-                <div className="news-content">
-                  <Card.Meta
-                    title={
-                      <Link
-                        to={`/tintucs/${tintuc.tintuc_id}`}
-                        className="news-title"
-                      >
-                        {tintuc.title}
-                      </Link>
-                    }
-                  />
-                </div>
+                >{tintuc.title}</Card>
               </div>
             ))}
           </div>

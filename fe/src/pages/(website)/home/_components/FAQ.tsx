@@ -51,47 +51,7 @@ const FAQ: React.FC<IFAQ> = ({ game }) => {
           <h2 className="text-xl font-medium text-black ">
             Chi tiết sản phẩm :
           </h2>
-          <div className="w-full lg:w-4/5">
-            <h2 className="text-xl font-medium text-black ">Mô tả game</h2>
-            <p className="text-sm max-w-full">{game.description_id}</p>
-
-            {productDetails.map((detail, index) => (
-              <article key={index} className="mt-4">
-                <h2 className="text-xl font-bold">{detail.title}</h2>
-                <p className="mt-3 italic">{detail.quote}</p>
-                <p className="mt-2 leading-5">{detail.description}</p>
-                {detail.image && (
-                  <img
-                    src={detail.image}
-                    alt={detail.title}
-                    className="mt-4 w-full object-contain"
-                  />
-                )}
-              </article>
-            ))}
-
-            <h2 className="text-xl font-medium text-black ">
-              Cấu hình yêu cầu:
-            </h2>
-            {systemRequirements?.length > 0 ? (
-              systemRequirements.map((requirement, index) => (
-                <div key={index} className="mt-4">
-                  <h3 className="text-base font-bold">{requirement.title}</h3>
-                  <ul className="list-disc list-inside">
-                    {requirement.specs?.length > 0 ? (
-                      requirement.specs.map((spec, specIndex) => (
-                        <li key={specIndex}>{spec}</li>
-                      ))
-                    ) : (
-                      <li>Không có dữ liệu</li>
-                    )}
-                  </ul>
-                </div>
-              ))
-            ) : (
-              <p>Không có dữ liệu cấu hình yêu cầu</p>
-            )}
-          </div>
+          
         </div>
       </section>
 
