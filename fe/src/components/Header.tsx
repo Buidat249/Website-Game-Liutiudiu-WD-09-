@@ -100,7 +100,7 @@ const Header = (props: Props) => {
       <header>
         <div className="top-bar">
           <div className="top-bar-content">
-            <span>Kết nối yêu thương cùng Tinder Plus</span>
+            <span>Kết nối yêu thương cùng Liutiudiu Shop</span>
             <nav>
               <a href="#">Hướng dẫn mua hàng</a>
               <a href="#">Ưu đãi khách hàng</a>
@@ -117,7 +117,7 @@ const Header = (props: Props) => {
           <div className="main-header-content">
             <div className="logo">
               <img src={logo} alt="Liutuidiu logo" />
-              <span>Liutuidiu</span>
+              <span>Liutiudiu Shop</span>
             </div>
             <div className="search-bar">
               <input type="text" placeholder="Tìm kiếm sản phẩm" />
@@ -149,7 +149,9 @@ const Header = (props: Props) => {
               <div className="cart">
                 <a onClick={handleGoToCart}>
                   <img src={cartIcon} alt="Cart Icon" />
-                  <span>Giỏ hàng({gameCount})</span>
+                  <span className=" flex justify-between items-center">Giỏ hàng
+                    <p style={{marginRight: "5px",marginLeft: "5px",paddingRight: "5px",paddingLeft: "5px", backgroundColor:"white", borderRadius: "5px", color: "black"}}>{gameCount}</p>
+                  </span>
                 </a>
               </div>
             </div>

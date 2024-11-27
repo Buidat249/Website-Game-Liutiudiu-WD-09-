@@ -10,6 +10,12 @@ const tintucSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    categorynew_id: [{
+        type: mongoose.Schema.Types.Number,
+        required: true,
+        unique: false,
+        ref: "Categorynew", // Tham chiếu đến model Description
+    }],
     description_id: [{
         type: mongoose.Schema.Types.Number,
         required: true,

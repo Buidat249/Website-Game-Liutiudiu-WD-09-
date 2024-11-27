@@ -10,6 +10,9 @@ import Cart_ItemPage from "@/pages/(dashboard)/cart_item/page";
 import CategoryAddPage from "@/pages/(dashboard)/category/add/page";
 import CategoryEditPage from "@/pages/(dashboard)/category/edit/page";
 import CategoryPage from "@/pages/(dashboard)/category/page";
+import CategoryNewAddPage from "@/pages/(dashboard)/categorynew/add/page";
+import CategoryNewEditPage from "@/pages/(dashboard)/categorynew/edit/page";
+import CategoryNewPage from "@/pages/(dashboard)/categorynew/page";
 import DashboardPage from "@/pages/(dashboard)/dashboard/page";
 import DescriptionAddPage from "@/pages/(dashboard)/description/add/page";
 import DescriptionEditPage from "@/pages/(dashboard)/description/edit/pages";
@@ -93,6 +96,7 @@ const Router = () => {
         <Route path="login" element={<LoginPage />} />
         <Route path="productgame/:game_id" element={<ProductDetail />} />
         <Route path="/tintucs" element={<NewsPage />} />
+        <Route path="/tintucs/:tintuc_id" element={<NewsDetailPage />} />
 
         <Route path="/vnpayconfirm" element={<PagePayVnPay />} />
         <Route path="/vnpayment" element={<VnpayPayment />} />
@@ -148,19 +152,17 @@ const Router = () => {
         <Route path="carts/:cart_id/edit" element={<CartEditPage />} />
         <Route path="categories" element={<CategoryPage />} />
         <Route path="categories/add" element={<CategoryAddPage />} />
-        <Route
-          path="categories/:category_id/edit"
-          element={<CategoryEditPage />}
-        />
+        <Route path="categories/:category_id/edit"element={<CategoryEditPage />} />
+        <Route path="categorynews" element={<CategoryNewPage />} />
+        <Route path="categorynews/add" element={<CategoryNewAddPage />} />
+        <Route path="categorynews/:categorynew_id/edit"element={<CategoryNewEditPage />} />
+
         <Route path="games" element={<GamePage />} />
         <Route path="games/add" element={<GameAddPage />} />
         <Route path="games/:game_id/edit" element={<GameEditPage />} />
         <Route path="order_details" element={<Order_DetailPage />} />
         <Route path="order_details/add" element={<Order_DetailAddPage />} />
-        <Route
-          path="order_details/:order_detail_id/edit"
-          element={<Order_DetailEditPage />}
-        />
+        <Route path="order_details/:order_detail_id/edit" element={<Order_DetailEditPage />}   />
         <Route path="orders" element={<OrderPage />} />
         <Route path="orders/add" element={<OrderAddPage />} />
         <Route path="orders/:order_id/edit" element={<OrderEditPage />} />
