@@ -102,7 +102,7 @@ const Header = (props: Props) => {
           <div className="top-bar-content">
             <span>Kết nối yêu thương cùng Liutiudiu Shop</span>
             <nav>
-              <a href="#">Hướng dẫn mua hàng</a>
+              <a href="createaccout">Hướng dẫn mua hàng</a>
               <a href="#">Ưu đãi khách hàng</a>
               {user.username && (
                 <a onClick={handleLogout} href="#">
