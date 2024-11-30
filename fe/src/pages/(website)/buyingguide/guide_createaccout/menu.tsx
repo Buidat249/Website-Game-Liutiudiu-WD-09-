@@ -51,7 +51,7 @@ const Menu = () => {
           </a>
         </li>
         <li>
-          <a href="#" className="text-gray-700 hover:text-blue-600">
+          <a href="order" className="text-gray-700 hover:text-blue-600">
             Quản lý đơn hàng
           </a>
         </li>
