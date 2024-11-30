@@ -41,7 +41,7 @@ const Menu = () => {
           </a>
         </li>
         <li>
-          <a href="Recharge" className="text-gray-700 hover:text-blue-600">
+          <a href="#" className="text-gray-700 hover:text-blue-600">
             Hướng dẫn nạp tiền
           </a>
         </li>
