@@ -139,6 +139,8 @@ const Router = () => {
         <Route path="/contact" element={<PageContact />} />
         <Route path="/recharge" element={<PageGuideRecharge />} />
         <Route path="/order" element={<PageOrder />} />
+        <Route path="/huongdantaotk" element={<PageBuyingguide />} />
+        <Route path="/huongdannaptien" element={<PageGuideRecharge />} />
       </Route>
       <Route path="/admin" element={<LayoutAdmin />}>
         <Route index element={<DashboardPage />} />

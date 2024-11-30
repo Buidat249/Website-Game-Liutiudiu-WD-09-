@@ -8,7 +8,7 @@ const Createaccout = () => {
 
         <div className="mb-6">
           <h3 className="font-bold">Bước 1:</h3>
-          <p>Ở giao diện trang chủ Divine Shop, click vào Đăng ký</p>
+          <p>Ở giao diện trang chủ Liutiudiu Shop, click vào Đăng ký</p>
           <img
             src="https://help.divineshop.vn/~gitbook/image?url=https%3A%2F%2F532840585-files.gitbook.io%2F%7E%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252F-M3-IU1k8a0MMGt6Gmx-%252Fuploads%252FQ8Omd6Ll2zH7OR81p4o4%252Fimage.png%3Falt%3Dmedia%26token%3D2b71d0e2-b9ee-480f-bf30-22b251d1bcdc&width=768&dpr=1&quality=100&sign=28667628&sv=1"
             alt="Hướng dẫn bước 1"

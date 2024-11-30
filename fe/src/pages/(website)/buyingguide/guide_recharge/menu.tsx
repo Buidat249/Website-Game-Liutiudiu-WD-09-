@@ -3,12 +3,13 @@ import React from "react";
 
 const Menu = () => {
   return (
-    <aside className="bg-white w-64 pt-6 pb-6 pr-6 pl-6 shadow-lg h-screen mr-5">
+    <aside className="bg-white w-80 pt-6 pb-6 pr-6 pl-6 shadow-lg h-screen mr-5">
+      {/* GIỚI THIỆU */}
       <h3 className="text-lg font-bold mb-4">GIỚI THIỆU</h3>
       <ul className="space-y-2">
         <li>
           <a href="#" className="text-gray-700 hover:text-blue-600">
-            Giới thiệu Divine Shop
+            Giới thiệu Liutiudiu Shop
           </a>
         </li>
         <li>
@@ -33,6 +34,7 @@ const Menu = () => {
         </li>
       </ul>
 
+      {/* HƯỚNG DẪN MUA HÀNG */}
       <h3 className="text-lg font-bold mt-8 mb-4">HƯỚNG DẪN MUA HÀNG</h3>
       <ul className="space-y-2">
         <li>
@@ -41,7 +43,7 @@ const Menu = () => {
           </a>
         </li>
         <li>
-          <a href="#" className="text-gray-700 hover:text-blue-600">
+          <a href="Recharge" className="text-gray-700 hover:text-blue-600">
             Hướng dẫn nạp tiền
           </a>
         </li>
@@ -51,7 +53,7 @@ const Menu = () => {
           </a>
         </li>
         <li>
-          <a href="#" className="text-gray-700 hover:text-blue-600">
+          <a href="order" className="text-gray-700 hover:text-blue-600">
             Quản lý đơn hàng
           </a>
         </li>
@@ -62,6 +64,7 @@ const Menu = () => {
         </li>
       </ul>
 
+      {/* BẢO HÀNH */}
       <h3 className="text-lg font-bold mt-8 mb-4">BẢO HÀNH</h3>
       <ul className="space-y-2">
         <li>
