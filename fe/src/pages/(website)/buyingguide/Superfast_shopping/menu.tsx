@@ -3,7 +3,7 @@ import React from "react";
 
 const Menu = () => {
   return (
-    <aside className="bg-white w-96 pt-6 pb-6 pr-6 pl-6 shadow-lg h-screen mr-5 sticky top-0">
+    <aside className="bg-white w-80 pt-6 pb-6 pr-6 pl-6 shadow-lg h-screen mr-5 sticky top-0">
       {/* GIỚI THIỆU */}
       <h3 className="text-lg font-bold mb-4">GIỚI THIỆU</h3>
       <ul className="space-y-2">
@@ -34,6 +34,7 @@ const Menu = () => {
         </li>
       </ul>
 
+      {/* HƯỚNG DẪN MUA HÀNG */}
       <h3 className="text-lg font-bold mt-8 mb-4">HƯỚNG DẪN MUA HÀNG</h3>
       <ul className="space-y-2">
         <li>
@@ -48,7 +49,7 @@ const Menu = () => {
         </li>
         <li>
           <a href="#" className="text-gray-700 hover:text-blue-600">
-          Hướng dẫn mua hàng siêu tốc
+            Hướng dẫn mua hàng siêu tốc
           </a>
         </li>
         <li>
@@ -63,6 +64,7 @@ const Menu = () => {
         </li>
       </ul>
 
+      {/* BẢO HÀNH */}
       <h3 className="text-lg font-bold mt-8 mb-4">BẢO HÀNH</h3>
       <ul className="space-y-2">
         <li>

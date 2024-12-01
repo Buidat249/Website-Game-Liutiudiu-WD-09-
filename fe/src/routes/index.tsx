@@ -61,6 +61,7 @@ import CardBankForm from "@/pages/(website)/Payment_method/_components/card_Bank
 import NapTrucTiepForm from "@/pages/(website)/Payment_method/_components/naptructiep";
 import TheCaoForm from "@/pages/(website)/Payment_method/_components/thecao";
 import PagePayment_method from "@/pages/(website)/Payment_method/page";
+import PageShopping from "@/pages/(website)/buyingguide/Superfast_shopping/page";
 import PageGuideRecharge from "@/pages/(website)/buyingguide/guide_recharge/page";
 import PageOrder from "@/pages/(website)/buyingguide/order_management/page";
 import PageBuyingguide from "@/pages/(website)/buyingguide/page";
@@ -141,6 +142,7 @@ const Router = () => {
         <Route path="/order" element={<PageOrder />} />
         <Route path="/huongdantaotk" element={<PageBuyingguide />} />
         <Route path="/huongdannaptien" element={<PageGuideRecharge />} />
+        <Route path="/shopping" element={<PageShopping />} />
       </Route>
       <Route path="/admin" element={<LayoutAdmin />}>
         <Route index element={<DashboardPage />} />
