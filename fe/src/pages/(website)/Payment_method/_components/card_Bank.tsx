@@ -21,6 +21,11 @@ const CardBankForm: React.FC = () => {
     console.log("Failed:", errorInfo);
   };
 
+  const handleBack = () => {
+    // Xử lý logic quay lại
+    window.history.back(); // Điều hướng về trang trước
+  };
+
   return (
     <div className="bg-gray-100 p-6 mx-auto w-[1048px]">
       <Title level={3}>Nạp tiền vào tài khoản</Title>
@@ -59,8 +64,11 @@ const CardBankForm: React.FC = () => {
           >
             <Input placeholder="Nhập số tiền" />
           </Form.Item>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" style={{ marginRight: 8 }}>
             Nạp Liucoin
+          </Button>
+          <Button type="default" onClick={handleBack}>
+            Quay lại
           </Button>
         </Form>
       </Card>

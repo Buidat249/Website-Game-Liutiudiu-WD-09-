@@ -22,6 +22,11 @@ const NapTienTuDongForm: React.FC = () => {
     console.log("Failed:", errorInfo);
   };
 
+  const handleBack = () => {
+    // Xử lý logic quay lại
+    window.history.back(); // Điều hướng về trang trước
+  };
+
   return (
     <div className="bg-gray-100 p-6 mx-auto w-[1048px]">
       <Title level={3}>Nạp tiền vào tài khoản</Title>
@@ -55,9 +60,14 @@ const NapTienTuDongForm: React.FC = () => {
           >
             <Input placeholder="Nhập số tiền" />
           </Form.Item>
-          <Button type="primary" htmlType="submit">
-            Nạp Liucoin
-          </Button>
+          <div style={{ display: "flex", gap: "10px" }}>
+            <Button type="primary" htmlType="submit">
+              Nạp Liucoin
+            </Button>
+            <Button type="default" onClick={handleBack}>
+              Quay lại
+            </Button>
+          </div>
         </Form>
       </Card>
     </div>

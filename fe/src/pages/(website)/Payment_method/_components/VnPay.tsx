@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Form, Input, Button, Typography, Card, Modal, Collapse } from "antd";
+import { ClockCircleOutlined } from "@ant-design/icons";
 
 const { Title, Text } = Typography;
 const { Panel } = Collapse;
 
 const VnPay_autoForm: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [countdown, setCountdown] = useState(1800); // Countdown set to 30 minutes (1800 seconds)
+  const [countdown, setCountdown] = useState(1800); // 30 phút (1800 giây)
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -30,12 +31,12 @@ const VnPay_autoForm: React.FC = () => {
 
   const handleOk = () => {
     setIsModalVisible(false);
-    setCountdown(1800); // Reset the timer when closing the modal
+    setCountdown(1800); // Reset lại khi đóng modal
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
-    setCountdown(1800); // Reset the timer when closing the modal
+    setCountdown(1800); // Reset lại khi đóng modal
   };
 
   const formatTime = (seconds: number) => {
@@ -46,15 +47,18 @@ const VnPay_autoForm: React.FC = () => {
 
   const onFinish = (values: any) => {
     console.log("Success:", values);
-    showModal(); // Show the modal on successful form submission
+    showModal(); // Hiển thị modal sau khi form được submit thành công
   };
 
   const onFinishFailed = (errorInfo: any) => {
     console.log("Failed:", errorInfo);
   };
-
+ const handleBack = () => {
+   // Xử lý logic quay lại
+   window.history.back(); // Điều hướng về trang trước
+ };
   return (
-    <div className="bg-gray-100 p-6  mx-auto w-[1048px]">
+    <div className="bg-gray-100 p-6 mx-auto w-[1048px]">
       <Title level={3}>Nạp tiền vào tài khoản</Title>
       <Text>Bạn có thể chọn các phương thức thanh toán khả dụng bên dưới</Text>
       <Card style={{ marginTop: 20 }}>
@@ -91,32 +95,45 @@ const VnPay_autoForm: React.FC = () => {
           >
             <Input placeholder="Nhập số tiền" />
           </Form.Item>
+          
+          <div style={{ display: "flex", gap: "10px" }}>
           <Button type="primary" htmlType="submit">
             Nạp Liucoin
           </Button>
+            <Button type="default" onClick={handleBack}>
+              Quay lại
+            </Button>
+          </div>
         </Form>
       </Card>
 
       <Modal
         title="VNPAY QR"
         visible={isModalVisible}
-        onOk={handleOk}
         onCancel={handleCancel}
         footer={null}
       >
         <div style={{ textAlign: "center" }}>
           <img
-            src="https://cdn.pixabay.com/photo/2023/02/28/01/51/qr-code-7819654_640.jpg" // Path to the uploaded image or replace with your hosted QR code URL
+            src="https://cdn.pixabay.com/photo/2023/02/28/01/51/qr-code-7819654_640.jpg" // Link mã QR
             alt="VNPAY QR"
-            style={{ margin:"auto", maxWidth: 150,}}
+            style={{
+              margin: "auto",
+              maxWidth: 150,
+              display: "block",
+            }}
           />
-          <Button type="link" href="/path-to-qr-code" download>
+          <Button
+            type="link"
+            href="https://cdn.pixabay.com/photo/2023/02/28/01/51/qr-code-7819654_640.jpg"
+            download
+          >
             Lưu mã QR
           </Button>
           <br />
           <Button type="link">Hướng dẫn thanh toán QR</Button>
           <Text strong style={{ display: "block", marginTop: 10 }}>
-            Giao dịch kết thúc sau{" "}
+            <ClockCircleOutlined /> Giao dịch kết thúc sau{" "}
             <Text type="danger">{formatTime(countdown)}</Text>
           </Text>
           <div style={{ marginTop: 10, color: "red" }}>
@@ -127,14 +144,19 @@ const VnPay_autoForm: React.FC = () => {
             khi hệ thống chuyển sang bước kết quả thanh toán.
           </div>
         </div>
-        {/* <Collapse style={{ marginTop: 20 }}>
+        <Collapse style={{ marginTop: 20 }}>
           <Panel
             header="Danh sách ngân hàng / Ví điện tử liên kết thanh toán"
             key="1"
           >
-
+            <ul>
+              <li>Ngân hàng Vietcombank</li>
+              <li>Ngân hàng BIDV</li>
+              <li>Ví Momo</li>
+              <li>Ví ZaloPay</li>
+            </ul>
           </Panel>
-        </Collapse> */}
+        </Collapse>
       </Modal>
     </div>
   );

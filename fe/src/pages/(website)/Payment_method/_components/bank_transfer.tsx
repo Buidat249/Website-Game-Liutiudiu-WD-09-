@@ -52,6 +52,10 @@ const BankingPage: React.FC = () => {
     setIsModalVisible(false);
   };
 
+  const handleBack = () => {
+    window.history.back(); // Navigate back to the previous page
+  };
+
   // Countdown timer effect
   useEffect(() => {
     if (countdown === 0) return;
@@ -64,7 +68,7 @@ const BankingPage: React.FC = () => {
   }, [countdown]);
 
   return (
-    <div className="bg-gray-100 p-6  mx-auto w-[1048px]">
+    <div className="bg-gray-100 p-6 mx-auto w-[1048px]">
       <Card>
         <Typography.Title level={3}>Nạp tiền vào tài khoản</Typography.Title>
         <Typography.Paragraph>
@@ -110,9 +114,14 @@ const BankingPage: React.FC = () => {
           bordered
         />
 
-        <Button type="primary" style={{ marginTop: "20px" }} onClick={showQrCode}>
-          Nạp tiền
-        </Button>
+        <div style={{ display: "flex", gap: "10px", marginTop: "20px" }}>
+          <Button type="primary" onClick={showQrCode}>
+            Nạp tiền
+          </Button>
+          <Button type="default" onClick={handleBack}>
+            Quay lại
+          </Button>
+        </div>
 
         <Modal
           title="Mã QR để chuyển khoản"
@@ -127,7 +136,12 @@ const BankingPage: React.FC = () => {
           <img
             src="https://cdn.pixabay.com/photo/2023/02/28/01/51/qr-code-7819654_640.jpg"
             alt="QR Code"
-            style={{ width: "150px", height: "auto", marginBottom: "20px", margin: "auto" }}
+            style={{
+              width: "150px",
+              height: "auto",
+              marginBottom: "20px",
+              margin: "auto",
+            }}
           />
           <Typography.Text>Thời gian còn lại: {countdown} giây</Typography.Text>
         </Modal>

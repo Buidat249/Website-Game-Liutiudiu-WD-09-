@@ -1,11 +1,16 @@
 import React from "react";
-import { Card, Typography } from "antd";
+import { Card, Typography, Button } from "antd";
 
 const { Title, Text, Link } = Typography;
 
 const NapTrucTiepForm: React.FC = () => {
+  const handleBack = () => {
+    // Xử lý logic quay lại, ví dụ: điều hướng hoặc cập nhật giao diện
+    window.history.back(); // Điều hướng về trang trước
+  };
+
   return (
-    <div className="bg-gray-100 p-6  mx-auto w-[1048px]">
+    <div className="bg-gray-100 p-6 mx-auto w-[1048px]">
       <Card>
         <div
           style={{ display: "flex", alignItems: "center", marginBottom: 20 }}
@@ -44,6 +49,11 @@ const NapTrucTiepForm: React.FC = () => {
               &nbsp;"Đại lý LIUTUIDIU Shop"
             </Link>
           </Text>
+        </div>
+        <div style={{ marginTop: 20, textAlign: "right" }}>
+          <Button type="default" onClick={handleBack}>
+            Quay lại
+          </Button>
         </div>
       </Card>
     </div>
