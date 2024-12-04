@@ -1,5 +1,6 @@
 // src/Menu.js
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Menu = () => {
   return (
@@ -7,14 +8,14 @@ const Menu = () => {
       <h3 className="text-lg font-bold mb-4">GIỚI THIỆU</h3>
       <ul className="space-y-2">
         <li>
-          <a href="#" className="text-gray-700 hover:text-blue-600">
-            Giới thiệu Divine Shop
-          </a>
+          <Link to="/contact/introduce" className="text-gray-700 hover:text-blue-600">
+            Giới thiệu Liutiudiu Store
+          </Link>
         </li>
         <li>
-          <a href="#" className="text-gray-700 hover:text-blue-600">
+          <Link to="/contact/fanpage" className="text-gray-700 hover:text-blue-600">
             Hệ thống fanpage chính thức
-          </a>
+          </Link>
         </li>
         <li>
           <a href="#" className="text-gray-700 hover:text-blue-600">

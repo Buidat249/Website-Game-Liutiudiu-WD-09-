@@ -59,6 +59,8 @@ import NapTrucTiepForm from "@/pages/(website)/Payment_method/_components/naptru
 import TheCaoForm from "@/pages/(website)/Payment_method/_components/thecao";
 import PagePayment_method from "@/pages/(website)/Payment_method/page";
 import PageCart from "@/pages/(website)/cart/page";
+import Fanpage from "@/pages/(website)/contact/_components/fanpage";
+import Introduce from "@/pages/(website)/contact/_components/introduce";
 import PageContact from "@/pages/(website)/contact/page";
 import ProductDetail from "@/pages/(website)/home/ProductDetail";
 import HomePage from "@/pages/(website)/home/page";
@@ -129,8 +131,10 @@ const Router = () => {
         <Route path="/user/affiliate" element={<PageAffiliate />} />
 
         <Route path="/contact" element={<PageContact />} />
+        <Route/>
 
-        <Route path="/contact" element={<PageContact />} />
+        <Route path="/contact/introduce" element={<Introduce />} />
+        <Route path="/contact/fanpage" element={<Fanpage />} />
       </Route>
       <Route path="/admin" element={<LayoutAdmin />}>
         <Route index element={<DashboardPage />} />

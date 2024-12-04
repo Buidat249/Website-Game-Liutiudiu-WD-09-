@@ -81,7 +81,9 @@ const HomePage = () => {
             </div>
             <div className="aside-left-small">
               {leftGames.map((game) => (
+                <Link to={`/productgame/${game.game_id}`}>
                 <img key={game.game_id} src={game.image} alt={game.title} />
+                </Link>
               ))}
             </div>
           </div>
