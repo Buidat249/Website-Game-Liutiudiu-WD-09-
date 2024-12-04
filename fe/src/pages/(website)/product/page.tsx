@@ -104,7 +104,7 @@ const ProductPage = () => {
       );
     }
 
-    // loc danh muc
+    // loc danh muc 
     if (selectedFilter) {
       const filterId = Number(selectedFilter);
       filtered = filtered.filter(
@@ -142,7 +142,7 @@ const ProductPage = () => {
   const handleReset = () => {
     setSelectedCategory("");
     setSelectedBrand("");
-    setSelectedFilter(""); // Reset the selected filter
+    setSelectedFilter(""); // Reset the selected filter.
     setPriceFrom("");
     setPriceTo("");
     setSortOrder("");

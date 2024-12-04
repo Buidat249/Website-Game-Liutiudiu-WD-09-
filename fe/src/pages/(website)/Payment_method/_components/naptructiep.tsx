@@ -18,7 +18,9 @@ const NapTrucTiepForm: React.FC = () => {
           />
           <Title level={4}>Giao dịch trực tiếp</Title>
         </div>
-        <Text>Mua hàng tại các đại lý của Divine Shop trên khắp cả nước</Text>
+        <Text>
+          Mua hàng tại các đại lý của LIUTUIDIU Shop trên khắp cả nước
+        </Text>
         <div style={{ marginTop: 20 }}>
           <Text>
             Đại lý chỉ mua sản phẩm, không nhận nạp số dư vào tài khoản Divine
@@ -39,7 +41,7 @@ const NapTrucTiepForm: React.FC = () => {
               target="_blank"
               style={{ color: "red" }}
             >
-              &nbsp;"Đại lý LIUTUIDIU"
+              &nbsp;"Đại lý LIUTUIDIU Shop"
             </Link>
           </Text>
         </div>

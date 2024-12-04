@@ -36,7 +36,7 @@ const NewsDetailPage = () => {
         const response = await axios.get(`http://localhost:8080/tintucs/${tintuc_id}`);
         setData(response.data.data);
         setIsLoading(false);
-      } catch (err) {
+      } catch (err) {  //eroroo
         setError("Lỗi khi tải dữ liệu bài viết.");
         setIsLoading(false);
       }
