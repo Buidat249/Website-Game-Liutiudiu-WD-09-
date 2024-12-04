@@ -6,9 +6,14 @@ const { Title, Text } = Typography;
 const CardBankForm: React.FC = () => {
   const onFinish = (values: any) => {
     Modal.warning({
-      title: "Thông báo",
-      content:
-        "Hệ thống thanh toán đang bảo trì. ",
+      title: "Thông báo bảo trì",
+      content: (
+        <div>
+          <p>Hệ thống thanh toán đang được nâng cấp để phục vụ tốt hơn.</p>
+          <p>Vui lòng thử lại sau hoặc liên hệ với chúng tôi nếu cần hỗ trợ.</p>
+        </div>
+      ),
+      okText: "Đóng",
     });
   };
 
@@ -17,7 +22,7 @@ const CardBankForm: React.FC = () => {
   };
 
   return (
-    <div className="bg-gray-100 p-6  mx-auto w-[1048px]">
+    <div className="bg-gray-100 p-6 mx-auto w-[1048px]">
       <Title level={3}>Nạp tiền vào tài khoản</Title>
       <Text>Bạn có thể chọn các phương thức thanh toán khả dụng bên dưới</Text>
       <Card style={{ marginTop: 20 }}>
@@ -25,8 +30,8 @@ const CardBankForm: React.FC = () => {
           style={{ display: "flex", alignItems: "center", marginBottom: 20 }}
         >
           <img
-            src="https://cdn.divineshop.vn/image/catalog/Logo-bank/visa-master.png?hash=1604888771" 
-            alt="QR code"
+            src="https://cdn.divineshop.vn/image/catalog/Logo-bank/visa-master.png?hash=1604888771"
+            alt="Card logo"
             style={{ marginRight: 15 }}
             width={35}
           />
