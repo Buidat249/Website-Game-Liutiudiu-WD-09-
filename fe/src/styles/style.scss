@@ -534,7 +534,7 @@ body {
 .cart img {
   width: 40px;
   height: 40px;
-  margin-right: 10px;
+ 
 
 }
 
@@ -699,15 +699,14 @@ justify-content: space-around;
 .game img {
   width: 100%;
   /* Chiếm hết chiều rộng của thẻ cha */
-  height: 120px;
+  height: 110px;
   /* Chiều cao cố định */
   object-fit: cover;
   /* Cắt ảnh sao cho không bị méo mà đầy đủ khuôn hình */
-  border-radius: 5px;
+  border-radius: 3px;
 }
 
 .game p {
-  margin: 2px;
   font-size: 1rem;
   white-space: nowrap; /* Hoặc dùng 'white-space: normal' để cho phép xuống dòng */
 }
@@ -1500,7 +1499,7 @@ select {
 }
 
 .discount {
-  color: #d9534f;
+  color: #dc3545;
   font-weight: bold;
   font-size: 14px;
   margin-left: 5px;
@@ -1743,29 +1742,43 @@ select {
 
 /* Phần giảm giá */
 .discount {
-  background-color: red; /* Nền đỏ */
+  background-color: #dc3545; /* Nền đỏ */
   color: white; /* Chữ trắng */
-  border: 0px solid red; /* Viền đỏ */
-  border-radius: 10px; /* Bo góc */
-  padding: 0.25rem 0.5rem; /* Padding xung quanh */
+  border: 0px solid #dc3545; /* Viền đỏ */
+  border-radius: 5px; /* Bo góc */
+  padding: 0.03rem 0.3rem; /* Padding xung quanh */
   font-weight: bold; /* Đậm chữ */
   font-size: 1rem; /* Kích thước chữ */
 }
 
 /* Phần giá */
 .final_price {
-  font-size: 14px !important; /* Buộc áp dụng font-size */
+  font-size: 13px !important; /* Buộc áp dụng font-size */
   font-weight: bold;
   color: black;
+
 }
+.free-button {
+  background-color: #28a745;
+  color: white; /* Chữ trắng */
+  border: 0px solid #28a745; /* Viền đỏ */
+  border-radius: 5px; /* Bo góc */
+  padding: 0.03rem 0.3rem; /* Padding xung quanh */
+  font-weight: bold; /* Đậm chữ */
+  font-size: 1rem; /* Kích thước chữ */
+  margin-left: 10px;
+}
+.free-game{
+  display: flex;
+}
+
 
 .price {
   padding-bottom: 20px;
-  font-size: 14px !important; /* Buộc áp dụng font-size */
-  font-weight: bold;
-  color: rgb(161, 159, 159);
+  font-size: 13px !important; /* Buộc áp dụng font-size */
+  color: #9ca3af;
   text-decoration: line-through; /* Gạch ngang phần giá */
-  text-decoration-color: rgb(161, 159, 159); /* Đặt màu gạch ngang đậm hơn */
+  text-decoration-color: #9ca3af; /* Đặt màu gạch ngang đậm hơn */
   text-decoration-thickness: 2px; /* Tăng độ dày của gạch ngang */
 }
 
@@ -1867,6 +1880,174 @@ select {
   line-height: 1.5;
   margin: 0;
 }
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  margin: 0;
+  padding: 0;
+}
+
+.main-container {
+  display: flex;
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.left-column {
+  flex: 2;
+  margin-right: 20px;
+}
+
+.right-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.breadcrumb1 {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.breadcrumb1 a {
+  color: #007BFF;
+  text-decoration: none;
+}
+
+.breadcrumb1 span {
+  font-weight: bold;
+}
+
+.title1 {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.post-info1 {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 20px;
+}
+
+.main-image1 {
+  width: 100%;
+  height: 450px;
+  margin-bottom: 20px;
+}
+
+.content1 {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #444;
+  margin-bottom: 20px;
+}
+
+.content1 a {
+  color: #007BFF;
+  text-decoration: none;
+}
+
+.advertisement1 {
+  background-color: #ff4b4b;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  font-weight: bold;
+}
+
+.popular-posts1 {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.popular-posts1 h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.popular-posts1 ul {
+  list-style: none;
+  padding: 0;
+}
+
+.popular-posts1 li {
+  margin-bottom: 8px;
+}
+
+.popular-posts1 a {
+  text-decoration: none;
+  color: #007BFF;
+}
+
+.popular-posts1 a:hover {
+  text-decoration: underline;
+}
+
+
+/* Bỏ gạch chân cho Link */
+.post-link {
+  text-decoration: none; /* Bỏ gạch chân mặc định */
+  color: inherit; /* Giữ màu kế thừa */
+  display: flex; /* Dùng flex để căn chỉnh ảnh và thông tin bên cạnh */
+  align-items: center; /* Căn giữa các phần tử */
+  transition: all 0.3s ease; /* Thêm hiệu ứng chuyển động khi hover */
+}
+
+/* Loại bỏ gạch chân khi hover vào Link */
+.post-link, 
+.post-link * {
+  text-decoration: none !important;
+  cursor: pointer;
+  color: inherit;
+}
+
+.post-link:hover, 
+.post-link:hover * {
+  color: blue !important; /* Đổi màu thành xanh khi hover */
+  text-decoration: none !important; /* Bỏ gạch chân mạnh mẽ khi hover */
+}
+
+/* Đảm bảo không có gạch chân trong các phần tử con của Link */
+.post-link:hover .post-title,
+.post-link:hover .post-date {
+  text-decoration: none; /* Loại bỏ gạch chân khi hover */
+  color: blue; /* Đổi màu chữ thành xanh khi hover vào tiêu đề và ngày */
+}
+
+/* Đảm bảo không có gạch chân trong các phần tử con khác */
+.post-link:hover p {
+  text-decoration: none; /* Loại bỏ gạch chân từ tất cả các p */
+}
+
+.post-link:hover img {
+  opacity: 0.8; /* Thêm hiệu ứng mờ cho ảnh khi hover */
+}
+
+/* Đổi màu tiêu đề khi hover vào Link */
+.post-link:hover .post-title {
+  color: blue; /* Đổi màu chữ tiêu đề thành xanh */
+}
+
+/* Đổi màu ngày khi hover vào Link */
+.post-link:hover .post-date {
+  color: blue; /* Đổi màu chữ ngày thành xanh */
+}
+
+
+
+
+
+
+
 
 
 

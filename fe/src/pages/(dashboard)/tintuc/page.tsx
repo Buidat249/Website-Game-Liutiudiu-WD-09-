@@ -9,6 +9,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ICategory } from "@/common/types/category";
 import { IPlatform } from "@/common/types/platform";
 import { IDescription } from "@/common/types/description";
+import { ICategoryNew } from "@/common/types/categorynew";
 
 const TintucPage = () => {
   const [messageApi, contextHolder] = message.useMessage();
@@ -44,6 +45,15 @@ const TintucPage = () => {
       .catch((error) => console.error("Lỗi khi lấy dữ liệu descriptions:", error));
   }, []);
 
+  const [categorynews, setCategorynew,] = useState<ICategoryNew[]>([]);
+
+  useEffect(() => {
+      fetch("http://localhost:8080/categorynews/")
+      .then((response) => response.json())
+      .then((data) => setCategorynew(data.data))
+      .catch((error) => console.error("Lỗi khi lấy dữ liệu categorynew:", error));
+  }, []);
+
   if (error) return <div>Lỗi: {error.message}</div>;
 
   const columns = [
@@ -74,6 +84,31 @@ const TintucPage = () => {
       ellipsis: true,
     },
     { key: "title", title: "Tieu de", dataIndex: "title" },
+    {
+      key: "categorynew_id",
+      title: "danh mục",
+      dataIndex: "categorynew_id",
+      render: (categorynew_id: any) => {
+        if (isLoading || !categorynews.length) {
+          return "Đang tải danh mục..."; // Nếu dữ liệu chưa có
+        }
+
+        if (Array.isArray(categorynew_id)) {
+          return categorynew_id
+            .map((id) => {
+              const categorynew = categorynews.find((c) => c.categorynew_id === id);
+              return categorynew ? categorynew.name : "danh mục không xác định";
+            })
+            .join(", ");
+        } else {
+          const categorynew = categorynews.find(
+            (c) => c.categorynew_id === categorynew_id
+          );
+          return categorynew ? categorynew.name : "danh mục không xác định";
+        }
+      },
+      ellipsis: true,
+    },
     {
       key: "image",
       title: "Ảnh",

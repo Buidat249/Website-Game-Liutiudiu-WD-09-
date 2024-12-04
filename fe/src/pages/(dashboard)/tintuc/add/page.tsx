@@ -10,6 +10,7 @@ type FieldType = {
     title?: string,
     description_id?: number,
     image?: string,
+    categorynew_id : [number];
 };
 
 const TintucAddPage: React.FC = () => {
@@ -32,6 +33,17 @@ const TintucAddPage: React.FC = () => {
       });
     },
   });
+
+  //fetch categorynew
+  const { data: categorynew = { data: [] } } = useQuery({
+    queryKey: ["categorynew"],
+    queryFn: () =>
+      axios.get("http://localhost:8080/categorynews").then((res) => res.data),
+  });
+
+  console.log("Categorynew:", categorynew);
+
+  const categorynewList = Array.isArray(categorynew.data) ? categorynew.data : [];
 
   const normFile = (e: any) => {
     if (Array.isArray(e)) {
@@ -101,6 +113,27 @@ const descriptionform = Array.isArray(descriptions.data)
           rules={[{ required: true, message: "Không được bỏ trống" }]}
         >
           <Input />
+        </Form.Item>
+
+        <Form.Item<FieldType>
+          label="Tên thể loại"
+          name="categorynew_id"
+          rules={[{ required: true, message: "Vui lòng chọn tên thể loại" }]}
+        >
+          {isLoading ? (
+            <Spin indicator={<Loading3QuartersOutlined spin />} />
+          ) : (
+            <Select mode="multiple" placeholder="Chọn tên thể loại">
+              {categorynewList.map((categorynew: any) => (
+                <Select.Option
+                  key={categorynew.categorynew_id}
+                  value={categorynew.categorynew_id}
+                >
+                  {categorynew.name}
+                </Select.Option>
+              ))}
+            </Select>
+          )}
         </Form.Item>
 
         <Form.Item<FieldType>

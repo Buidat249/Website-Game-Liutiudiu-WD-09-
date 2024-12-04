@@ -32,6 +32,40 @@ export const getDescriptionDetail = async (req, res) => {
     }
 };
 
+export const getDescriptionDetailIds = async (req, res) => {
+    try {
+      // Log tham số ids từ URL
+      console.log("Received params:", req.params);
+  
+      const idsParam = req.params.ids;
+  
+      if (!idsParam) {
+        return res.status(400).json({ message: "IDs parameter is required" });
+      }
+  
+      console.log("Received IDs:", idsParam); // Log tham số nhận được từ frontend
+  
+      const ids = idsParam.split(","); // Tách chuỗi "1,2,3" thành mảng ["1", "2", "3"]
+  
+      const descriptions = await Description.find({
+        description_id: { $in: ids },
+      });
+  
+      if (descriptions.length === 0) {
+        return res.status(404).json({
+          message: "Descriptions Not Found",
+        });
+      }
+  
+      return res.status(200).json({
+        message: "Get Descriptions Done",
+        data: descriptions,
+      });
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  };
+
  // POST /Descipions
 export const addDescription = async (req, res) => {
      console.log("Received data:", req.body);
@@ -65,9 +99,10 @@ export const addDescription = async (req, res) => {
 
  export const updateDescription = async (req, res) => {
     try {
-        const description = await Description.findOneAndUpdate({description_id:req.params.id}, req.body, {
-            new: true,
-        });
+        const description = await Description.findOneAndUpdate(
+            { description_id: req.params.id },
+            req.body, { new: true }
+        );
         if (!description) {
             return res.status(404).json({
                 message: "Description Not Found",

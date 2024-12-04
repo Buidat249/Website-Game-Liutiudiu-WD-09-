@@ -119,15 +119,26 @@ const HomePage = () => {
                   <div key={game.game_id} className="game">
                     <Link to={`/productgame/${game.game_id}`}>
                       <img src={game.image} alt={game.name} />
-                      <p style={{ fontWeight: "bold", fontSize: "17px" }}>{game.name}</p>
+                      <p style={{ marginTop: "8px", fontSize: "13px" }}>{game.name}</p>
                       <div className="flex gap-2 final_price-price-discount-container">
-                        <p className="final_price">
-                          {new Intl.NumberFormat("vi-VN").format(game.final_price)} đ
-                        </p>
-                        <p className="price">
-                          {new Intl.NumberFormat("vi-VN").format(game.price)} đ
-                        </p>
-                        <p className="discount">-{game.discount}%</p>
+                        {game.final_price === 0 ? (
+                          <>
+                            <p className="final_price">
+                              {new Intl.NumberFormat("vi-VN").format(game.final_price)}đ
+                            </p>
+                            <button className="free-button">Free</button>
+                          </>
+                        ) : (
+                          <>
+                            <p className="final_price">
+                              {new Intl.NumberFormat("vi-VN").format(game.final_price)}đ
+                            </p>
+                            <p className="price">
+                              {new Intl.NumberFormat("vi-VN").format(game.price)}đ
+                            </p>
+                            <p className="discount">-{game.discount}%</p>
+                          </>
+                        )}
                       </div>
                     </Link>
                   </div>
