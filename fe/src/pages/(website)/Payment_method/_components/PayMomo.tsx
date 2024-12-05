@@ -16,6 +16,10 @@ const PayMoMOForm: React.FC = () => {
   const handleCancel = () => {
     setIsModalVisible(false);
   };
+  const handleBack = () => {
+    // Xử lý logic quay lại
+    window.history.back(); // Điều hướng về trang trước
+  };
 
   return (
     <div className="bg-gray-100 p-6  mx-auto w-[1048px]">
@@ -55,6 +59,9 @@ const PayMoMOForm: React.FC = () => {
           <Button type="primary" htmlType="submit">
             Nạp Liucoin
           </Button>
+          <Button type="default" onClick={handleBack}>
+            Quay lại
+          </Button>
         </Form>
       </Card>
 
@@ -76,7 +83,7 @@ const PayMoMOForm: React.FC = () => {
           <img
             src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=momo%3A%2F%2Fapp%3Faction%3DpayWithApp%26isScanQR%3Dtrue%26serviceType%3Dqr%26sid%3DTU9NT1hGUE4yMDE5MDUzMHxNTTIyMDg5MTc%26v%3D3.0"
             alt="QR Code"
-            style={{margin:"aotu", width: "200px", height: "200px" }}
+            style={{ margin: "aotu", width: "200px", height: "200px" }}
           />
         </div>
         <Text strong>Thực hiện theo hướng dẫn sau để thanh toán:</Text>

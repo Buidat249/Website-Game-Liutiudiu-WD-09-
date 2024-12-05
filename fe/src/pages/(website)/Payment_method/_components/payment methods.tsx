@@ -1,5 +1,5 @@
 import React from "react";
-import { List, Typography, Card, Divider, Avatar } from "antd";
+import { List, Typography, Card, Divider, Avatar, Button } from "antd";
 import { useNavigate } from "react-router-dom";
 
 const paymentMethods = [
@@ -57,9 +57,10 @@ const PaymentPage: React.FC = () => {
       navigate(route); // Điều hướng đến đường dẫn khi nhấp vào mục
     }
   }
+
   return (
     <div className="bg-gray-100  mx-auto w-[1048px]">
-      <Card >
+      <Card>
         <Typography.Title level={3}>Nạp tiền vào tài khoản</Typography.Title>
         <Typography.Paragraph>
           Bạn có thể chọn các phương thức thanh toán khả dụng bên dưới owr
@@ -82,6 +83,7 @@ const PaymentPage: React.FC = () => {
           )}
         />
       </Card>
+      
     </div>
   );
 };

@@ -69,6 +69,8 @@ import PageGuideRecharge from "@/pages/(website)/buyingguide/guide_recharge/page
 import PageOrder from "@/pages/(website)/buyingguide/order_management/page";
 import PageBuyingguide from "@/pages/(website)/buyingguide/page";
 import PageCart from "@/pages/(website)/cart/page";
+import Fanpage from "@/pages/(website)/contact/_components/fanpage";
+import Introduce from "@/pages/(website)/contact/_components/introduce";
 import PageContact from "@/pages/(website)/contact/page";
 import ProductDetail from "@/pages/(website)/home/ProductDetail";
 import HomePage from "@/pages/(website)/home/page";
