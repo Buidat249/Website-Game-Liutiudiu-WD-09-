@@ -39,9 +39,8 @@ const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({ games }) => {
       return;
     }
 
-    // Dữ liệu gửi lên backend
     const orderData = {
-      user_id: user.user_id, // ID người dùng
+      user_id: user.user_id,
       games: games.map((game) => ({
         game_id: game.game_id,
         name: game.name,
@@ -49,9 +48,9 @@ const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({ games }) => {
         price: game.price,
         discount: game.discount,
         final_price: game.final_price,
-        key_ids: game.key_id, // Thêm key_id vào dữ liệu gửi lên
+        key_ids: game.key_id,
       })),
-      total_price: totalPrice, // Tổng tiền
+      total_price: totalPrice,
     };
     console.log("Dữ liệu đơn hàng:", orderData);
 
@@ -68,14 +67,16 @@ const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({ games }) => {
         const data = await response.json();
         console.log("Đơn hàng đã được tạo:", data);
 
-        // Giả sử thanh toán thành công
-        setPaymentSuccess(true);
+        // Giả sử thanh toán thành công, trừ tiền và cập nhật localStorage
+        const newBalance = user.money - totalPrice;
+        user.money = newBalance;
+        localStorage.setItem("user", JSON.stringify(user));
 
-        // Sau khi xác nhận thanh toán, chuyển hướng về trang chủ sau 2 giây
+        // Cập nhật state hiển thị và chuyển hướng
+        setPaymentSuccess(true);
         setTimeout(() => {
           navigate("/");
         }, 2000);
-
         message.success("Thanh toán thành công!");
       } else {
         message.error("Thanh toán thất bại!");
@@ -85,6 +86,7 @@ const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({ games }) => {
       message.error("Đã có lỗi xảy ra, vui lòng thử lại!");
     }
   };
+
 
   const handleBackToCart = () => {
     navigate("/cart");

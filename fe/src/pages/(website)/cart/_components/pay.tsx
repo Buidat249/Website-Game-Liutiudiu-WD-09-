@@ -114,7 +114,7 @@ const CheckoutBoxRight = ({ totalPrice, totalQuantity }: any) => {
         <div className="flex justify-between">
           <span>Số dư hiện tại</span>
           <span className="font-medium text-gray-900">
-            {money.toLocaleString()}đ
+            {user.money.toLocaleString()}đ
           </span>
         </div>
         <div className="flex justify-between">
@@ -124,7 +124,7 @@ const CheckoutBoxRight = ({ totalPrice, totalQuantity }: any) => {
       </div>
 
       <div className="mt-6 space-y-3">
-        {money >= totalPrice ? (
+        {user.money >= totalPrice ? (
           <button
             className="w-full bg-green-600 text-white py-2 rounded"
             onClick={() => handlePayment("confirm")}
