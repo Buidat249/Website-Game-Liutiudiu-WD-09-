@@ -44,6 +44,12 @@ const orderSchema = new mongoose.Schema(
           required: true,
           min: 1,
         },
+        key_ids: [
+          {
+            key_id: { type: Number, required: true },
+            key_name: { type: String, required: true },
+          },
+        ],
       },
     ],
     total_price: {

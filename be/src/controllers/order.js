@@ -52,6 +52,7 @@ export const getOrderStatus = async (req, res) => {
 };
 
 // POST /orders
+
 export const addOrder = async (req, res) => {
   try {
     const { user_id, games, total_price } = req.body;
@@ -95,7 +96,11 @@ export const addOrder = async (req, res) => {
       // Cập nhật thông tin game đã mua cùng keys
       updatedGames.push({
         ...game,
-        game_keys: keysToUpdate.map((key) => key.key), // Lưu lại danh sách keys đã mua
+        game_keys: keysToUpdate.map((key) => key.key), // Lưu lại danh sách keys đã mua (key string)
+        key_ids: keysToUpdate.map((key) => ({
+          key_id: key.key_id,
+          key_name: key.name,
+        })), // Lưu cả key_id và key_name vào key_ids
       });
     }
 
@@ -106,11 +111,12 @@ export const addOrder = async (req, res) => {
     const order = await Order.create({
       order_id: newOrderId,
       user_id,
-      games: updatedGames,
+      games: updatedGames, // Cập nhật với game có key_ids và game_keys
       total_price,
       status: "pending",
     });
 
+    // Trả về thông tin đơn hàng mới đã tạo
     res.status(201).json({
       message: "Order created successfully",
       data: order,

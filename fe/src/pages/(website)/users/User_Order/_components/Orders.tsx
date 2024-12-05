@@ -50,7 +50,7 @@ const Orders = () => {
 
     // Lọc theo mã đơn hàng
     if (filters.orderId) {
-      filtered = filtered.filter(order => String(order.order_id).includes(filters.orderId) );
+      filtered = filtered.filter(order => String(order.order_id).includes(filters.orderId));
     }
 
     // Lọc theo số tiền
@@ -174,12 +174,15 @@ const Orders = () => {
               <th className="py-3 px-6 bg-gray-100 border-b text-left text-sm font-medium text-gray-600">
                 Trạng thái
               </th>
+              <th className="py-3 px-6 bg-gray-100 border-b text-left text-sm font-medium text-gray-600">
+                Key IDs
+              </th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={4} className="py-4 px-6 text-center">
+                <td colSpan={5} className="py-4 px-6 text-center">
                   Đang tải...
                 </td>
               </tr>
@@ -202,11 +205,28 @@ const Orders = () => {
                         {order.status}
                       </span>
                     </td>
+                    <td className="py-4 px-6 border-b">
+                      {order.games.map((game: any, gameIndex: number) => (
+                        <div key={gameIndex}>
+                          <p>
+                            <strong>{game.name}</strong> :{" "}
+                            {game.key_ids.map((key: any, keyIndex: number) => (
+                              <span key={key._id || keyIndex}>
+                                {key.key_name}
+                                {keyIndex < game.key_ids.length - 1 && ", "} {/* Thêm dấu phẩy giữa các key */}
+                              </span>
+                            ))}
+                          </p>
+                        </div>
+                      ))}
+                    </td>
+
+
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={4} className="py-4 px-6 text-center">Không có đơn hàng phù hợp.</td>
+                  <td colSpan={5} className="py-4 px-6 text-center">Không có đơn hàng phù hợp.</td>
                 </tr>
               )
             )}

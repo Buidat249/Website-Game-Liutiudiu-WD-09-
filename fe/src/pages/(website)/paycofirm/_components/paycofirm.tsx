@@ -9,6 +9,7 @@ interface Game {
   discount: number;
   final_price: number;
   quantity: number;
+  key_id: number[]; // Thêm key_id vào
 }
 
 interface CheckoutSummaryProps {
@@ -22,7 +23,7 @@ const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({ games }) => {
     (acc, game) => acc + game.final_price * game.quantity,
     0
   );
-  console.log('tong tien',totalPrice)
+  console.log("Tổng tiền", totalPrice);
 
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const user = JSON.parse(localStorage.getItem("user") || "{}");
@@ -33,7 +34,7 @@ const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({ games }) => {
       return;
     }
 
-    if (user.mone< totalPrice) {
+    if (user.money < totalPrice) {
       message.error("Số dư không đủ để thanh toán!");
       return;
     }
@@ -48,11 +49,11 @@ const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({ games }) => {
         price: game.price,
         discount: game.discount,
         final_price: game.final_price,
+        key_ids: game.key_id, // Thêm key_id vào dữ liệu gửi lên
       })),
       total_price: totalPrice, // Tổng tiền
     };
-    console.log('dataa',orderData)
-    
+    console.log("Dữ liệu đơn hàng:", orderData);
 
     try {
       const response = await fetch("http://localhost:8080/orders", {
