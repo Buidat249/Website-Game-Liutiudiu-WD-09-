@@ -1,4 +1,5 @@
 import Order from "../models/order";
+import Key from "../models/key";
 
 // GET / orders
 export const getAllOrders = async (req, res) => {
@@ -17,7 +18,7 @@ export const getAllOrders = async (req, res) => {
 export const getOrderDetail = async (req, res) => {
   try {
     const userId = req.params.userId;
-    
+
     // Chỉ cần gửi tất cả dữ liệu mà không lọc trên backend
     const orders = await Order.find({ user_id: userId });
 
@@ -32,19 +33,16 @@ export const getOrderDetail = async (req, res) => {
   }
 };
 
-
-
-
 //Get status oders
 export const getOrderStatus = async (req, res) => {
   try {
     const order = await Order.findOne({ order_id: parseInt(req.params.id) });
     if (!order) {
-      return res.status(404).json({ message: 'Order not found' });
+      return res.status(404).json({ message: "Order not found" });
     }
 
     return res.status(200).json({
-      message: 'Order found',
+      message: "Order found",
       status: order.status,
       payment_status: order.payment_status, // Trả về payment_status
     });
@@ -53,66 +51,64 @@ export const getOrderStatus = async (req, res) => {
   }
 };
 
-
 // POST /orders
 export const addOrder = async (req, res) => {
   try {
     const { user_id, games, total_price } = req.body;
 
-    // Log thông tin nhận từ frontend
-    console.log("Order Data Received:", req.body);
-
-    // Kiểm tra dữ liệu bắt buộc
+    // Kiểm tra dữ liệu đầu vào
     if (
       !user_id ||
       !Array.isArray(games) ||
       games.length === 0 ||
-      total_price === undefined ||
-      total_price === null
+      total_price === undefined
     ) {
       return res.status(400).json({
         message: "Invalid data. Please check user_id, games, and total_price.",
-        data: req.body, // Gửi lại dữ liệu để debug
       });
     }
 
-    // Kiểm tra các trường trong games (cho phép giá trị 0)
+    const updatedGames = [];
+
+    // Lặp qua từng game
     for (const game of games) {
-      if (
-        !game.name ||
-        game.discount === undefined ||
-        game.price === undefined ||
-        game.final_price === undefined
-      ) {
+      // Lấy các keys chưa sử dụng của game
+      const availableKeys = await Key.find({
+        game_id: game.game_id,
+        is_used: false,
+      }).sort({ createdAt: 1 });
+
+      // Kiểm tra số lượng keys có đủ hay không
+      if (availableKeys.length < game.quantity) {
         return res.status(400).json({
-          message: "Missing required fields in game data.",
+          message: `Không đủ số lượng keys cho game ID: ${game.game_id} - ${game.name}. Chỉ còn ${availableKeys.length} keys.`,
         });
       }
 
-      // Kiểm tra giá trị của price, discount, và final_price (cho phép bằng 0)
-      if (game.price < 0 || game.final_price < 0) {
-        return res.status(400).json({
-          message: "Price and final price cannot be negative.",
-        });
-      }
+      // Cập nhật trạng thái is_used của các keys mà người dùng muốn mua
+      const keysToUpdate = availableKeys.slice(0, game.quantity);
+      await Key.updateMany(
+        { _id: { $in: keysToUpdate.map((key) => key._id) } },
+        { $set: { is_used: true } }
+      );
 
-      if (game.discount < 0 || game.discount > 100) {
-        return res.status(400).json({
-          message: "Discount must be between 0 and 100.",
-        });
-      }
+      // Cập nhật thông tin game đã mua cùng keys
+      updatedGames.push({
+        ...game,
+        game_keys: keysToUpdate.map((key) => key.key), // Lưu lại danh sách keys đã mua
+      });
     }
 
     // Tạo đơn hàng mới
     const lastOrder = await Order.findOne({}, {}, { sort: { order_id: -1 } });
-    const newOrderId =
-      lastOrder && lastOrder.order_id ? lastOrder.order_id + 1 : 1;
+    const newOrderId = lastOrder ? lastOrder.order_id + 1 : 1;
 
     const order = await Order.create({
       order_id: newOrderId,
       user_id,
-      games,
+      games: updatedGames,
       total_price,
+      status: "pending",
     });
 
     res.status(201).json({
@@ -121,9 +117,9 @@ export const addOrder = async (req, res) => {
     });
   } catch (error) {
     console.error("Error creating order:", error);
-    res
-      .status(500)
-      .json({ message: "An error occurred while creating the order." });
+    res.status(500).json({
+      message: "An error occurred while creating the order.",
+    });
   }
 };
 

@@ -26,6 +26,9 @@ import FilterPage from "@/pages/(dashboard)/filter/page";
 import GameAddPage from "@/pages/(dashboard)/game/add/page";
 import GameEditPage from "@/pages/(dashboard)/game/edit/page";
 import GamePage from "@/pages/(dashboard)/game/page";
+import AddKeyPage from "@/pages/(dashboard)/keys/add/page";
+import EditKeyPage from "@/pages/(dashboard)/keys/edit/page";
+import KeysPage from "@/pages/(dashboard)/keys/pages";
 import LayoutAdmin from "@/pages/(dashboard)/layout";
 import OrderAddPage from "@/pages/(dashboard)/order/add/page";
 import OrderEditPage from "@/pages/(dashboard)/order/edit/page";
@@ -160,17 +163,17 @@ const Router = () => {
         <Route path="carts/:cart_id/edit" element={<CartEditPage />} />
         <Route path="categories" element={<CategoryPage />} />
         <Route path="categories/add" element={<CategoryAddPage />} />
-        <Route path="categories/:category_id/edit"element={<CategoryEditPage />} />
+        <Route path="categories/:category_id/edit" element={<CategoryEditPage />} />
         <Route path="categorynews" element={<CategoryNewPage />} />
         <Route path="categorynews/add" element={<CategoryNewAddPage />} />
-        <Route path="categorynews/:categorynew_id/edit"element={<CategoryNewEditPage />} />
+        <Route path="categorynews/:categorynew_id/edit" element={<CategoryNewEditPage />} />
 
         <Route path="games" element={<GamePage />} />
         <Route path="games/add" element={<GameAddPage />} />
         <Route path="games/:game_id/edit" element={<GameEditPage />} />
         <Route path="order_details" element={<Order_DetailPage />} />
         <Route path="order_details/add" element={<Order_DetailAddPage />} />
-        <Route path="order_details/:order_detail_id/edit" element={<Order_DetailEditPage />}   />
+        <Route path="order_details/:order_detail_id/edit" element={<Order_DetailEditPage />} />
         <Route path="orders" element={<OrderPage />} />
         <Route path="orders/add" element={<OrderAddPage />} />
         <Route path="orders/:order_id/edit" element={<OrderEditPage />} />
@@ -208,6 +211,10 @@ const Router = () => {
           element={<DescriptionDetailEditPage />}
         />
 
+        <Route path="keys" element={<KeysPage />} />
+        <Route path="keys/add" element={<AddKeyPage />} />
+        <Route path="keys/:keys_id/edit" element={<EditKeyPage />} />
+
         <Route path="reviews" element={<ReviewPage />} />
         <Route path="reviews/add" element={<ReviewAddPage />} />
         <Route path="reviews/:review_id/edit" element={<ReviewEditPage />} />
@@ -216,9 +223,9 @@ const Router = () => {
         <Route path="roles/:role_id/edit" element={<RoleEditPage />} />
         <Route path="users" element={<UserPage />} />
         <Route path="users/:user_id/edit" element={<UserEditPage />} />
-        <Route path="tintucs/add" element={<TintucAddPage/>}/>
-        <Route path="tintucs" element={<TintucPage/>}/>
-        <Route path="tintucs/:tintuc_id/edit" element={<TintucEditPage/>}/>
+        <Route path="tintucs/add" element={<TintucAddPage />} />
+        <Route path="tintucs" element={<TintucPage />} />
+        <Route path="tintucs/:tintuc_id/edit" element={<TintucEditPage />} />
       </Route>
     </Routes>
   );

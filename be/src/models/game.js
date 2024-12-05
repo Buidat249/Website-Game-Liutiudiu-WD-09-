@@ -54,7 +54,15 @@ const gameSchema = new mongoose.Schema({
       ref: "Description", // Tham chiếu đến model description
     },
   ],
-  configuration: { type: String, required: true },
+  configuration: { type: String, required: true }, 
+  key_id: [
+    {
+      type: mongoose.Schema.Types.Number,
+      required: true,
+      unique: false,
+      ref: "Key", // Tham chiếu đến model description
+    },
+  ], // Mảng chứa các key game
 });
 
 gameSchema.pre("save", function (next) {

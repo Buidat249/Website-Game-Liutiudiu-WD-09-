@@ -8,6 +8,7 @@ interface CartItemProps {
     final_price: number;
     image: string;
     description: string;
+    key_id:number[];
   };
   quantity: number;
 }
@@ -26,7 +27,7 @@ const CartItem: React.FC<CartItemProps> = ({ game, quantity }) => {
       <div className="flex flex-col flex-1 pl-4">
         <h3 className="text-lg font-semibold">{game.name}</h3>
         <p className="text-sm text-gray-500">{game.description}</p>
-        <span className="text-green-500">Tình trạng: Còn hàng</span>
+        <span className="text-green-500">Tình trạng: {game.key_id.length}</span>
       </div>
       
       {/* Số lượng */}

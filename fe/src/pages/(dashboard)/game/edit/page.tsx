@@ -33,7 +33,7 @@ type FieldType = {
   final_price?: number;
   rating?: number;
   image?: string;
-
+  key_id?: number;
   configuration?: string;
   description_id?: number;
 };
@@ -60,8 +60,13 @@ const GameEditPage: React.FC = () => {
 
   // Mutation for updating game
   const { mutate } = useMutation({
-    mutationFn: (game: any) =>
-      axios.put(`http://localhost:8080/games/${game_id}`, game),
+    mutationFn: (game: any) => {
+      console.log("Updating game with key_ids:", game.key_id); // In ra key_id để kiểm tra
+      return axios.put(`http://localhost:8080/games/${game_id}`, {
+        ...game,
+        key_ids: game.key_id, // Đồng nhất tên key_ids hoặc key_id theo backend
+      });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["games"] });
       messageApi.success("Cập nhật game thành công");
@@ -114,10 +119,8 @@ const GameEditPage: React.FC = () => {
       image: imageUrl || data?.data?.image,
     }; // Nếu không có ảnh mới, giữ ảnh cũ
     mutate(gameData);
+    console.log(gameData);
 
-    window.localStorage.roload();
-
-    window.localStorage.roload();
   };
 
   // Fetch lists for brands, categories, platforms, and filters
@@ -162,6 +165,16 @@ const GameEditPage: React.FC = () => {
   const descriptionList = Array.isArray(descriptions.data)
     ? descriptions.data
     : [];
+
+  // fetch keys
+  const { data: keys = { data: [] } } = useQuery({
+    queryKey: ["keys"],
+    queryFn: () =>
+      axios.get("http://localhost:8080/keys").then((res) => res.data),
+  });
+
+  const keysList = Array.isArray(keys.data) ? keys.data : [];
+
 
   // Hàm tính toán final_price
   const calculateFinalPrice = (price: number, discount: number) => {
@@ -223,6 +236,7 @@ const GameEditPage: React.FC = () => {
           discount: data?.data?.discount || 0,
           image: data?.data?.image || "",
 
+          key_id: data?.data?.key_id || [],
           description: data?.data?.description || "",
           configuration: data?.data?.configuration || "",
 
@@ -315,6 +329,20 @@ const GameEditPage: React.FC = () => {
                 value={description.description_id}
               >
                 {description.name}
+              </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
+
+        <Form.Item
+          label="Tên keys"
+          name="key_id"
+          rules={[{ required: true, message: "Vui lòng chọn tên keys" }]}
+        >
+          <Select mode="multiple" placeholder="Chọn tên keys">
+            {keysList.map((key: any) => (
+              <Select.Option key={key.key_id} value={key.key_id}>
+                {key.name}
               </Select.Option>
             ))}
           </Select>

@@ -5,6 +5,7 @@ import { Link, useParams } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 
 interface Game {
+  key_id: number[];
   game_id?: number;
   brand_id?: number;
   category_id: number[]; // Sửa để category_id luôn là một mảng
@@ -17,6 +18,7 @@ interface Game {
   image?: string;
   description_id?: number[];
   configuration?: string;
+  availableKeysCount?: number;
 }
 
 interface Platform {
@@ -48,6 +50,7 @@ const ProductDetail = () => {
   const [platforms, setPlatforms] = useState<Platform[]>([]);
   const [messageApi, contextHolder] = message.useMessage();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  console.log('daaa', game);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -60,9 +63,24 @@ const ProductDetail = () => {
       try {
         const response = await axios.get<{ data: Game }>(`http://localhost:8080/games/${game_id}`);
         const gameData = response.data.data;
+
+        // Kiểm tra nếu API trả về đúng dữ liệu keys
+        const keysResponse = await axios.get<any>(`http://localhost:8080/games/${game_id}/available-keys`);
+
+        // Kiểm tra xem response có chứa data và count không
+        let availableKeysCount = 0; // Mặc định là 0 nếu không có dữ liệu hợp lệ
+
+        if (keysResponse?.data && typeof keysResponse.data.count === 'number') {
+          availableKeysCount = keysResponse.data.count; // Lấy count nếu có
+        }
+
+        // Thêm availableKeysCount vào dữ liệu game
+        gameData.availableKeysCount = availableKeysCount;
+
         setGame(gameData);
 
-        const categoryId = gameData.category_id[0]; // Lấy giá trị đầu tiên của mảng category_id
+        // Lấy category và related games (không thay đổi logic này)
+        const categoryId = gameData.category_id[0];
         if (categoryId) {
           const categoryResponse = await axios.get<{ data: { name: string } }>(`http://localhost:8080/categories/${categoryId}`);
           setCategoryName(categoryResponse.data.data.name);
@@ -77,10 +95,12 @@ const ProductDetail = () => {
             relatedGame.category_id.some((catId) => gameData.category_id.includes(catId))
         );
         setRelatedGames(relatedGamesList);
+
       } catch (error) {
         console.error("Error fetching game details:", error);
       }
     };
+
 
     if (game_id) {
       fetchGame();
@@ -146,6 +166,12 @@ const ProductDetail = () => {
       return;
     }
 
+    // Kiểm tra số lượng keys khả dụng trước khi thêm vào giỏ
+    if (game?.availableKeysCount === 0) {
+      messageApi.error("Sản phẩm này hiện đã hết hàng.");
+      return;
+    }
+
     try {
       const response = await axios.post("http://localhost:8080/carts", { gameId, userId }, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -169,17 +195,24 @@ const ProductDetail = () => {
       return;
     }
 
+    // Kiểm tra số lượng keys khả dụng trước khi mua
+    if (game?.availableKeysCount === 0) {
+      messageApi.error("Sản phẩm này hiện đã hết hàng.");
+      return;
+    }
+
     try {
       const response = await axios.post("http://localhost:8080/carts", { gameId, userId }, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       messageApi.success(response.data.message);
-      navigate('/cart');
+      navigate('/cart'); // Điều hướng đến giỏ hàng
     } catch (error: any) {
       messageApi.error(error.response?.data?.message || "Có lỗi xảy ra khi thêm vào giỏ hàng!");
       console.error("Lỗi:", error);
     }
   };
+
 
   return (
     <div>
@@ -226,9 +259,9 @@ const ProductDetail = () => {
                                       color: "black",
                                     }}
                                   >
-                                    Tình trạng:{" "}
+                                    Số lượng :{" "}
                                     <span className="text-emerald-500">
-                                      {/* {inStock ? "Còn hàng" : "Hết hàng"} */}
+                                      {game.availableKeysCount || 0} sản phẩm
                                     </span>
                                   </div>
                                 </div>
@@ -386,38 +419,38 @@ const ProductDetail = () => {
                         </div>
                         <div className="flex shrink-0 mt-3.5 max-w-full h-px border-t border-gray-400 border-opacity-30 w-[450px]" />
                       </div>
-                      <div
-                        style={{ marginTop: "5px", maxWidth: "fit-content" }}
-                      >
+                      <div style={{ marginTop: "5px", maxWidth: "fit-content" }}>
                         <Button
                           size="large"
                           type="primary"
-                          style={{ marginRight: "5px", width: 219.67 }}
+                          style={{ marginRight: "5px", color: "#000B1D", width: 219.67 }}
                           onClick={() => BuyToCart(game.game_id as any)}
+                          disabled={game?.availableKeysCount === 0} // Kiểm tra số lượng keys khả dụng
                         >
                           <img
                             loading="lazy"
                             src="https://cdn.builder.io/api/v1/image/assets/TEMP/117488c38dda05d787ab8db90683a19f645dbb1be01e2bcf4d57a62e7449f9db?placeholderIfAbsent=true&apiKey=b147c62d1b404bf790d7133a5bf6ed3c"
-                            alt=""
+                            alt="Mua ngay"
                             className="object-contain shrink-0 self-stretch my-auto w-5 aspect-[1.18]"
                           />
                           <span className="self-stretch my-auto">Mua ngay</span>
                         </Button>
-                        <Button size="large"
-                          style={{ width: 219.67 }}
+                        <Button
+                          size="large"
+                          style={{ width: 219.67, color: "#000B1D", backgroundColor: "" }}
                           onClick={() => addToCart(game.game_id as any)}
+                          disabled={game?.availableKeysCount === 0} // Kiểm tra số lượng keys khả dụng
                         >
                           <img
                             loading="lazy"
                             src="https://cdn.builder.io/api/v1/image/assets/TEMP/8aeae39e84b7d89e22be272674e27eeba5e611f315bdcf2da24e8140860bc80f?placeholderIfAbsent=true&apiKey=b147c62d1b404bf790d7133a5bf6ed3c"
-                            alt=""
+                            alt="Thêm vào giỏ"
                             className="object-contain shrink-0 self-stretch my-auto w-5 aspect-[1.18]"
                           />
-                          <span className="self-stretch my-auto">
-                            Thêm vào giỏ
-                          </span>
+                          <span className="self-stretch my-auto">Thêm vào giỏ</span>
                         </Button>
                       </div>
+
                     </div>
                   </div>
                 </div>

@@ -22,6 +22,7 @@ const Profile = () => {
 
   const userId = localStorage.getItem("user_id");
 
+
   useEffect(() => {
     if (userId) {
       fetch(`http://localhost:8080/users/${userId}`)
@@ -31,6 +32,8 @@ const Profile = () => {
             ...data?.data,
             displayName: data?.data?.displayName ?? true,
           });
+          const money = data?.data?.money || 0; // Nếu không có tiền, mặc định là 0
+          localStorage.setItem("money", money.toString()); // Lưu tiền vào localStorage dưới dạng chuỗi
         })
         .catch((error) => console.error("Error fetching user data:", error));
     }
@@ -98,8 +101,8 @@ const Profile = () => {
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-md max-w-4xl w-[800px] my-6 mx-auto">
-        {/* Phần tổng quan */}
-        <h2 className="text-xl font-bold mb-4">Tổng quan</h2>
+      {/* Phần tổng quan */}
+      <h2 className="text-xl font-bold mb-4">Tổng quan</h2>
       <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
         <div>
           <p className="text-gray-600">Tên đăng nhập</p>
@@ -263,7 +266,7 @@ const Profile = () => {
             Cho phép hiển thị tên của bạn trên các hoạt động
           </label>
         </div>
-      
+
         <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-6 hover:bg-blue-600">
           Lưu thay đổi
         </button>

@@ -3,6 +3,7 @@ import React from 'react';
 interface CartItemMomoProps {
   game: { 
     game_id: number;
+    key_id: number[];
     name: string;
     price: number;
     final_price: number;
@@ -26,7 +27,7 @@ const CartItemMomo: React.FC<CartItemMomoProps> = ({ game, quantity }) => {
       <div className="flex flex-col flex-1 pl-4">
         <h3 className="text-lg font-semibold">{game.name}</h3>
         <p className="text-sm text-gray-500">{game.description}</p>
-        <span className="text-green-500">Tình trạng: Còn hàng</span>
+        <span className="text-green-500">Tình trạng: {game.key_id.length}</span>
       </div>
       
       {/* Số lượng */}

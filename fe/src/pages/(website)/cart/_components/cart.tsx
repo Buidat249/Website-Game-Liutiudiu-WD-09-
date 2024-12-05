@@ -11,6 +11,7 @@ interface Cart {
 }
 
 interface Game {
+  key_id: number[];
   game_id: number;
   brand_id: number;
   category_id: number;
@@ -22,6 +23,7 @@ interface Game {
   image: string;
   title: string;
   description: string;
+  availableKeysCount?: number; // Thêm trường này
 }
 
 const CartBoxLeft = ({ setTotalPrice, setTotalQuantity }: any) => {
@@ -31,6 +33,8 @@ const CartBoxLeft = ({ setTotalPrice, setTotalQuantity }: any) => {
   const [selectAll, setSelectAll] = useState(false);
   const { selectedGames, setSelectedGames } = useCartContext();
   const navigate = useNavigate();
+
+
 
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
@@ -59,16 +63,31 @@ const CartBoxLeft = ({ setTotalPrice, setTotalQuantity }: any) => {
   };
 
   // Hàm lấy sản phẩm từ API
-  const fetchGameData = () => {
-    axios
-      .get("http://localhost:8080/games")
-      .then((response) => {
-        setGames(response.data.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching games:", error);
-      });
+  const fetchGameData = async () => {
+    try {
+      const response = await axios.get("http://localhost:8080/games");
+      const gameData = response.data.data;
+
+      // Lấy thông tin số lượng keys khả dụng cho từng game
+      const updatedGames = await Promise.all(
+        gameData.map(async (game: Game) => {
+          try {
+            const keysResponse = await axios.get(`http://localhost:8080/games/${game.game_id}/available-keys`);
+            const availableKeysCount = keysResponse.data.count;
+            return { ...game, availableKeysCount };
+          } catch (error) {
+            console.error(`Error fetching keys for game ${game.game_id}:`, error);
+            return { ...game, availableKeysCount: 0 }; // Nếu lỗi, giả định số lượng keys = 0
+          }
+        })
+      );
+
+      setGames(updatedGames);
+    } catch (error) {
+      console.error("Error fetching games:", error);
+    }
   };
+
 
   // Gọi dữ liệu khi component load và khi user thay đổi
   useEffect(() => {
@@ -104,34 +123,65 @@ const CartBoxLeft = ({ setTotalPrice, setTotalQuantity }: any) => {
     if (cart) {
       const game = cart.games.find((gameItem) => gameItem.game_id === game_id);
       if (game) {
-        const newQuantity =
-          action === "increase" ? game.quantity + 1 : Math.max(1, game.quantity - 1);
-        updateQuantity(cart_id, game_id, newQuantity);
+        const gameData = games.find((g) => g.game_id === game_id); // Lấy dữ liệu game từ danh sách games
+        if (gameData) {
+          const availableKeys = gameData.availableKeysCount || 0; // Lấy số lượng keys khả dụng từ API
 
-        // Cập nhật selectedGames với số lượng mới và trạng thái đã chọn
-        setSelectedGames((prevSelected) => ({
-          ...prevSelected,
-          [game_id]: {
-            selected: true,  // Giữ lại trạng thái đã chọn
-            quantity: newQuantity,  // Cập nhật số lượng
-          },
-        }));
+          const newQuantity =
+            action === "increase" ? game.quantity + 1 : Math.max(1, game.quantity - 1);
+
+          // Kiểm tra số lượng mới có vượt quá số lượng keys khả dụng không
+          if (newQuantity > availableKeys) {
+            message.error(`Số lượng bạn muốn mua vượt quá số lượng keys còn lại (${availableKeys} keys)`);
+            return;
+          }
+
+          // Cập nhật số lượng nếu hợp lệ
+          updateQuantity(cart_id, game_id, newQuantity);
+
+          // Cập nhật selectedGames với số lượng mới và trạng thái đã chọn
+          setSelectedGames((prevSelected) => ({
+            ...prevSelected,
+            [game_id]: {
+              selected: true,
+              quantity: newQuantity,
+            },
+          }));
+        }
       }
     }
   };
+
 
   // Hàm xử lý chọn/deselect game
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>, gameId: number) => {
     const cart = carts[0]; // Lấy giỏ hàng đầu tiên
     const gameInCart = cart?.games.find((gameItem) => gameItem.game_id === gameId);
-    
+
     if (gameInCart) {
       const currentQuantity = gameInCart.quantity; // Lấy số lượng hiện tại của game trong giỏ
-  
+
+      // Tìm game trong danh sách games
+      const game = games.find((g) => g.game_id === gameId);
+
+      // Kiểm tra nếu game không tồn tại hoặc không có availableKeysCount
+      if (!game || game.availableKeysCount === undefined) {
+        message.error(`Dữ liệu game không hợp lệ!`);
+        return;
+      }
+
+      const availableKeys = game.availableKeysCount; // Lấy số lượng keys có sẵn
+
+      if (currentQuantity > availableKeys) {
+        // Nếu số lượng trong giỏ lớn hơn số lượng keys, hiển thị lỗi và không cho phép chọn
+        message.error(`Không đủ keys cho game ${game?.name}. Chọn lại số lượng hoặc sản phẩm khác.`);
+        return; // Dừng lại không cập nhật selectedGames
+      }
+
+      // Nếu checkbox được chọn, lưu trạng thái và số lượng hiện tại
       setSelectedGames((prevSelected) => {
         const updatedSelected = { ...prevSelected };
         if (event.target.checked) {
-          // Nếu checkbox được chọn, lưu trạng thái và số lượng hiện tại
           updatedSelected[gameId] = { selected: true, quantity: currentQuantity };
         } else {
           // Nếu bỏ chọn, xóa sản phẩm khỏi selectedGames
@@ -141,7 +191,6 @@ const CartBoxLeft = ({ setTotalPrice, setTotalQuantity }: any) => {
       });
     }
   };
-  
 
   // Hàm chọn/deselect tất cả game
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -153,10 +202,23 @@ const CartBoxLeft = ({ setTotalPrice, setTotalQuantity }: any) => {
     if (isChecked) {
       carts.forEach((cart) => {
         cart.games.forEach((gameItem) => {
-          updatedSelectedGames[gameItem.game_id] = {
-            selected: true, // Đánh dấu game đã được chọn
-            quantity: gameItem.quantity, // Lấy số lượng từ giỏ hàng
-          };
+          // Tìm game trong danh sách games
+          const game = games.find((g) => g.game_id === gameItem.game_id);
+
+          if (game && game.availableKeysCount !== undefined) {
+            const availableKeys = game.availableKeysCount; // Lấy số lượng keys có sẵn
+
+            if (gameItem.quantity > availableKeys) {
+              // Nếu số lượng game trong giỏ lớn hơn số lượng keys, hiển thị lỗi và không chọn
+              message.error(`Không đủ keys cho game ${game?.name}. Vui lòng chọn lại số lượng.`);
+              return; // Dừng lại nếu không đủ keys
+            }
+
+            updatedSelectedGames[gameItem.game_id] = {
+              selected: true,
+              quantity: gameItem.quantity, // Lấy số lượng từ giỏ hàng
+            };
+          }
         });
       });
     } else {
@@ -167,6 +229,7 @@ const CartBoxLeft = ({ setTotalPrice, setTotalQuantity }: any) => {
     // Cập nhật selectedGames với đối tượng mới
     setSelectedGames(updatedSelectedGames);
   };
+
 
   // Tính tổng giá trị giỏ hàng
   const calculateTotal = () => {
@@ -223,7 +286,8 @@ const CartBoxLeft = ({ setTotalPrice, setTotalQuantity }: any) => {
       });
   };
 
-  // Render giao diện giỏ hàng
+
+
   return (
     <div className="flex-1 bg-white p-6 rounded-lg shadow-md mb-4 lg:mb-0 lg:mr-4">
       <h2 className="text-xl font-bold mb-4" style={{ paddingTop: "20px" }}>
@@ -265,7 +329,11 @@ const CartBoxLeft = ({ setTotalPrice, setTotalQuantity }: any) => {
                   <div className="flex flex-col flex-1 pl-4">
                     <h3 className="text-lg font-semibold">{game.name}</h3>
                     <p className="text-sm text-gray-500">{game.title}</p>
-                    <span className="text-green-500">Tình trạng: Còn hàng</span>
+                    <span className="text-green-500">
+                      Tình trạng: Còn {game.availableKeysCount ?? 0} keys
+                    </span>
+
+
                   </div>
                   <div className="flex items-center">
                     <Button

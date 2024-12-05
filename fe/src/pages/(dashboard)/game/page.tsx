@@ -9,6 +9,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ICategory } from "@/common/types/category";
 import { IPlatform } from "@/common/types/platform";
 import { IDescription } from "@/common/types/description";
+import { IKey } from "@/common/types/key";
 
 const GamePage = () => {
   const [messageApi, contextHolder] = message.useMessage();
@@ -40,6 +41,7 @@ const GamePage = () => {
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [platforms, setPlatforms] = useState<IPlatform[]>([]);
   const [filters, setFilter] = useState<IFilter[]>([]);
+  const [keys, setKey] = useState<IKey[]>([]);
   const [descriptions, setDescription] = useState<IDescription[]>([]);
 
   useEffect(() => {
@@ -65,10 +67,15 @@ const GamePage = () => {
       .then((data) => setFilter(data.data))
       .catch((error) => console.error("Lỗi khi lấy dữ liệu filters:", error));
 
-      fetch("http://localhost:8080/descriptions/")
+    fetch("http://localhost:8080/descriptions/")
       .then((response) => response.json())
       .then((data) => setDescription(data.data))
       .catch((error) => console.error("Lỗi khi lấy dữ liệu descriptions:", error));
+
+    fetch("http://localhost:8080/keys/")
+      .then((response) => response.json())
+      .then((data) => setKey(data.data))
+      .catch((error) => console.error("Lỗi khi lấy dữ liệu keys:", error));
   }, []);
 
   if (error) return <div>Lỗi: {error.message}</div>;
@@ -199,6 +206,27 @@ const GamePage = () => {
         <Image src={game.image} width={100} height={100} />
       ),
     },
+    // Thêm cột keys
+    {
+      key: "key_id",
+      title: "Keys",
+      dataIndex: "key_id",
+      render: (key_id: any) => {
+        if (isLoading || !keys.length) {
+          return "Đang tải keys..."; // Nếu dữ liệu chưa có
+        }
+
+        // Nếu `key_id` là mảng, đếm tổng số lượng keys
+        if (Array.isArray(key_id)) {
+          return `Tổng số keys: ${key_id.length}`;
+        } else {
+          // Nếu là một key duy nhất, hiển thị số 1
+          return `Tổng số keys: 1`;
+        }
+      },
+      ellipsis: true,
+    },
+
     {
       key: "action",
       title: "Hành động",
