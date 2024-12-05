@@ -21,6 +21,7 @@ const Profile = () => {
   });
 
   const userId = localStorage.getItem("user_id");
+  const user = localStorage.getItem("user");
 
 
   useEffect(() => {

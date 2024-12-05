@@ -15,7 +15,7 @@ const Orders = () => {
   });
   const [error, setError] = useState<string>(""); // Trạng thái lỗi
 
-  // Hàm gọi API lấy đơn hàng
+  // Hàm gọi API lấy đơn  
   const fetchOrders = async () => {
     const user = JSON.parse(localStorage.getItem("user") || "{}");
     if (!user || !user.user_id) {
@@ -206,7 +206,7 @@ const Orders = () => {
                       </span>
                     </td>
                     <td className="py-4 px-6 border-b">
-                      {order.games.map((game: any, gameIndex: number) => (
+                      {order.status === "completed" && order.games.map((game: any, gameIndex: number) => (
                         <div key={gameIndex}>
                           <p>
                             <strong>{game.name}</strong> :{" "}
@@ -220,8 +220,6 @@ const Orders = () => {
                         </div>
                       ))}
                     </td>
-
-
                   </tr>
                 ))
               ) : (
@@ -233,6 +231,7 @@ const Orders = () => {
           </tbody>
         </table>
       </div>
+
     </div>
   );
 };

@@ -55,7 +55,9 @@ export const getOrderStatus = async (req, res) => {
 
 export const addOrder = async (req, res) => {
   try {
-    const { user_id, games, total_price } = req.body;
+    const { user_id, games, total_price,status  } = req.body;
+
+    const orderStatus = status || "pending"; 
 
     // Kiểm tra dữ liệu đầu vào
     if (
@@ -113,7 +115,7 @@ export const addOrder = async (req, res) => {
       user_id,
       games: updatedGames, // Cập nhật với game có key_ids và game_keys
       total_price,
-      status: "pending",
+      status: orderStatus , // Sửa thành 'completed'
     });
 
     // Trả về thông tin đơn hàng mới đã tạo

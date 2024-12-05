@@ -1,7 +1,7 @@
-// src/Content.js
+// src/ContactHelp.js
 import React from 'react';
 
-const Content = () => {
+const ContactHelp = () => {
   return (
     <main className="flex-1 pt-6 pb-6 pr-0 pl-6 bg-gray-100 h-screen overflow-y-auto">
       <h1 className="text-2xl font-bold mb-6">Liên hệ và hỗ trợ</h1>
@@ -32,4 +32,4 @@ const Content = () => {
   );
 };
 
-export default Content;
+export default ContactHelp;

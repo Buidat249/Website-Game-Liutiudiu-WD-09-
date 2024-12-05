@@ -87,10 +87,10 @@ const VnpayPayment = () => {
           <span
             className={`${
               paymentStatus === "pending"
-                ? "text-green-600"
+                ? "text-yellow-600"
                 : paymentStatus === "failed"
                 ? "text-red-600"
-                : "text-yellow-600"
+                : "text-green-600"
             }`}
           >
             {paymentStatus === "completed"

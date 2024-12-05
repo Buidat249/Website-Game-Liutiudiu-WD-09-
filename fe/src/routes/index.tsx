@@ -65,13 +65,12 @@ import NapTrucTiepForm from "@/pages/(website)/Payment_method/_components/naptru
 import TheCaoForm from "@/pages/(website)/Payment_method/_components/thecao";
 import PagePayment_method from "@/pages/(website)/Payment_method/page";
 import PageShopping from "@/pages/(website)/buyingguide/Superfast_shopping/page";
-import PageGuideRecharge from "@/pages/(website)/buyingguide/guide_recharge/page";
-import PageOrder from "@/pages/(website)/buyingguide/order_management/page";
-import PageBuyingguide from "@/pages/(website)/buyingguide/page";
 import PageCart from "@/pages/(website)/cart/page";
-import Fanpage from "@/pages/(website)/contact/_components/fanpage";
-import Introduce from "@/pages/(website)/contact/_components/introduce";
-import PageContact from "@/pages/(website)/contact/page";
+import ContactHelp from "@/pages/(website)/contact/ContectHelp/component/contacthelp";
+import Fanpage from "@/pages/(website)/contact/Fanpage/conponent/fanpage";
+import Introduce from "@/pages/(website)/contact/Introduce/component/introduce";
+import PageContactHelp from "@/pages/(website)/contact/ContectHelp/page";
+import PageContact from "@/pages/(website)/contact/turtorbuy/page";
 import ProductDetail from "@/pages/(website)/home/ProductDetail";
 import HomePage from "@/pages/(website)/home/page";
 import Layout from "@/pages/(website)/layout";
@@ -95,6 +94,11 @@ import SecuritySettings from "@/pages/(website)/users/User_security/page";
 import TransactionsHistory from "@/pages/(website)/users/User_transactions/page";
 import Wishlist from "@/pages/(website)/users/User_wishlist/page";
 import { Route, Routes } from "react-router-dom";
+import PageFanpage from "@/pages/(website)/contact/Fanpage/page";
+import PageIntroduce from "@/pages/(website)/contact/Introduce/page";
+import PageTurtoregister from "@/pages/(website)/contact/TurtorRegister/page";
+import PageTurRecharge from "@/pages/(website)/contact/TurtorRechange/page";
+import PageTurtorBuy from "@/pages/(website)/contact/turtorbuy/page";
 
 const Router = () => {
   return (
@@ -140,14 +144,13 @@ const Router = () => {
         <Route path="/user/comments" element={<Mycomment />} />
         <Route path="/user/wishlist" element={<Wishlist />} />
         <Route path="/user/affiliate" element={<PageAffiliate />} />
-        <Route path="/createaccout" element={<PageBuyingguide />} />
-        <Route path="/contact" element={<PageContact />} />
-        <Route path="/contact" element={<PageContact />} />
-        <Route path="/recharge" element={<PageGuideRecharge />} />
-        <Route path="/order" element={<PageOrder />} />
-        <Route path="/huongdantaotk" element={<PageBuyingguide />} />
-        <Route path="/huongdannaptien" element={<PageGuideRecharge />} />
-        <Route path="/shopping" element={<PageShopping />} />
+        <Route path="/contact" element={<PageContactHelp />} />
+        <Route path="/contact/contacthelp" element={<PageContactHelp />} />
+        <Route path="/contact/fanpage" element={<PageFanpage />} />
+        <Route path="/contact/introduce" element={<PageIntroduce />} />
+        <Route path="/contact/turtorrecharge" element={<PageTurRecharge />} />
+        <Route path="/contact/turtorregister" element={<PageTurtoregister />} />
+        <Route path="/contact/turtorbuy" element={<PageTurtorBuy />} />
       </Route>
       <Route path="/admin" element={<LayoutAdmin />}>
         <Route index element={<DashboardPage />} />

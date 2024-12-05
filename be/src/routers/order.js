@@ -7,7 +7,7 @@ const router = Router();
 
 
 router.get(`/orders`, getAllOrders);
-router.get(`/orders/:userId`, getAllOrders); // Sửa route thành :userId thay vì :id
+router.get(`/orders/:userId`, getOrderDetail); // Sửa route thành :userId thay vì :id
 router.get(`/orders/status/:id`, getOrderStatus);
 router.post(`/orders`, addOrder);
 router.put(`/orders/:id`, updateOrder);
