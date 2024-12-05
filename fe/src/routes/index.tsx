@@ -142,7 +142,8 @@ const Router = () => {
         <Route path="/user/affiliate" element={<PageAffiliate />} />
         <Route path="/createaccout" element={<PageBuyingguide />} />
         <Route path="/contact" element={<PageContact />} />
-        <Route path="/contact" element={<PageContact />} />
+        <Route path="/contact/introduce" element={<Introduce />} />
+        <Route path="/contact/fanpage" element={<Fanpage/>}/>
         <Route path="/recharge" element={<PageGuideRecharge />} />
         <Route path="/order" element={<PageOrder />} />
         <Route path="/huongdantaotk" element={<PageBuyingguide />} />
