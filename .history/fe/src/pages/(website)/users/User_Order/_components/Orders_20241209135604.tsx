@@ -140,7 +140,7 @@ const Orders = () => {
         width={800}
       >
         <div>
-         
+          <h3>Thông tin đơn hàng</h3>
           <p>
             <strong>Mã đơn hàng:</strong> {selectedOrder?.order_id}
           </p>
@@ -161,10 +161,12 @@ const Orders = () => {
                 <strong>Tên game:</strong>
                 {game.name}
               </p>
-              <strong>Key game:</strong>
-              {game.key_ids.map((key: any, keyIndex: number) => (              
-                <p key={keyIndex}>{key.key_name}</p>
-              ))}
+              <p>
+                <strong>Key game:</strong>
+                {game.key_ids.map((key: any, keyIndex: number) => (
+                   key={keyIndex}>- {key.key_name}
+                ))}
+              </p>
             </div>
           ))}
         </div>

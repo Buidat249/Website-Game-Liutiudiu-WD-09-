@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Modal } from "antd"; // Import Modal từ Ant Design
+import { Modal } from "antd";  // Import Modal từ Ant Design
 
 const Orders = () => {
   const [orders, setOrders] = useState<any[]>([]);
@@ -14,7 +14,7 @@ const Orders = () => {
     endDate: "",
   });
   const [error, setError] = useState<string>("");
-
+  
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
 
@@ -29,9 +29,7 @@ const Orders = () => {
     setLoading(true);
 
     try {
-      const response = await axios.get(
-        `http://localhost:8080/orders/${user.user_id}`
-      );
+      const response = await axios.get(`http://localhost:8080/orders/${user.user_id}`);
       setOrders(response.data.data);
       setFilteredOrders(response.data.data);
     } catch (error) {
@@ -61,27 +59,18 @@ const Orders = () => {
   const filterOrders = () => {
     let filtered = [...orders];
     if (filters.orderId) {
-      filtered = filtered.filter((order) =>
-        String(order.order_id).includes(filters.orderId)
-      );
+      filtered = filtered.filter(order => String(order.order_id).includes(filters.orderId));
     }
     if (filters.amountFrom) {
-      filtered = filtered.filter(
-        (order) => order.total_price >= parseInt(filters.amountFrom)
-      );
+      filtered = filtered.filter(order => order.total_price >= parseInt(filters.amountFrom));
     }
     if (filters.amountTo) {
-      filtered = filtered.filter(
-        (order) => order.total_price <= parseInt(filters.amountTo)
-      );
+      filtered = filtered.filter(order => order.total_price <= parseInt(filters.amountTo));
     }
     if (filters.startDate && filters.endDate) {
-      filtered = filtered.filter((order) => {
+      filtered = filtered.filter(order => {
         const orderDate = new Date(order.createdAt);
-        return (
-          orderDate >= new Date(filters.startDate) &&
-          orderDate <= new Date(filters.endDate)
-        );
+        return orderDate >= new Date(filters.startDate) && orderDate <= new Date(filters.endDate);
       });
     }
     setFilteredOrders(filtered);
@@ -112,9 +101,7 @@ const Orders = () => {
         <tbody>
           {filteredOrders.map((order) => (
             <tr key={order.order_id}>
-              <td className="py-4 px-6 border-b">
-                {new Date(order.createdAt).toLocaleString()}
-              </td>
+              <td className="py-4 px-6 border-b">{new Date(order.createdAt).toLocaleString()}</td>
               <td className="py-4 px-6 border-b">{order.order_id}</td>
               <td className="py-4 px-6 border-b">{order.total_price}₫</td>
               <td className="py-4 px-6 border-b">{order.status}</td>
@@ -140,30 +127,17 @@ const Orders = () => {
         width={800}
       >
         <div>
-         
-          <p>
-            <strong>Mã đơn hàng:</strong> {selectedOrder?.order_id}
-          </p>
-          <p>
-            <strong>Thời gian:</strong>{" "}
-            {new Date(selectedOrder?.createdAt).toLocaleString()}
-          </p>
-          <p>
-            <strong>Tổng tiền:</strong> {selectedOrder?.total_price}₫
-          </p>
-          <p>
-            <strong>Trạng thái:</strong> {selectedOrder?.status}
-          </p>
+          <h3>Thông tin đơn hàng</h3>
+          <p><strong>Mã đơn hàng:</strong> {selectedOrder?.order_id}</p>
+          <p><strong>Thời gian:</strong> {new Date(selectedOrder?.createdAt).toLocaleString()}</p>
+          <p><strong>Tổng tiền:</strong> {selectedOrder?.total_price}₫</p>
+          <p><strong>Trạng thái:</strong> {selectedOrder?.status}</p>
 
           {selectedOrder?.games.map((game: any, index: number) => (
             <div key={index}>
-              <p>
-                <strong>Tên game:</strong>
-                {game.name}
-              </p>
-              <strong>Key game:</strong>
-              {game.key_ids.map((key: any, keyIndex: number) => (              
-                <p key={keyIndex}>{key.key_name}</p>
+              <p><strong>{game.name}</strong></p>
+              {game.key_ids.map((key: any, keyIndex: number) => (
+                <p key={keyIndex}>- {key.key_name}</p>
               ))}
             </div>
           ))}

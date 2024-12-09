@@ -1,5 +1,4 @@
 import Order from "../models/order";
-import User from "../models/User";
 import Key from "../models/key";
 
 // GET / orders
@@ -180,35 +179,29 @@ export const removeOrder = async (req, res) => {
 };
 
 export const confirmVnPay = async (req, res) => {
-  if (req.query.vnp_TxnRef.startsWith("naptienthucong")) {
-    const user_id = req.query.vnp_TxnRef.split("_")[1];
+  if (req.query.vnp_TxnRef.startsWith('naptienthucong')) {
+    const user_id = req.query.vnp_TxnRef.split('_')[1];
     try {
       // Chuyển đổi user_id sang kiểu số
       const userId = parseInt(user_id, 10);
       if (isNaN(userId)) {
         return res.status(400).json({ message: "ID người dùng không hợp lệ" });
       }
-
+      
       // Cập nhật thông tin người dùng
-      const user = await User.findOneAndUpdate(
-        { user_id: userId },
-        {
-          moneynew: money,
-          money:
-            Number.parseInt(req.query.vnp_Amount) + Number.parseInt(moneynew),
-        },
-        {
-          new: true,
-        }
-      );
-
+      const user = await User.findOneAndUpdate({ user_id: userId }, {
+        money: Number.parseInt(req.query.vnp_Amount)
+      }, {
+        new: true,
+      });
+  
       if (!user) {
         return res.status(404).json({
           message: "Không tìm thấy người dùng",
         });
       }
-
-      res.redirect("http://localhost:5173/user/profile");
+  
+      res.redirect('http://localhost:5173/user/profile');
     } catch (error) {
       return res.status(500).json({ message: error.message });
     }
@@ -228,10 +221,8 @@ export const confirmVnPay = async (req, res) => {
           message: "Order Not Found",
         });
       }
-
-      res.redirect(
-        `http://localhost:5173/vnpay/success?order_id=${req.query.vnp_TxnRef}&amount=${req.query.vnp_Amount}`
-      );
+      
+      res.redirect('http://localhost:5173/user/orders');
     } catch (error) {
       return res.status(500).json({ message: error.message });
     }
