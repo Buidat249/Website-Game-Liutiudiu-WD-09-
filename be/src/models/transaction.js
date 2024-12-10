@@ -20,7 +20,7 @@ const transactionSchema = new mongoose.Schema(
     status: {
       type: String,
       required: true,
-      enum: ["completed"]
+      enum: ["completed", "failed"]
     },
   },
   { timestamps: true }

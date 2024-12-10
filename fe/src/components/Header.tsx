@@ -103,7 +103,9 @@ const Header = (props: Props) => {
             <span>Kết nối yêu thương cùng Liutiudiu Shop</span>
             <nav>
               <a href="createaccout">Hướng dẫn mua hàng</a>
-              <a href="#">Ưu đãi khách hàng</a>
+              {user.role_id === 0 && (
+                <a href="/admin">Chuyển đến admin</a>
+              )}
               {user.username && (
                 <a onClick={handleLogout} href="#">
                   Đăng xuất
@@ -112,6 +114,7 @@ const Header = (props: Props) => {
             </nav>
           </div>
         </div>
+
 
         <div className="main-header">
           <div className="main-header-content">
@@ -150,7 +153,7 @@ const Header = (props: Props) => {
                 <a onClick={handleGoToCart}>
                   <img src={cartIcon} alt="Cart Icon" />
                   <span className=" flex justify-between items-center">Giỏ hàng
-                    <p style={{marginRight: "5px",marginLeft: "5px",paddingRight: "5px",paddingLeft: "5px", backgroundColor:"white", borderRadius: "5px", color: "black"}}>{gameCount}</p>
+                    <p style={{ marginRight: "5px", marginLeft: "5px", paddingRight: "5px", paddingLeft: "5px", backgroundColor: "white", borderRadius: "5px", color: "black" }}>{gameCount}</p>
                   </span>
                 </a>
               </div>

@@ -97,6 +97,38 @@ const Orders = () => {
     setSelectedOrder(null);
   };
 
+  const getStatusLabel = (status: any) => {
+    switch (status) {
+      case "pending":
+        return "Chưa thanh toán";
+      case "completed":
+        return "Đã thanh toán";
+      case "canceled":
+        return "Đã hủy";
+      case "payment_failed":
+        return "Thanh toán thất bại";
+      default:
+        return "Không xác định";
+    }
+  };
+
+  const getStatusClass = (status: any) => {
+    switch (status) {
+      case "pending":
+        return "text-gray-400"; // Màu vàng cam
+      case "completed":
+        return "text-green-500"; // Màu xanh lá
+      case "canceled":
+        return "text-orange-500"; // Màu xám
+      case "payment_failed":
+        return "text-red-500"; // Màu đỏ
+      default:
+        return "text-black"; // Mặc định là màu đen
+    }
+  };
+
+
+
   return (
     <div>
       <table className="min-w-full">
@@ -117,7 +149,9 @@ const Orders = () => {
               </td>
               <td className="py-4 px-6 border-b">{order.order_id}</td>
               <td className="py-4 px-6 border-b">{order.total_price}₫</td>
-              <td className="py-4 px-6 border-b">{order.status}</td>
+              <td className={`py-4 px-6 border-b ${getStatusClass(order.status)}`}>
+                {getStatusLabel(order.status)}
+              </td>
               <td className="py-4 px-6 border-b">
                 <button
                   onClick={() => showOrderDetails(order)}
@@ -131,7 +165,6 @@ const Orders = () => {
         </tbody>
       </table>
 
-      {/* Modal chi tiết đơn hàng */}
       <Modal
         title={`Chi tiết đơn hàng #${selectedOrder?.order_id}`}
         visible={isModalVisible}
@@ -140,7 +173,6 @@ const Orders = () => {
         width={800}
       >
         <div>
-         
           <p>
             <strong>Mã đơn hàng:</strong> {selectedOrder?.order_id}
           </p>
@@ -152,24 +184,33 @@ const Orders = () => {
             <strong>Tổng tiền:</strong> {selectedOrder?.total_price}₫
           </p>
           <p>
-            <strong>Trạng thái:</strong> {selectedOrder?.status}
+            <strong>Trạng thái:</strong>{" "}
+            <span className={getStatusClass(selectedOrder?.status)}>
+              {getStatusLabel(selectedOrder?.status)}
+            </span>
           </p>
 
-          {selectedOrder?.games.map((game: any, index: number) => (
-            <div key={index}>
-              <p>
-                <strong>Tên game:</strong>
-                {game.name}
-              </p>
-              <strong>Key game:</strong>
-              {game.key_ids.map((key: any, keyIndex: number) => (              
-                <p key={keyIndex}>{key.key_name}</p>
-              ))}
-            </div>
-          ))}
+          {selectedOrder?.status === "completed" ? (
+            selectedOrder?.games.map((game: any, index: number) => (
+              <div key={index}>
+                <p>
+                  <strong>Tên game:</strong> {game.name}
+                </p>
+                <p>
+                  <strong>Key game:</strong>
+                </p>
+                {game.key_ids.map((key: any, keyIndex: number) => (
+                  <p key={keyIndex}>{key.key_name}</p>
+                ))}
+              </div>
+            ))
+          ) : (
+            <p className="text-red-500">Thanh toán để nhận key game.</p>
+          )}
         </div>
       </Modal>
     </div>
+
   );
 };
 

@@ -22,6 +22,7 @@ import description_detail from "./routers/desciption_detail";
 import tintuc from "./routers/tintuc";
 import categorynews from "./routers/categorynew";
 import key from "./routers/key";
+import transaction from "./routers/transaction";
 const app = express();
 // middleware
 app.use(express.json());
@@ -58,6 +59,7 @@ app.use("", pay);
 app.use("", tintuc)
 app.use("", categorynews);
 app.use("", key);
+app.use("", transaction);
 export const viteNodeApp = app;
 
 app.listen(PORT, () => {
