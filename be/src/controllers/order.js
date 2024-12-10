@@ -1,4 +1,5 @@
 import Order from "../models/order";
+import Transaction from "../models/transaction";
 import User from "../models/User";
 import Key from "../models/key";
 
@@ -181,6 +182,11 @@ export const removeOrder = async (req, res) => {
 
 export const confirmVnPay = async (req, res) => {
   if (req.query.vnp_TxnRef.startsWith("naptienthucong")) {
+    if (req.query.vnp_TransactionStatus !== '00') {
+      return res.redirect(
+        `http://localhost:5173/vnpay/fall?order_id=${req.query.vnp_TxnRef}&amount=${req.query.vnp_Amount}`
+      );
+    }
     const user_id = req.query.vnp_TxnRef.split("_")[1];
     try {
       // Chuyển đổi user_id sang kiểu số
@@ -189,18 +195,25 @@ export const confirmVnPay = async (req, res) => {
         return res.status(400).json({ message: "ID người dùng không hợp lệ" });
       }
 
+      const lastTransaction = await Transaction.findOne({}, {}, { sort: { transaction_id: -1 } });
+      const newTransactionId = lastTransaction ? lastTransaction.transaction_id + 1 : 1;
+
+      const transactionData = {
+          transaction_id: newTransactionId,
+          user_id: userId,
+          total_price: Math.floor(Number.parseInt(req.query.vnp_Amount) / 100),
+          status: 'completed'
+      };
+
+      const transaction = await Transaction.create(transactionData);
+      const userCur = await User.findOne({ user_id: userId });
       // Cập nhật thông tin người dùng
       const user = await User.findOneAndUpdate(
         { user_id: userId },
         {
-          moneynew: money,
           money:
-            Number.parseInt(req.query.vnp_Amount) + Number.parseInt(moneynew),
-        },
-        {
-          new: true,
-        }
-      );
+            Math.floor(Number.parseInt(req.query.vnp_Amount) / 100) + Number.parseInt(userCur.money ?? 0),
+        });
 
       if (!user) {
         return res.status(404).json({
@@ -214,20 +227,31 @@ export const confirmVnPay = async (req, res) => {
     }
   } else {
     try {
-      const order = await Order.findOneAndUpdate(
-        { order_id: req.query.vnp_TxnRef },
-        {
-          status: "completed",
-        },
-        {
-          new: true,
-        }
-      );
+      const order = await Order.findOne(
+        { order_id: req.query.vnp_TxnRef });
       if (!order) {
         return res.status(404).json({
           message: "Order Not Found",
         });
       }
+      if (req.query.vnp_TransactionStatus !== '00') {
+        
+        await Order.findOneAndUpdate(
+          { order_id: req.query.vnp_TxnRef },
+          {
+            status: "payment_failed",
+          }
+        );
+        return res.redirect(
+          `http://localhost:5173/vnpay/fall?order_id=${req.query.vnp_TxnRef}&amount=${req.query.vnp_Amount}`
+        );
+      }
+      await Order.findOneAndUpdate(
+        { order_id: req.query.vnp_TxnRef },
+        {
+          status: "completed",
+        }
+      );
 
       res.redirect(
         `http://localhost:5173/vnpay/success?order_id=${req.query.vnp_TxnRef}&amount=${req.query.vnp_Amount}`

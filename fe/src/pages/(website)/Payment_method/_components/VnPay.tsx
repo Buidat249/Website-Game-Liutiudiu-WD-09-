@@ -67,7 +67,7 @@ const VnPay_autoForm: React.FC = () => {
     
     const amount = form.getFieldValue("soTien"); // Lấy giá trị số tiền từ form
     if (amount) {
-      const url = `http://localhost:8080/carts/create-pay/vnpay?amount=${amount}&ref=naptienthucong_${user.user_id}`;
+      const url = `http://localhost:8080/carts/create-pay/vnpay?amount=${amount}&ref=naptienthucong_${user.user_id}_${(new Date()).getTime()}`;
       window.location.href = url; // Redirect sang URL
     } else {
       console.error("Vui lòng nhập số tiền trước khi nạp.");

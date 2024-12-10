@@ -100,6 +100,7 @@ import PageTurtoregister from "@/pages/(website)/contact/TurtorRegister/page";
 import PageTurRecharge from "@/pages/(website)/contact/TurtorRechange/page";
 import PageTurtorBuy from "@/pages/(website)/contact/turtorbuy/page";
 import PaymentSuccess from "@/pages/(website)/payvnpay/_components/success";
+import PaymentFall from "@/pages/(website)/payvnpay/_components/fall";
 
 const Router = () => {
   return (
@@ -115,6 +116,7 @@ const Router = () => {
         <Route path="/vnpayconfirm" element={<PagePayVnPay />} />
         <Route path="/vnpayment" element={<VnpayPayment />} />
         <Route path="/vnpay/success" element={<PaymentSuccess />} />
+        <Route path="/vnpay/fall" element={<PaymentFall />} />
 
 
         <Route path="/momoconfirm" element={<PagePayMomo />} />
