@@ -6,7 +6,7 @@ import { addKeys, assignKeysToGame, getAllKeys, getKeyDetail, removeKey, updateK
 const router = Router();
 
 router.get(`/keys`, getAllKeys);
-router.get(`/keys/:id`, getKeyDetail);
+router.get(`/keys/:game_id`, getKeyDetail);
 router.post(`/keys`, addKeys);
 router.put(`/keys/:id`, updateKey);
 router.delete(`/keys/:id`, removeKey);

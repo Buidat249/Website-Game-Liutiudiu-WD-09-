@@ -94,7 +94,7 @@ export const addOrder = async (req, res) => {
       const keysToUpdate = availableKeys.slice(0, game.quantity);
       await Key.updateMany(
         { _id: { $in: keysToUpdate.map((key) => key._id) } },
-        { $set: { is_used: true } }
+        { $set: { is_used: true, user_id: user_id, used_at: orderStatus == "completed" ? new Date() : undefined } }
       );
 
       // Cập nhật thông tin game đã mua cùng keys
@@ -119,6 +119,17 @@ export const addOrder = async (req, res) => {
       total_price,
       status: orderStatus, // Sửa thành 'completed'
     });
+
+    // Cập nhật ví tiền khách hàng
+    if (orderStatus == "completed") {
+      const userCur = await User.findOne({ user_id });
+      // Cập nhật thông tin người dùng
+      const user = await User.findOneAndUpdate(
+        { user_id },
+        {
+          money: Number.parseInt(userCur.money ?? 0) - Number.parseInt(total_price),
+        });
+    }
 
     // Trả về thông tin đơn hàng mới đã tạo
     res.status(201).json({
@@ -234,6 +245,11 @@ export const confirmVnPay = async (req, res) => {
           message: "Order Not Found",
         });
       }
+      
+      const keys = order.games.reduce((acc, game) => {
+        return acc.concat(game.key_ids.map(key => key.key_id));
+      }, []);
+
       if (req.query.vnp_TransactionStatus !== '00') {
         
         await Order.findOneAndUpdate(
@@ -242,6 +258,17 @@ export const confirmVnPay = async (req, res) => {
             status: "payment_failed",
           }
         );
+
+        for (const key of keys) {
+          await Key.findOneAndUpdate(
+            { key_id: key },
+            {
+              is_used: false,
+              used_at: undefined,
+              user_id: "",
+            }
+          );
+        }
         return res.redirect(
           `http://localhost:5173/vnpay/fall?order_id=${req.query.vnp_TxnRef}&amount=${req.query.vnp_Amount}`
         );
@@ -252,6 +279,16 @@ export const confirmVnPay = async (req, res) => {
           status: "completed",
         }
       );
+
+      for (const key of keys) {
+        await Key.findOneAndUpdate(
+          { key_id: key },
+          {
+            is_used: true,
+            used_at: new Date()
+          }
+        );
+      }
 
       res.redirect(
         `http://localhost:5173/vnpay/success?order_id=${req.query.vnp_TxnRef}&amount=${req.query.vnp_Amount}`

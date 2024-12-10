@@ -88,6 +88,7 @@ const OrderPage = () => {
       title: "Trạng thái",
       render: (_: any, order: any) => (
         <select
+          disabled={order.status == "completed"}
           value={order.status}
           onChange={(e) => handleChangeStatus(e, order.order_id)}
         >
@@ -111,11 +112,8 @@ const OrderPage = () => {
             okText="Yes"
             cancelText="No"
           >
-            <Button danger>Xóa</Button>
+            <Button disabled={order.status == "completed"} danger>Xóa</Button>
           </Popconfirm>
-          <Link to={`/admin/orders/${order.order_id}/edit`}>
-            <Button>Cập nhật</Button>
-          </Link>
         </>
       ),
     },

@@ -223,7 +223,7 @@ export const removeGameFromCart = async (req, res) => {
 export const createPayQrVnPay = async (req, res) => {
   const vnpay = new VNPay({
     tmnCode: "FKYQKRXQ",
-    secureSecret: "XPE9OLXDPO61GTID3N27E47GHUHE14F6",
+    secureSecret: "8K03P3S8NFR8WVJL1PNLFZ5IQIDKIVRB",
     vnpayHost: "https://sandbox.vnpayment.vn",
     testMode: true, 
     hashAlgorithm: "SHA512", 

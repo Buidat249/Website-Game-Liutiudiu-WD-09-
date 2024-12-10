@@ -31,7 +31,6 @@ import EditKeyPage from "@/pages/(dashboard)/keys/edit/page";
 import KeysPage from "@/pages/(dashboard)/keys/pages";
 import LayoutAdmin from "@/pages/(dashboard)/layout";
 import OrderAddPage from "@/pages/(dashboard)/order/add/page";
-import OrderEditPage from "@/pages/(dashboard)/order/edit/page";
 import OrderPage from "@/pages/(dashboard)/order/page";
 import Order_DetailAddPage from "@/pages/(dashboard)/order_detail/add/page";
 import Order_DetailEditPage from "@/pages/(dashboard)/order_detail/edit/page";
@@ -186,7 +185,6 @@ const Router = () => {
         <Route path="order_details/:order_detail_id/edit" element={<Order_DetailEditPage />} />
         <Route path="orders" element={<OrderPage />} />
         <Route path="orders/add" element={<OrderAddPage />} />
-        <Route path="orders/:order_id/edit" element={<OrderEditPage />} />
         <Route path="payment_methods" element={<Payment_MethodPage />} />
         <Route path="payment_methods/add" element={<Payment_MethodAddPage />} />
         <Route

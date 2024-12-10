@@ -16,15 +16,20 @@ export const getAllKeys = async (req, res) => {
 // GET /keys/:id - Lấy chi tiết key theo ID
 export const getKeyDetail = async (req, res) => {
   try {
-    const key = await Key.findOne({ key_id: req.params.id });
-    if (!key) {
+    const { game_id } = req.params; // Lấy game_id từ params
+
+    // Tìm kiếm tất cả keys theo game_id
+    const keys = await Key.find({ game_id: game_id });
+
+    if (!keys || keys.length === 0) {
       return res.status(404).json({
-        message: "Không tìm thấy key",
+        message: "Không tìm thấy key cho game_id này",
       });
     }
+
     return res.status(200).json({
-      message: "Lấy chi tiết key thành công",
-      data: key,
+      message: "Lấy chi tiết keys thành công",
+      data: keys, // Trả về tất cả các keys liên quan đến game_id
     });
   } catch (error) {
     return res.status(500).json({ message: error.message });
@@ -48,6 +53,8 @@ export const addKeys = async (req, res) => {
       key_id: newKeyId,
       name: req.body.name, // Đảm bảo rằng 'name' không null hoặc undefined
       is_used: req.body.is_used || false,
+      used_at: req.body.is_used ? new Date() : null, // Nếu is_used là true, gán ngày giờ hiện tại, nếu false thì để null
+      game_id:  req.body.game_id,
     };
 
     // Thêm khóa mới vào cơ sở dữ liệu
@@ -104,20 +111,16 @@ export const removeKey = async (req, res) => {
   }
 };
 
-
 export const assignKeysToGame = async (req, res) => {
-    try {
-      const { game_id, key_ids } = req.body;
-  
-      // Cập nhật keys trong bảng Key với game_id
-      await Key.updateMany(
-        { _id: { $in: key_ids } },
-        { game_id: game_id }
-      );
-  
-      res.status(200).json({ message: "Keys assigned to game successfully" });
-    } catch (error) {
-      console.error("Error assigning keys:", error);
-      res.status(500).json({ message: "An error occurred while assigning keys" });
-    }
-  };
+  try {
+    const { game_id, key_ids } = req.body;
+
+    // Cập nhật keys trong bảng Key với game_id
+    await Key.updateMany({ _id: { $in: key_ids } }, { game_id: game_id });
+
+    res.status(200).json({ message: "Keys assigned to game successfully" });
+  } catch (error) {
+    console.error("Error assigning keys:", error);
+    res.status(500).json({ message: "An error occurred while assigning keys" });
+  }
+};

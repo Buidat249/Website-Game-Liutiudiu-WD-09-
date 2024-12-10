@@ -42,7 +42,7 @@ const NapTrucTiepForm: React.FC = () => {
             Các bạn có thể xem chi tiết các địa điểm Giao dịch trực tiếp tại
             đây:
             <Link
-              href="http://localhost:5173/"
+              href="https://www.google.com/maps/@20.9747968,105.791488,11z?entry=ttu&g_ep=EgoyMDI0MTIwNC4wIKXMDSoASAFQAw%3D%3D"
               target="_blank"
               style={{ color: "red" }}
             >

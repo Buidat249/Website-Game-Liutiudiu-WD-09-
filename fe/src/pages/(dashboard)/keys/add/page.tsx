@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button, Form, FormProps, Input, message } from "antd";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 type FieldType = {
     key_id?: number;
@@ -15,18 +15,36 @@ const AddKeyPage: React.FC = () => {
     const [messageApi, contextHolder] = message.useMessage();
     const queryClient = useQueryClient();
     const [lastKeyId, setLastKeyId] = useState<number>(0);
+    const location = useLocation();
+    const [gameId, setGameId] = useState<number | null>(null);
+    const [gameName, setGameName] = useState<string>("");
 
     // Fetch the last key_id to generate a new one
     useEffect(() => {
-        axios.get("http://localhost:8080/keys/lastkey")
-            .then(response => {
-                const lastKey = response.data.data;
-                setLastKeyId(lastKey ? lastKey.key_id : 0);
-            })
-            .catch(error => {
-                console.error("Failed to fetch last key:", error);
-            });
-    }, []);
+        // Lấy game_id từ URL
+        const queryParams = new URLSearchParams(location.search);
+        const gameIdFromUrl = queryParams.get("game_id");
+        if (gameIdFromUrl) {
+            setGameId(Number(gameIdFromUrl)); // Chuyển giá trị thành số
+        }
+    }, [location]);
+
+    // Fetch game name based on game_id
+    useEffect(() => {
+        if (gameId) {
+            axios
+                .get(`http://localhost:8080/games/${gameId}`)
+                .then((response) => {
+                    const game = response.data.data;
+                    if (game) {
+                        setGameName(game.name); // Cập nhật tên game từ API
+                    }
+                })
+                .catch((error) => {
+                    console.error("Failed to fetch game:", error);
+                });
+        }
+    }, [gameId]);
 
     // Mutation for adding a new key
     const { mutate } = useMutation({
@@ -47,22 +65,20 @@ const AddKeyPage: React.FC = () => {
 
     // Handle form submission
     const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
-        // Kiểm tra lại trước khi gửi dữ liệu
-        if (!values.name) {
+        if (!gameId) {
             messageApi.open({
                 type: "error",
-                content: "Tên khóa không được bỏ trống",
+                content: "Game ID is required",
             });
             return;
         }
-        console.log("Sending data:", values);
-        mutate(values);
+
+        const keyData = { ...values, game_id: gameId }; // Thêm game_id vào đây
+        console.log("Sending data:", keyData);
+        mutate(keyData);
     };
 
-
-    const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
-        errorInfo
-    ) => {
+    const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
         console.log("Thất bại", errorInfo);
     };
 
@@ -70,9 +86,11 @@ const AddKeyPage: React.FC = () => {
         <>
             {contextHolder}
             <div className="flex items-center justify-between mb-5">
-                <h1 className="text-2xl font-semibold">Thêm Khóa Game</h1>
+                <h1 className="text-2xl font-semibold">
+                    Thêm Khóa Game {gameName || "N/A"}
+                </h1>
                 <Button type="primary">
-                    <Link to="/admin/keys">
+                    <Link to={`/admin/games/${gameId}/edit`}>
                         <BackwardFilled /> Quay lại
                     </Link>
                 </Button>

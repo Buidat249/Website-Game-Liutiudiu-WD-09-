@@ -8,9 +8,17 @@ const PayMoMOForm: React.FC = () => {
   const [amount, setAmount] = useState<string>("");
 
   const onFinish = (values: any) => {
-    console.log("Success:", values);
-    setAmount(values.soTien);
-    setIsModalVisible(true);
+    // Hiển thị thông báo bảo trì
+    Modal.warning({
+      title: "Thông báo bảo trì",
+      content: (
+        <div>
+          <p>Hệ thống thanh toán tự động đang được nâng cấp.</p>
+          <p>Vui lòng thử lại sau hoặc liên hệ với chúng tôi để được hỗ trợ.</p>
+        </div>
+      ),
+      okText: "Đóng",
+    });
   };
 
   const handleCancel = () => {
