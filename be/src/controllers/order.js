@@ -1,6 +1,6 @@
 import Order from "../models/order";
 import Transaction from "../models/transaction";
-import User from "../models/User";
+import User from "../models/user";
 import Key from "../models/key";
 
 // GET / orders

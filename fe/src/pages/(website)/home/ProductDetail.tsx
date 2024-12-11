@@ -41,6 +41,7 @@ interface DescriptionDetail {
   descriptiondetail_id?: number;
 }
 
+
 const ProductDetail = () => {
   const { game_id } = useParams<{ game_id: string }>();
   const [game, setGame] = useState<Game | null>(null);
@@ -50,10 +51,23 @@ const ProductDetail = () => {
   const [relatedGames, setRelatedGames] = useState<Game[]>([]);
   const [platforms, setPlatforms] = useState<Platform[]>([]);
   const [messageApi, contextHolder] = message.useMessage();
+  const [user, setUser] = useState<any>(null); // Lưu trữ thông tin user
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  console.log('daaa', game);
   const navigate = useNavigate();
   const [isFavourite, setIsFavourite] = useState<boolean>(game?.favourite || false); // Ban đầu set giá trị từ game.favourite (nếu có)
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      const parsedUser = JSON.parse(storedUser);
+      // Nếu không có favouriteGames, thêm vào mảng rỗng
+      if (!parsedUser.favouriteGames) {
+        parsedUser.favouriteGames = [];
+      }
+      setUser(parsedUser);  // Gán user từ localStorage vào state
+    }
+  }, []);
+
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -75,55 +89,65 @@ const ProductDetail = () => {
     }
   }, [isLoggedIn, game?.game_id]);
 
+  useEffect(() => {
+    if (user?.favouriteGames) {
+      const isFavouriteGame = user.favouriteGames.some(
+        (fav: any) => fav.game_id === game?.game_id
+      );
+      setIsFavourite(isFavouriteGame);
+    }
+  }, [user?.favouriteGames, game?.game_id]);
+
   const toggleFavourite = async () => {
     if (!isLoggedIn) {
       messageApi.error("Bạn cần đăng nhập để thực hiện hành động này.");
       return;
     }
-  
-    const user_id = localStorage.getItem('user_id');
+
     const game_id = game?.game_id;
-  
-    if (!user_id || !game_id) {
+    if (!user || !game_id) {
       messageApi.error("Không có thông tin game hoặc user để thực hiện hành động này.");
       return;
     }
-  
+
     const newFavouriteStatus = !isFavourite;
-  
-    // Lấy danh sách game yêu thích từ localStorage và kiểm tra nếu là mảng
-    const storedFavouriteGames = localStorage.getItem(`${user_id}_favouriteGames`);
-    let favouriteGames = storedFavouriteGames ? JSON.parse(storedFavouriteGames) : [];
-  
-    if (!Array.isArray(favouriteGames)) {
-      favouriteGames = [];
-    }
-  
+
+    let updatedFavourites;
+
+    // Nếu thêm game vào yêu thích
     if (newFavouriteStatus) {
-      // Nếu yêu thích, thêm game vào danh sách yêu thích
-      favouriteGames.push({ game_id, favourite: true });
+      updatedFavourites = [...user.favouriteGames, { game_id, favourite: true, _id: Date.now().toString() }];
     } else {
-      // Nếu không yêu thích, xoá game khỏi danh sách yêu thích
-      favouriteGames = favouriteGames.filter((g : any) => g.game_id !== game_id);
+      // Nếu xoá game khỏi yêu thích
+      updatedFavourites = user.favouriteGames.filter((fav: any) => fav.game_id !== game_id);
     }
-  
-    // Lưu lại danh sách game yêu thích vào localStorage
-    localStorage.setItem(`${user_id}_favouriteGames`, JSON.stringify(favouriteGames));
-  
-    // Cập nhật trạng thái yêu thích trên frontend
-    setIsFavourite(newFavouriteStatus);
-  
-    // Gửi yêu cầu cập nhật đến backend để lưu thay đổi
+
     try {
-      const response = await axios.post(`http://localhost:8080/users/${user_id}/favourite`, { game_id, favourite: newFavouriteStatus });
-      messageApi.success(`Game ${newFavouriteStatus ? 'đã được thêm vào' : 'đã bị xoá khỏi'} danh sách yêu thích`);
+      // Gửi yêu cầu cập nhật đến backend
+      const response = await axios.post(
+        `http://localhost:8080/users/${user.user_id}/favourite`,
+        { game_id, favourite: newFavouriteStatus }
+      );
+
+      console.log('Response from backend:', response.data);  // Kiểm tra dữ liệu trả về từ server
+
+      // Cập nhật lại user và lưu vào localStorage nếu thành công
+      const updatedUser = { ...user, favouriteGames: updatedFavourites };
+      setUser(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));  // Lưu lại user vào localStorage
+
+      setIsFavourite(newFavouriteStatus);
+
+      messageApi.success(
+        `Game ${newFavouriteStatus ? 'đã được thêm vào' : 'đã bị xoá khỏi'} danh sách yêu thích`
+      );
     } catch (error) {
       console.error("Error updating favourite status on server:", error);
-      messageApi.error("Không thể cập nhật yêu thích trên server.");
+      messageApi.error("Không thể cập nhật trạng thái yêu thích trên server.");
     }
   };
-  
-  
+
+
   useEffect(() => {
     axios
       .get("http://localhost:8080/platforms")
@@ -152,7 +176,7 @@ const ProductDetail = () => {
 
         // Lấy category và related games (không thay đổi logic này)
         const categoryId = gameData.category_id[0];
-        console.log('catte',categoryId)
+        console.log('catte', categoryId)
         if (categoryId) {
           const categoryResponse = await axios.get<{ data: { name: string } }>(`http://localhost:8080/categories/${categoryId}`);
           setCategoryName(categoryResponse.data.data.name);

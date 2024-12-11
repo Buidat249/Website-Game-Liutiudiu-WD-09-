@@ -117,6 +117,7 @@ export const Login = async (req, res) => {
         username: user.username,
         avatar: user.avatar,
         money: user.money,
+        favouriteGames: user.favouriteGames,
         role_id: user.role_id, // Trả về role_id của người dùng
       });
     } else {
