@@ -57,7 +57,7 @@ const Fanpage = () => {
             <span className="flex flex-col flex-1 text-right">
               <span className="text-xs">Previous</span>
               <span className="text-dark dark:text-light/6 line-clamp-2">
-                Giới thiệu Divine Shop
+                Giới thiệu Liutiudiu Shop
               </span>
             </span>
             <svg
