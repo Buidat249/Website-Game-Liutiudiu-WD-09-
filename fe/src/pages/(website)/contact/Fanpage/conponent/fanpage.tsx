@@ -3,8 +3,8 @@ import { Button } from "antd";
 import { Link } from "react-router-dom";
 const Fanpage = () => {
   return (
-    <div className="flex-1 pt-6 pb-6 pr-0 pl-6 bg-gray-100 h-screen overflow-y-auto">
-      <div className="bg-white p-6 rounded-lg shadow-md ml-5 w-[790px]">
+    <div className="flex-1 pt-6 pb-6 pr-0 pl-6 bg-gray-100  overflow-y-auto">
+      <div className="bg-white p-6 rounded-lg shadow-md ml-5 ">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">
           Hệ thống Fanpage chính thức
         </h2>

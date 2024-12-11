@@ -1,11 +1,9 @@
 import React from "react";
-import { ArrowRightOutlined } from "@ant-design/icons";
 import { Button } from "antd";
 import { Link } from "react-router-dom";
 const Introduce = () => {
   return (
-
-    <div className="main flex-1 pt-6 pb-6 pr-0 pl-6 bg-gray-100 h-screen ">
+    <div className="main flex-1 pt-6 pb-6 pr-0 pl-6 bg-gray-100 ">
       <div className="header">
         <div className="heading-gi-i-thi-u">Giới thiệu liutiudiu Shop</div>
         <p className="text-wrapper-5">
