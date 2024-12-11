@@ -147,7 +147,7 @@ const Router = () => {
         <Route path="/user/transactions" element={<TransactionsHistory />} />
         <Route path="/user/security" element={<SecuritySettings />} />
         <Route path="/user/comments" element={<Mycomment />} />
-        <Route path="/user/wishlist" element={<Wishlist />} />
+        <Route path="/user/favorites" element={<Wishlist />} />
         <Route path="/user/affiliate" element={<PageAffiliate />} />
         <Route path="/contact" element={<PageContactHelp />} />
         <Route path="/contact/contacthelp" element={<PageContactHelp />} />

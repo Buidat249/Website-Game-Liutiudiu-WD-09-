@@ -3,7 +3,6 @@ import Game from "../models/game";
 import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
 
-
 // GET / users
 export const getAllUsers = async (req, res) => {
   try {
@@ -27,7 +26,7 @@ export const getUserDetail = async (req, res) => {
     }
 
     // Tìm người dùng theo user_id
-    const user = await User.findOne({ user_id: userId },  '-password');
+    const user = await User.findOne({ user_id: userId }, "-password");
     if (!user) {
       return res.status(404).json({
         message: "User Not Found",
@@ -197,33 +196,74 @@ export const removeUser = async (req, res) => {
 
 export const toggleFavourite = async (req, res) => {
   try {
-    const { userId } = req.params; // Lấy userId từ URL
-    const { gameId } = req.body; // Lấy gameId từ request body
+    const userId = req.params.userId;
+    const { game_id, favourite } = req.body;
 
-    const user = await User.findOne({ user_id: userId });
-    if (!user) return res.status(404).json({ message: "Người dùng không tồn tại" });
-
-    const game = await Game.findOne({ game_id: gameId });
-    if (!game) return res.status(404).json({ message: "Game không tồn tại" });
-
-    // Kiểm tra game đã có trong danh sách yêu thích của người dùng chưa
-    const isFavourite = user.favourite.includes(gameId);
-
-    if (isFavourite) {
-      // Nếu đã yêu thích, xóa khỏi danh sách
-      user.favourite = user.favourite.filter((id) => id !== gameId);
-      game.favourite = false;
-    } else {
-      // Nếu chưa, thêm vào danh sách
-      user.favourite.push(gameId);
-      game.favourite = true;
+    if (typeof favourite !== "boolean") {
+      return res
+        .status(400)
+        .json({ message: "Favourite must be a boolean value." });
     }
 
-    await user.save();
-    await game.save();
+    if (!game_id || typeof game_id !== "number") {
+      return res
+        .status(400)
+        .json({ message: "game_id is required and must be a valid number." });
+    }
 
-    res.status(200).json({ message: "Cập nhật yêu thích thành công", favourite: !isFavourite });
+    const user = await User.findOne({ user_id: userId });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    const existingGameIndex = user.favouriteGames.findIndex(
+      (game) => game.game_id === game_id
+    );
+
+    if (existingGameIndex !== -1) {
+      if (favourite === false) {
+        // Xóa game khỏi danh sách yêu thích
+        user.favouriteGames.splice(existingGameIndex, 1);
+      } else {
+        // Cập nhật trạng thái yêu thích
+        user.favouriteGames[existingGameIndex].favourite = true;
+      }
+    } else if (favourite === true) {
+      // Nếu game chưa có trong mảng, thêm mới vào mảng
+      user.favouriteGames.push({ game_id, favourite });
+    }
+
+    await user.save(); // Lưu lại thay đổi
+
+    return res.status(200).json({
+      message: "Favourite updated successfully",
+      data: user.favouriteGames,
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Error updating favourite:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+// GET /users/:userId/favourite
+export const getFavouriteGames = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    // Tìm người dùng theo userId
+    const user = await User.findOne({ user_id: userId });
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    // Trả về danh sách các game yêu thích của người dùng
+    return res.status(200).json({
+      message: "Favourite games fetched successfully",
+      data: user.favouriteGames,
+    });
+  } catch (error) {
+    console.error("Error fetching favourite games:", error);
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };

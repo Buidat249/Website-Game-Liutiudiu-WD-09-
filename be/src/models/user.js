@@ -54,9 +54,12 @@ const userSchema = new mongoose.Schema({
     city:{
         type: String,
     },
-    favourite:{
-        type: Boolean,
-    },
+    favouriteGames: [
+        {
+          game_id: { type: Number, required: true, ref: "Game" }, // Tham chiếu đến model Game
+          favourite: { type: Boolean, required: true, default: false }, // Trạng thái yêu thích
+        },
+    ],
 
     
 }, { timestamps: true });

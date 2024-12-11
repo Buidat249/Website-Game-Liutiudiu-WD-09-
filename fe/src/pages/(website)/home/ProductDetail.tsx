@@ -11,6 +11,7 @@ interface Game {
   category_id: number[]; // Sửa để category_id luôn là một mảng
   platform_id?: number;
   name?: string;
+  favourite?: boolean;
   price?: number;
   discount?: number;
   final_price?: number | undefined;
@@ -52,7 +53,77 @@ const ProductDetail = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   console.log('daaa', game);
   const navigate = useNavigate();
+  const [isFavourite, setIsFavourite] = useState<boolean>(game?.favourite || false); // Ban đầu set giá trị từ game.favourite (nếu có)
 
+  useEffect(() => {
+    if (isLoggedIn) {
+      const user_id = localStorage.getItem('user_id');
+      const game_id = game?.game_id;
+
+      if (!game_id || !user_id) {
+        console.error("Không có thông tin user hoặc game_id để kiểm tra");
+        return;
+      }
+
+      // Lấy danh sách game yêu thích từ localStorage và kiểm tra nếu là mảng
+      const storedFavouriteGames = localStorage.getItem(`${user_id}_favouriteGames`);
+      const favouriteGames = storedFavouriteGames ? JSON.parse(storedFavouriteGames) : [];
+
+      // Kiểm tra nếu game_id có trong danh sách yêu thích
+      const isGameFavourite = Array.isArray(favouriteGames) && favouriteGames.some((g) => g.game_id === game_id);
+      setIsFavourite(isGameFavourite); // Cập nhật trạng thái yêu thích
+    }
+  }, [isLoggedIn, game?.game_id]);
+
+  const toggleFavourite = async () => {
+    if (!isLoggedIn) {
+      messageApi.error("Bạn cần đăng nhập để thực hiện hành động này.");
+      return;
+    }
+  
+    const user_id = localStorage.getItem('user_id');
+    const game_id = game?.game_id;
+  
+    if (!user_id || !game_id) {
+      messageApi.error("Không có thông tin game hoặc user để thực hiện hành động này.");
+      return;
+    }
+  
+    const newFavouriteStatus = !isFavourite;
+  
+    // Lấy danh sách game yêu thích từ localStorage và kiểm tra nếu là mảng
+    const storedFavouriteGames = localStorage.getItem(`${user_id}_favouriteGames`);
+    let favouriteGames = storedFavouriteGames ? JSON.parse(storedFavouriteGames) : [];
+  
+    if (!Array.isArray(favouriteGames)) {
+      favouriteGames = [];
+    }
+  
+    if (newFavouriteStatus) {
+      // Nếu yêu thích, thêm game vào danh sách yêu thích
+      favouriteGames.push({ game_id, favourite: true });
+    } else {
+      // Nếu không yêu thích, xoá game khỏi danh sách yêu thích
+      favouriteGames = favouriteGames.filter((g : any) => g.game_id !== game_id);
+    }
+  
+    // Lưu lại danh sách game yêu thích vào localStorage
+    localStorage.setItem(`${user_id}_favouriteGames`, JSON.stringify(favouriteGames));
+  
+    // Cập nhật trạng thái yêu thích trên frontend
+    setIsFavourite(newFavouriteStatus);
+  
+    // Gửi yêu cầu cập nhật đến backend để lưu thay đổi
+    try {
+      const response = await axios.post(`http://localhost:8080/users/${user_id}/favourite`, { game_id, favourite: newFavouriteStatus });
+      messageApi.success(`Game ${newFavouriteStatus ? 'đã được thêm vào' : 'đã bị xoá khỏi'} danh sách yêu thích`);
+    } catch (error) {
+      console.error("Error updating favourite status on server:", error);
+      messageApi.error("Không thể cập nhật yêu thích trên server.");
+    }
+  };
+  
+  
   useEffect(() => {
     axios
       .get("http://localhost:8080/platforms")
@@ -81,6 +152,7 @@ const ProductDetail = () => {
 
         // Lấy category và related games (không thay đổi logic này)
         const categoryId = gameData.category_id[0];
+        console.log('catte',categoryId)
         if (categoryId) {
           const categoryResponse = await axios.get<{ data: { name: string } }>(`http://localhost:8080/categories/${categoryId}`);
           setCategoryName(categoryResponse.data.data.name);
@@ -366,14 +438,19 @@ const ProductDetail = () => {
 
 
                           </h4>
-                          <button className="flex flex-col justify-center py-1">
+                          <Button onClick={toggleFavourite}>
                             <img
                               loading="lazy"
-                              src="https://cdn.builder.io/api/v1/image/assets/TEMP/0e31365606729c7016ed5aa825a3d481f05e8f0951f6e5bb3bae99d939b86e6c?placeholderIfAbsent=true&apiKey=b147c62d1b404bf790d7133a5bf6ed3c"
-                              alt="Increase"
+                              src={
+                                isFavourite
+                                  ? "data:image/png;base64,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" // Trái tim rỗng
+                                  : "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIALcAxAMBIgACEQEDEQH/xAAbAAEAAwEBAQEAAAAAAAAAAAAAAQQFAgMGB//EADQQAQACAQMCAwYEBAcAAAAAAAABAgMEESESMRMiUQUyQUJhgVJxscE0cpHwFCMzU4KS0f/EABQBAQAAAAAAAAAAAAAAAAAAAAD/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwD9xAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFbU6qmCNu9/hWFDLqM2bvaYiflqDVtkpX3r1j85c+Ph/3af8AaGXTTZL89Mu/8Hk/CDVraLR5ZifylLHnDfFzEzWfh8Hti1mTHxmjqj1gGkOMeSmSvVS28OwARMxETM9oBJKln1ny4uZ9VS/i5p81rT9Aals2KvvZKx9yM2K3a9Jn82ZXR2n5ZRbRZPwg14lLErOfTz5bTH0jld02ui8xTL5bzO0THaQXhESkAAAAAABV1uo8Cm1f9S3aFm1orWbT2iN2FmyTlzWtPeZ2B3ipfPknbmZ7y0MGGuOPWzwwbY6bR93p4gLO5ureIjxAWt3hlwRfmnE+kuPEPFBWre2my7149a+rTwZq5qdVfvCjn6ctdp4tHaVfBmvp8u+3G/mgG1aYrWZniIjeWXqdTOaemsbUif6mv1PiTFKc07/m509OmOq3M+gPbT6eNuq/Eei5SIr7tVaMh4oLe6N1bxU+ID1tSl/eqz9XpppPVHMLniE3i0TE9p7g8fZ+q2mMOSf5Z/ZosHLScWWYj4cw19Jl8fBW0944n8we4AAAAAK3tC3Tpb/Xhk4Y/wAyGn7U/hf+UM3F732BZ3Op57m4O+pHU43RuD06kdThAPTqeeXnt3N0bgjHGz2izzNwevUnqeW5uD16k9by3Nwe3URbl47piQRqPN0yseyL85KfD3o/v+ivknyPX2V/EW/l/wDAaoAAAAAKvtGu+kt9NpZWOfN9m5lp147V/FEwwtui232B67o3c7m4Otzdzubg6QgBIgBIgB0OQHW453AdG7nc3BN58n3WvZNfPe/0/VStO/dq+zcfRpotPe87gtgAAAAAMb2ji8PPv8tuYbKvrMMZ8M1+eOaz9QYsS63ccxxP3TEg73N3O6QSlACRACRACRAAboAN0bomSZ4B6Y6eLljHXvb9G5SOmIr6QoezMHTHjW+PFWiAAAAAAAADJ9pafpv41fdnv9JUX0N6RkrNbcxMbSxNVgnBlms81+WQeUOocQ6gHQhIJEAJEAAIARJKAHrpcM6jNFPhHvfSHlWk3tEV5mZ4bmk08afFFY96eZkHrWsVrFY7Q6AAAAAAAAAB46nBXUYppf7PYB87lx2xZZreNp/VENvV6auopt2tHaWJas472x34mJ7AmEuYSDoQAkQAIESARG8xEcolqez9H0bZctfPPaPQHeg0vg18S8eefX4QugAAAAAAAAAAAAAra3SxqKccXjtKyA+ctE1tatuLR8CGxrdJGor1Rxkjt9WPaJraa2ja0SCUuTcHSEbgJRPaSezR0Gj6ZjLk7961/cD2fo+nbNmr5vlr6NIAAAAAAAAAAAAAAAAAFTW6SNTXeOLx2lbAfN2iaWtW1em1fgjdta3SRqa7xxkjtLGvWaTNbV6bVnsBujdDT0Gj2mMuavPesfuBoNFzGbLHPesfu0wAAAAAAAAAAAAAAAAAAAAAnsq63SRqabxPTeO0rQDO0Ghmkxlzx5onivo0QAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB/9k="
+                              }
+                              alt={isFavourite ? "Bỏ yêu thích" : "Thêm yêu thích"}
                               className="object-contain aspect-square w-[21px]"
                             />
-                          </button>
+                          </Button>
+
                         </div>
                         <div className="flex gap-2 mt-3 font-medium whitespace-nowrap">
                           {/* Giá gốc (giá chưa giảm) */}

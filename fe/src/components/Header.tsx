@@ -79,6 +79,7 @@ const Header = (props: Props) => {
     localStorage.removeItem("user_id");
     localStorage.removeItem("user");
     localStorage.removeItem("money");
+    localStorage.removeItem(`${user.user_id}_favouriteGames`); // Xóa dữ liệu yêu th
     window.location.reload(); // Refresh để cập nhật lại giao diện hoặc dùng state quản lý
     navigate("/login");
   };
