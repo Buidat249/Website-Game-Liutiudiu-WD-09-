@@ -54,6 +54,9 @@ const userSchema = new mongoose.Schema({
     city:{
         type: String,
     },
+    favourite:{
+        type: Boolean,
+    },
 
     
 }, { timestamps: true });

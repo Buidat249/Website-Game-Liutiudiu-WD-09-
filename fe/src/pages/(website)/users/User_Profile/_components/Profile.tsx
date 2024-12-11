@@ -25,19 +25,39 @@ const Profile = () => {
 
 
   useEffect(() => {
-    if (userId) {
-      fetch(`http://localhost:8080/users/${userId}`)
-        .then((response) => response.json())
-        .then((data) => {
-          setFormData({
-            ...data?.data,
-            displayName: data?.data?.displayName ?? true,
-          });
-          const money = data?.data?.money || 0; // Nếu không có tiền, mặc định là 0
-          localStorage.setItem("money", money.toString()); // Lưu tiền vào localStorage dưới dạng chuỗi
-        })
-        .catch((error) => console.error("Error fetching user data:", error));
+    if (!userId) {
+      setFormData({
+        user_id: "",
+        role_id: "",
+        username: "",
+        password: "",
+        email: "",
+        phone: "",
+        money: "",
+        address: "",
+        avatar: "",
+        fullname: "",
+        idCard: "",
+        gender: "",
+        city: "",
+        district: "",
+        ward: "",
+        displayName: true,
+      });
+      return;
     }
+
+    fetch(`http://localhost:8080/users/${userId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setFormData({
+          ...data?.data,
+          displayName: data?.data?.displayName ?? true,
+        });
+        const money = data?.data?.money || 0;
+        localStorage.setItem("money", money.toString());
+      })
+      .catch((error) => console.error("Error fetching user data:", error));
   }, [userId]);
 
   const handleChange = (e: any) => {
@@ -78,7 +98,7 @@ const Profile = () => {
     e.preventDefault();
     const userId = localStorage.getItem("user_id");
     if (!userId) {
-      alert("Không tìm thấy user_id. Vui lòng đăng nhập lại.");
+      alert("Vui lòng đăng nhập để xem thông tin cá nhân !");
       return;
     }
 

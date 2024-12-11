@@ -1,21 +1,47 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 const Security = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [paymentVerification, setPaymentVerification] =
-    useState("Áp dụng với mọi IP");
-  const [loginVerification, setLoginVerification] =
-    useState("Không sử dụng OTP");
-  const [authMethod, setAuthMethod] = useState("Bảo mật bằng Email");
 
-  const handlePasswordChange = (e:any) => setPassword(e.target.value);
-  const handleConfirmPasswordChange = (e:any) => setConfirmPassword(e.target.value);
-  const handleSubmitPassword = () => {
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setPassword(e.target.value);
+
+  const handleConfirmPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setConfirmPassword(e.target.value);
+
+  const handleSubmitPassword = async () => {
     if (password !== confirmPassword) {
       alert("Mật khẩu không khớp!");
-    } else {
-      alert("Mật khẩu đã được thay đổi thành công!");
+      return;
+    }
+
+    try {
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      const userId = user.user_id;
+
+      if (!userId) {
+        alert("Bạn cần đăng nhập để thực hiện thao tác này.");
+        return;
+      }
+
+      const response = await axios.put(
+        `http://localhost:8080/users/${userId}`,
+        { password },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        alert("Mật khẩu đã được thay đổi thành công!");
+      }
+    } catch (error: any) {
+      console.error("Cập nhật mật khẩu thất bại:", error.message);
+      alert("Đã xảy ra lỗi khi cập nhật mật khẩu.");
     }
   };
 
@@ -27,7 +53,6 @@ const Security = () => {
         và bảo mật hai lớp
       </p>
 
-      {/* Đổi mật khẩu */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
         <div className="lg:col-span-2">
           <input
@@ -59,64 +84,6 @@ const Security = () => {
             <li>Không nên giống với mật khẩu được sử dụng gần đây</li>
           </ul>
         </div>
-      </div>
-
-      {/* Bảo mật hai lớp */}
-      <div className="border-t border-gray-200 pt-6">
-        <h3 className="text-xl font-semibold mb-4">Bảo mật hai lớp</h3>
-        <p className="text-gray-600 mb-6">
-          Sử dụng xác thực hai lớp giúp tài khoản của bạn an toàn hơn, tránh
-          được các giao dịch được thực hiện trái phép
-        </p>
-
-        <div className="space-y-4">
-          <div>
-            <label className="block text-gray-700 mb-2">
-              Xác thực khi thanh toán
-            </label>
-            <select
-              className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:border-blue-500"
-              value={paymentVerification}
-              onChange={(e) => setPaymentVerification(e.target.value)}
-            >
-              <option>Áp dụng với mọi IP</option>
-              <option>Chỉ áp dụng với IP đã lưu</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-gray-700 mb-2">
-              Xác thực khi đăng nhập
-            </label>
-            <select
-              className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:border-blue-500"
-              value={loginVerification}
-              onChange={(e) => setLoginVerification(e.target.value)}
-            >
-              <option>Không sử dụng OTP</option>
-              <option>Sử dụng OTP qua Email</option>
-              <option>Sử dụng OTP qua SMS</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-gray-700 mb-2">
-              Phương thức xác thực
-            </label>
-            <select
-              className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:border-blue-500"
-              value={authMethod}
-              onChange={(e) => setAuthMethod(e.target.value)}
-            >
-              <option>Bảo mật bằng Email</option>
-              <option>Bảo mật bằng Google Authenticator</option>
-            </select>
-          </div>
-        </div>
-
-        <button className="mt-6 bg-blue-500 text-white rounded-lg p-2 hover:bg-blue-600">
-          Tiếp tục
-        </button>
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Form, Input, Button, Typography, Card, Modal, Collapse } from "antd";
 import { ClockCircleOutlined } from "@ant-design/icons";
+import { useNavigate } from "react-router-dom";
 
 const { Title, Text } = Typography;
 const { Panel } = Collapse;
@@ -9,6 +10,7 @@ const VnPay_autoForm: React.FC = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [countdown, setCountdown] = useState(1800); // 30 phút (1800 giây)
   const [form] = Form.useForm(); // Tạo instance của form
+  const navigate = useNavigate(); // Khởi tạo hook useNavigate
 
 
 
@@ -30,11 +32,6 @@ const VnPay_autoForm: React.FC = () => {
 
   const showModal = () => {
     setIsModalVisible(true);
-  };
-
-  const handleOk = () => {
-    setIsModalVisible(false);
-    setCountdown(1800); // Reset lại khi đóng modal
   };
 
   const handleCancel = () => {
@@ -64,15 +61,28 @@ const VnPay_autoForm: React.FC = () => {
 
   const handleRedirect = () => {
     const user = JSON.parse(localStorage.getItem("user") || "{}");
-    
+
+    if (!user || !user.user_id) {
+      // Hiển thị thông báo và điều hướng đến trang đăng nhập
+      Modal.warning({
+        title: "Thông báo",
+        content: "Vui lòng đăng nhập để thực hiện thao tác này.",
+        onOk: () => {
+          navigate("/login");
+        },
+      });
+      return;
+    }
+
     const amount = form.getFieldValue("soTien"); // Lấy giá trị số tiền từ form
     if (amount) {
-      const url = `http://localhost:8080/carts/create-pay/vnpay?amount=${amount}&ref=naptienthucong_${user.user_id}_${(new Date()).getTime()}`;
+      const url = `http://localhost:8080/carts/create-pay/vnpay?amount=${amount}&ref=naptienthucong_${user.user_id}_${new Date().getTime()}`;
       window.location.href = url; // Redirect sang URL
     } else {
       console.error("Vui lòng nhập số tiền trước khi nạp.");
     }
   };
+
 
   return (
     <div className="bg-gray-100 p-6 mx-auto w-[1048px]">

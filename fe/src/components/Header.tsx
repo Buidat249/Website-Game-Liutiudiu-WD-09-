@@ -76,8 +76,9 @@ const Header = (props: Props) => {
 
   // Hàm đăng xuất
   const handleLogout = () => {
+    localStorage.removeItem("user_id");
     localStorage.removeItem("user");
-    localStorage.removeItem("cart");
+    localStorage.removeItem("money");
     window.location.reload(); // Refresh để cập nhật lại giao diện hoặc dùng state quản lý
     navigate("/login");
   };

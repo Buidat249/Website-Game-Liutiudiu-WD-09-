@@ -45,6 +45,7 @@ export const addGame = async (req, res) => {
   try {
     const {
       name,
+      favourite,
       brand_id,
       category_id,
       platform_id,
@@ -72,6 +73,7 @@ export const addGame = async (req, res) => {
       name,
       brand_id,
       category_id,
+      favourite: "false",
       platform_id,
       filter_id, // Lưu mảng filter_id vào game
       description_id, // Lưu mảng description_id vào game

@@ -369,14 +369,6 @@ const ProductDetail = () => {
                           <button className="flex flex-col justify-center py-1">
                             <img
                               loading="lazy"
-                              src="https://cdn.builder.io/api/v1/image/assets/TEMP/e063f2101c6e2b7d646fe30f20198d38ea33c4103a7be0a645537733961a760a?placeholderIfAbsent=true&apiKey=b147c62d1b404bf790d7133a5bf6ed3c"
-                              alt="Decrease"
-                              className="object-contain aspect-square w-[21px]"
-                            />
-                          </button>
-                          <button className="flex flex-col justify-center py-1">
-                            <img
-                              loading="lazy"
                               src="https://cdn.builder.io/api/v1/image/assets/TEMP/0e31365606729c7016ed5aa825a3d481f05e8f0951f6e5bb3bae99d939b86e6c?placeholderIfAbsent=true&apiKey=b147c62d1b404bf790d7133a5bf6ed3c"
                               alt="Increase"
                               className="object-contain aspect-square w-[21px]"

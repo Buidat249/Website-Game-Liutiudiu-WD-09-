@@ -1,6 +1,8 @@
 import User from "../models/user";
+import Game from "../models/game";
 import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
+
 
 // GET / users
 export const getAllUsers = async (req, res) => {
@@ -190,5 +192,38 @@ export const removeUser = async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({ message: error.message });
+  }
+};
+
+export const toggleFavourite = async (req, res) => {
+  try {
+    const { userId } = req.params; // Lấy userId từ URL
+    const { gameId } = req.body; // Lấy gameId từ request body
+
+    const user = await User.findOne({ user_id: userId });
+    if (!user) return res.status(404).json({ message: "Người dùng không tồn tại" });
+
+    const game = await Game.findOne({ game_id: gameId });
+    if (!game) return res.status(404).json({ message: "Game không tồn tại" });
+
+    // Kiểm tra game đã có trong danh sách yêu thích của người dùng chưa
+    const isFavourite = user.favourite.includes(gameId);
+
+    if (isFavourite) {
+      // Nếu đã yêu thích, xóa khỏi danh sách
+      user.favourite = user.favourite.filter((id) => id !== gameId);
+      game.favourite = false;
+    } else {
+      // Nếu chưa, thêm vào danh sách
+      user.favourite.push(gameId);
+      game.favourite = true;
+    }
+
+    await user.save();
+    await game.save();
+
+    res.status(200).json({ message: "Cập nhật yêu thích thành công", favourite: !isFavourite });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };

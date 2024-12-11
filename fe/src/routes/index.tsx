@@ -100,6 +100,7 @@ import PageTurRecharge from "@/pages/(website)/contact/TurtorRechange/page";
 import PageTurtorBuy from "@/pages/(website)/contact/turtorbuy/page";
 import PaymentSuccess from "@/pages/(website)/payvnpay/_components/success";
 import PaymentFall from "@/pages/(website)/payvnpay/_components/fall";
+import ProtectedRoute from "./ProtectedRoute"; // Import ProtectedRoute
 
 const Router = () => {
   return (
@@ -232,7 +233,7 @@ const Router = () => {
         <Route path="users" element={<UserPage />} />
         <Route path="users/:user_id/edit" element={<UserEditPage />} />
         <Route path="tintucs/add" element={<TintucAddPage />} />
-        <Route path="tintucs" element={<TintucPage />} />
+        <Route path="tintucs" element={<ProtectedRoute><TintucPage /></ProtectedRoute>} />
         <Route path="tintucs/:tintuc_id/edit" element={<TintucEditPage />} />
       </Route>
     </Routes>
