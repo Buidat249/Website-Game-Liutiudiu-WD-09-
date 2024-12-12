@@ -104,7 +104,7 @@ const Header = (props: Props) => {
           <div className="top-bar-content">
             <span>Kết nối yêu thương cùng Liutiudiu Shop</span>
             <nav>
-              <a href="createaccout">Hướng dẫn mua hàng</a>
+              <a href="/contact/turtorbuy">Hướng dẫn mua hàng</a>
               {user.role_id === 0 && (
                 <a href="/admin">Chuyển đến admin</a>
               )}
