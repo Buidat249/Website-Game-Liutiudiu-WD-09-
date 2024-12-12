@@ -25,12 +25,31 @@ const CheckoutBoxRight = ({ totalPrice, totalQuantity }: any) => {
   const [games, setGames] = useState<Game[]>([]);
   const { selectedGames } = useCartContext(); // Sử dụng CartContext
   const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
+  const [user, setUser] = useState<any>(null);  // Thêm state user
+  const [money, setMoney] = useState<number>(0); // Thêm state money
   const navigate = useNavigate();
 
-  // Kiểm tra user khi đăng nhập
-  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  // Hàm lấy thông tin người dùng và tiền từ backend
+  const fetchUserData = () => {
+    const userId = JSON.parse(localStorage.getItem("user") || "{}").user_id;
+    if (userId) {
+      axios
+        .get(`http://localhost:8080/users/${userId}`)
+        .then((response) => {
+          setUser(response.data.data);
+          setMoney(response.data.data.money);  // Cập nhật số dư từ backend
+        })
+        .catch((error) => {
+          console.error("Error fetching user data:", error);
+        });
+    }
+  };
 
-  const money = JSON.parse(localStorage.getItem("money") || "{}");
+  // Gọi dữ liệu khi component load
+  useEffect(() => {
+    fetchUserData();
+    fetchGameData();
+  }, []);
 
   // Hàm lấy sản phẩm
   const fetchGameData = () => {
@@ -44,25 +63,19 @@ const CheckoutBoxRight = ({ totalPrice, totalQuantity }: any) => {
       });
   };
 
-  // Gọi dữ liệu khi component load
-  useEffect(() => {
-    fetchGameData();
-  }, []);
-
   // Hàm kiểm tra số lượng keys của sản phẩm
   const checkAvailableKeys = () => {
     const unavailableGames: string[] = []; // Đảm bảo kiểu của unavailableGames là mảng chuỗi
-  
     // Kiểm tra từng game đã chọn có đủ keys không
-    Object.keys(selectedGames).forEach((gameId : any) => {
+    Object.keys(selectedGames).forEach((gameId: any) => {
       const game = games.find((g) => g.game_id === parseInt(gameId));
       const selectedQuantity = selectedGames[gameId]?.quantity;
-  
+
       if (game && game.keys?.length < selectedQuantity) {
         unavailableGames.push(game.name);
       }
     });
-  
+
     return unavailableGames;
   };
 
@@ -114,7 +127,7 @@ const CheckoutBoxRight = ({ totalPrice, totalQuantity }: any) => {
         <div className="flex justify-between">
           <span>Số dư hiện tại</span>
           <span className="font-medium text-gray-900">
-            {user.money.toLocaleString()}đ
+            {money.toLocaleString()}đ
           </span>
         </div>
         <div className="flex justify-between">
@@ -124,7 +137,7 @@ const CheckoutBoxRight = ({ totalPrice, totalQuantity }: any) => {
       </div>
 
       <div className="mt-6 space-y-3">
-        {user.money >= totalPrice ? (
+        {money >= totalPrice ? (
           <button
             className="w-full bg-green-600 text-white py-2 rounded"
             onClick={() => handlePayment("confirm")}

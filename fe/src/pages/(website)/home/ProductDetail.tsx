@@ -55,6 +55,7 @@ const ProductDetail = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
   const [isFavourite, setIsFavourite] = useState<boolean>(game?.favourite || false); // Ban đầu set giá trị từ game.favourite (nếu có)
+  const [activeTab, setActiveTab] = useState('description'); // Trạng thái để xác định tab đang active
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -68,6 +69,9 @@ const ProductDetail = () => {
     }
   }, []);
 
+  const handleTabClick = (tab: any) => {
+    setActiveTab(tab);
+  };
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -516,7 +520,12 @@ const ProductDetail = () => {
                         <Button
                           size="large"
                           type="primary"
-                          style={{ marginRight: "5px", color: "#000B1D", width: 219.67 }}
+                          style={{
+                            marginRight: "5px",
+                            color: "#fff",  // Đổi màu chữ thành trắng
+                            backgroundColor: "#02132E",  // Đặt màu nền của nút
+                            width: 219.67
+                          }}
                           onClick={() => BuyToCart(game.game_id as any)}
                           disabled={game?.availableKeysCount === 0} // Kiểm tra số lượng keys khả dụng
                         >
@@ -550,41 +559,85 @@ const ProductDetail = () => {
               </div>
             </div>
             {/* Mô tả*/}
-            {description && description.length > 0 && (
-              <div className="mt-8">
-                <h2 className="text-3xl font-semibold text-gray-800 mb-4">Mô tả sản phẩm</h2>
-                {description.map((desc) => (
-                  <div key={desc.description_id} className="bg-white shadow-lg rounded-lg p-6 mb-6">
 
-
-                    {/* Kiểm tra xem descriptiondetail_id có phải là mảng hay không */}
-                    {Array.isArray(desc.descriptiondetail_id) && desc.descriptiondetail_id.length > 0 && (
-                      <div className="mt-4">
-                        {descriptionDetail && descriptionDetail.length > 0 && (
-                          <ul className="space-y-4">
-                            {descriptionDetail
-                              .filter((detail) =>
-                                // Kiểm tra xem desc.descriptiondetail_id có phải là mảng và có chứa detail.descriptiondetail_id không
-                                Array.isArray(desc.descriptiondetail_id) &&
-                                desc.descriptiondetail_id.includes(detail.descriptiondetail_id)
-                              )
-                              .map((detail) => (
-                                <li key={detail.descriptiondetail_id} className="border-t pt-4">
-                                  <h5 className="text-xl font-medium text-gray-800">{detail.name}</h5>
-                                  <p className="text-gray-600">{detail.content}</p>
-                                  {detail.image && <img src={detail.image} alt={detail.name} className="mt-2 w-full max-w-xs rounded-md" />}
-                                </li>
-                              ))}
-                          </ul>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                ))}
+            <div className="mt-8">
+              {/* Hai nút chuyển đổi */}
+              <div className="flex mb-4 py-6">
+                <button
+                  onClick={() => handleTabClick('description')}
+                  className={`flex-1 px-6 py-3 font-semibold text-lg rounded-l-lg ${activeTab === 'description' ? 'bg-[#02132E] text-white' : 'bg-gray-200 text-gray-600'} transition-colors hover:bg-[#033154] hover:text-white`}
+                >
+                  Mô tả sản phẩm
+                </button>
+                <button
+                  onClick={() => handleTabClick('comments')}
+                  className={`flex-1 px-6 py-3 font-semibold text-lg rounded-r-lg ${activeTab === 'comments' ? 'bg-[#02132E] text-white' : 'bg-gray-200 text-gray-600'} transition-colors hover:bg-[#033154] hover:text-white`}
+                >
+                  Bình luận
+                </button>
               </div>
-            )}
 
 
+
+              {/* Nội dung hiển thị theo tab */}
+              {activeTab === 'description' && description && description.length > 0 && (
+                <div>
+                  <h2 className="text-3xl font-semibold text-gray-800 mb-4">Mô tả sản phẩm</h2>
+                  {description.map((desc) => (
+                    <div key={desc.description_id} className="bg-white shadow-lg rounded-lg p-6 mb-6">
+                      {/* Kiểm tra xem descriptiondetail_id có phải là mảng hay không */}
+                      {Array.isArray(desc.descriptiondetail_id) && desc.descriptiondetail_id.length > 0 && (
+                        <div className="mt-4">
+                          {descriptionDetail && descriptionDetail.length > 0 && (
+                            <ul className="space-y-4">
+                              {descriptionDetail
+                                .filter((detail) =>
+                                  Array.isArray(desc.descriptiondetail_id) &&
+                                  desc.descriptiondetail_id.includes(detail.descriptiondetail_id)
+                                )
+                                .map((detail) => (
+                                  <li key={detail.descriptiondetail_id} className="border-t pt-4">
+                                    <h5 className="text-xl font-medium text-gray-800">{detail.name}</h5>
+                                    <p className="text-gray-600">{detail.content}</p>
+                                    {detail.image && <img src={detail.image} alt={detail.name} className="mt-2 w-full max-w-xs rounded-md" />}
+                                  </li>
+                                ))}
+                            </ul>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Phần Bình luận */}
+              {activeTab === 'comments' && (
+                <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
+                  <h2 className="text-3xl font-semibold text-gray-800 mb-4">Bình luận</h2>
+
+                  {/* Giao diện bình luận */}
+                  <div className="space-y-4">
+                    <div className="border-b pb-4">
+                      <h5 className="text-xl font-medium text-gray-800">User 1</h5>
+                      <p className="text-gray-600">Sản phẩm này rất tuyệt vời, tôi thích nó!</p>
+                    </div>
+                    <div className="border-b pb-4">
+                      <h5 className="text-xl font-medium text-gray-800">User 2</h5>
+                      <p className="text-gray-600">Tôi đã sử dụng sản phẩm này được một tuần, rất hài lòng với chất lượng.</p>
+                    </div>
+                    {/* Form nhập bình luận */}
+                    <div>
+                      <textarea
+                        placeholder="Viết bình luận của bạn..."
+                        className="w-full h-20 border p-4 rounded-lg text-gray-700"
+                      />
+                      <button className="mt-2 bg-blue-600 text-white px-6 py-2 rounded-lg">Gửi bình luận</button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
 
             {/* Các Game cùng thể loại */}
             <div className="games">

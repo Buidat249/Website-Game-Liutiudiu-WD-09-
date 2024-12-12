@@ -1,5 +1,7 @@
 import { defineConfig } from "vite";
+import vitePluginSocketIO from 'vite-plugin-socket-io'
 import { VitePluginNode } from "vite-plugin-node";
+import {socketEvents} from './src/socket/event';
 
 export default defineConfig({
     // ...vite configures
@@ -49,6 +51,7 @@ export default defineConfig({
             // swc configs, see [swc doc](https://swc.rs/docs/configuration/swcrc)
             swcOptions: {},
         }),
+        vitePluginSocketIO({socketEvents})
     ],
     optimizeDeps: {
         // Vite does not work well with optionnal dependencies,

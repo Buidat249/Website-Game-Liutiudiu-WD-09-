@@ -1,5 +1,5 @@
 import { message } from "antd";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface Game {
@@ -23,10 +23,31 @@ const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({ games }) => {
     (acc, game) => acc + game.final_price * game.quantity,
     0
   );
-  console.log("Tổng tiền", totalPrice);
-
   const [paymentSuccess, setPaymentSuccess] = useState(false);
-  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const [user, setUser] = useState<any>(null);  // Thêm state user
+  const [money, setMoney] = useState<number>(0); // Thêm state money
+
+  // Hàm lấy thông tin người dùng và tiền từ backend
+  const fetchUserData = () => {
+    const userId = JSON.parse(localStorage.getItem("user") || "{}").user_id;
+    if (userId) {
+      fetch(`http://localhost:8080/users/${userId}`)
+        .then((response) => response.json())
+        .then((data) => {
+          setUser(data.data);
+          setMoney(data.data.money);  // Cập nhật số dư từ backend
+        })
+        .catch((error) => {
+          console.error("Lỗi khi lấy thông tin người dùng:", error);
+          message.error("Lỗi khi tải thông tin người dùng!");
+        });
+    }
+  };
+
+  // Gọi dữ liệu khi component load
+  useEffect(() => {
+    fetchUserData();
+  }, []);
 
   const handleConfirmPayment = async () => {
     if (totalQuantity < 1) {
@@ -34,7 +55,7 @@ const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({ games }) => {
       return;
     }
 
-    if (user.money < totalPrice) {
+    if (money < totalPrice) {
       message.error("Số dư không đủ để thanh toán!");
       return;
     }
@@ -65,9 +86,11 @@ const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({ games }) => {
 
       if (response.ok) {
         const data = await response.json();
-        const newBalance = user.money - totalPrice;
-        user.money = newBalance;
-        localStorage.setItem("user", JSON.stringify(user));
+        const newBalance = money - totalPrice;
+        setMoney(newBalance); // Cập nhật lại số dư trong state
+        // Cập nhật lại số dư trong localStorage
+        const updatedUser = { ...user, money: newBalance };
+        localStorage.setItem("user", JSON.stringify(updatedUser));
 
         setPaymentSuccess(true);
         setTimeout(() => navigate("/"), 2000);
@@ -80,8 +103,6 @@ const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({ games }) => {
       message.error("Đã có lỗi xảy ra, vui lòng thử lại!");
     }
   };
-
-
 
   const handleBackToCart = () => {
     navigate("/cart");
@@ -100,7 +121,7 @@ const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({ games }) => {
         <div className="flex justify-between text-sm text-gray-600">
           <span>Số dư hiện tại</span>
           <span className="font-medium text-gray-900">
-            {user.money.toLocaleString()}đ
+            {money.toLocaleString()}đ
           </span>
         </div>
       </div>

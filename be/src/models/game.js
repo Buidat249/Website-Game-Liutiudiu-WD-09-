@@ -64,6 +64,13 @@ const gameSchema = new mongoose.Schema({
       ref: "Key", // Tham chiếu đến model description
     },
   ], // Mảng chứa các key game
+
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Comment", // Tham chiếu đến model Comment
+    },
+  ],
 });
 
 gameSchema.pre("save", function (next) {
