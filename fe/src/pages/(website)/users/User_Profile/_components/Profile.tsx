@@ -1,3 +1,5 @@
+import { PlusOutlined } from "@ant-design/icons";
+import { Button, Upload } from "antd";
 import React, { useState, useEffect } from "react";
 
 const Profile = () => {
@@ -20,9 +22,15 @@ const Profile = () => {
     displayName: true,
   });
 
+  const [imageUrl, setImageUrl] = useState<string>("");
+
   const userId = localStorage.getItem("user_id");
   const user = localStorage.getItem("user");
 
+
+  // Cloudinary credentials
+  const CLOUD_NAME = "dlcxulvmu"; // Thay bằng cloud name của bạn
+  const UPLOAD_PRESET = "DATNWD-09"; // Thay bằng upload preset của bạn
 
   useEffect(() => {
     if (!userId) {
@@ -68,29 +76,32 @@ const Profile = () => {
     });
   };
 
-  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const formData = new FormData();
-      formData.append("file", file);
+  // Cloudinary avatar upload handler
+  const handleAvatarChange = async (file: any) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", UPLOAD_PRESET);
 
-      try {
-        const response = await fetch("http://localhost:8080/upload-avatar", {
+    try {
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, // Cloudinary upload URL
+        {
           method: "POST",
           body: formData,
-        });
-
-        if (response.ok) {
-          const data = await response.json();
-          setFormData((prev) => ({ ...prev, avatar: data.avatarUrl }));
-          alert("Cập nhật ảnh đại diện thành công!");
-        } else {
-          alert("Tải ảnh lên thất bại!");
         }
-      } catch (error) {
-        console.error("Lỗi khi tải ảnh lên:", error);
-        alert("Đã có lỗi xảy ra, vui lòng thử lại!");
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setFormData((prev) => ({ ...prev, avatar: data.secure_url }));
+        setImageUrl(data.secure_url);
+        alert("Cập nhật ảnh đại diện thành công!");
+      } else {
+        alert("Tải ảnh lên thất bại!");
       }
+    } catch (error) {
+      console.error("Lỗi khi tải ảnh lên:", error);
+      alert("Đã có lỗi xảy ra, vui lòng thử lại!");
     }
   };
 
@@ -154,14 +165,18 @@ const Profile = () => {
       {/* Phần cập nhật ảnh đại diện */}
       <div className="flex items-center mb-8">
         <img
-          src="https://i.imgur.com/6VBx3io.png"
+          src={formData.avatar || imageUrl || "https://i.imgur.com/6VBx3io.png"}
           alt="Avatar"
           className="w-24 h-24 rounded-full mr-6"
         />
         <div>
-          <button className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">
-            Sửa ảnh đại diện
-          </button>
+          <Upload
+            name="file"
+            beforeUpload={handleAvatarChange}
+            showUploadList={false}
+          >
+            <Button icon={<PlusOutlined />}>Sửa ảnh đại diện</Button>
+          </Upload>
           <p className="text-sm text-gray-500 mt-2">
             Vui lòng chọn ảnh nhỏ hơn 5MB
             <br />

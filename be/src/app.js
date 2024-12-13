@@ -24,6 +24,7 @@ import categorynews from "./routers/categorynew";
 import key from "./routers/key";
 import transaction from "./routers/transaction";
 import statistical from "./routers/statistical";
+import comment from "./routers/comment";
 
 const app = express();
 // middleware
@@ -63,6 +64,7 @@ app.use("", categorynews);
 app.use("", key);
 app.use("", transaction);
 app.use("", statistical);
+app.use("", comment);
 
 export const viteNodeApp = app;
 

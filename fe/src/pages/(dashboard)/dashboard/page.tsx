@@ -271,12 +271,13 @@ const DashboardPage = (props: Props) => {
       {/* Tables for highest grossing and best-selling games */}
       <div className="flex gap-6">
         {/* Highest Grossing Games */}
-        <div className="bg-white p-4 shadow-lg rounded-lg w-1/2">
+        <div className="bg-white p-4 shadow-lg rounded-lg w-1/2 border border-gray-300">
           <h3 className="text-xl font-semibold mb-4">Game có doanh thu cao nhất</h3>
-          <table className="min-w-full">
+          <table className="min-w-full border border-gray-300">
             <thead>
               <tr>
-                <th className="px-4 py-2">Game</th>
+                <th className="px-4 py-2 border-r border-gray-300">STT</th> {/* Thêm border giữa các cột */}
+                <th className="px-4 py-2 border-r border-gray-300">Game</th>
                 <th className="px-4 py-2">Doanh Thu</th>
               </tr>
             </thead>
@@ -284,13 +285,16 @@ const DashboardPage = (props: Props) => {
               {highestGrossingGame.length > 0 ? (
                 highestGrossingGame.map((game, index) => (
                   <tr key={index}>
-                    <td className="px-4 py-2">{game.name}</td>
-                    <td className="px-4 py-2">${game.revenue.toFixed(2)}</td>
+                    <td className="px-4 py-2 border-t border-r border-gray-200">{index + 1}</td> {/* Số thứ tự và border bên phải */}
+                    <td className="px-4 py-2 border-t border-r border-gray-200">{game.name}</td>
+                    <td className="px-4 py-2 border-t border-gray-200">
+                      {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(game.revenue)}
+                    </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={2} className="text-center px-4 py-2">Loading...</td>
+                  <td colSpan={3} className="text-center px-4 py-2">Loading...</td>
                 </tr>
               )}
             </tbody>
@@ -298,12 +302,13 @@ const DashboardPage = (props: Props) => {
         </div>
 
         {/* Best Selling Games */}
-        <div className="bg-white p-4 shadow-lg rounded-lg w-1/2">
+        <div className="bg-white p-4 shadow-lg rounded-lg w-1/2 border border-gray-300">
           <h3 className="text-xl font-semibold mb-4">Game bán nhiều nhất</h3>
-          <table className="min-w-full">
+          <table className="min-w-full border border-gray-300">
             <thead>
               <tr>
-                <th className="px-4 py-2">Game</th>
+                <th className="px-4 py-2 border-r border-gray-300">STT</th> {/* Thêm border giữa các cột */}
+                <th className="px-4 py-2 border-r border-gray-300">Game</th>
                 <th className="px-4 py-2">Số Lượng Bán</th>
               </tr>
             </thead>
@@ -311,19 +316,21 @@ const DashboardPage = (props: Props) => {
               {bestSellingGame.length > 0 ? (
                 bestSellingGame.map((game, index) => (
                   <tr key={index}>
-                    <td className="px-4 py-2">{game.name}</td>
-                    <td className="px-4 py-2">{game.quantity}</td>
+                    <td className="px-4 py-2 border-t border-r border-gray-200">{index + 1}</td> {/* Số thứ tự và border bên phải */}
+                    <td className="px-4 py-2 border-t border-r border-gray-200">{game.name}</td>
+                    <td className="px-4 py-2 border-t border-gray-200">{game.quantity}</td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={2} className="text-center px-4 py-2">Loading...</td>
+                  <td colSpan={3} className="text-center px-4 py-2">Loading...</td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
       </div>
+
     </div>
   );
 };

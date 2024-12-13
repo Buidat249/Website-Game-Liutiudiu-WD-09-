@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Comment = () => {
   const [filters, setFilters] = useState({
@@ -6,6 +8,31 @@ const Comment = () => {
     dateFrom: "",
     dateTo: "",
   });
+  const [comments, setComments] = useState<any[]>([]);
+  const [filteredComments, setFilteredComments] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  // Fetch comments of the user
+  useEffect(() => {
+    const user_id = Number(localStorage.getItem('user_id'));
+    const fetchComments = async () => {
+      setLoading(true);  // Đặt loading = true khi bắt đầu fetch dữ liệu
+      try {
+        const response = await axios.get(`http://localhost:8080/users/${user_id}/comments`);
+        console.log("Danh sách bình luận:", response.data); // In ra data chính xác
+        setComments(response.data.data);  // Lấy đúng data từ response.data.data
+        setFilteredComments(response.data.data);  // Cập nhật filteredComments với data từ API
+        setLoading(false);  // Set loading = false khi đã nhận được dữ liệu
+      } catch (error) {
+        console.error("Error fetching comments:", error);
+        setLoading(false);  // Set loading = false nếu có lỗi
+      }
+    };
+
+    fetchComments();
+  }, []);
+
 
   const handleInputChange = (e: any) => {
     const { name, value } = e.target;
@@ -13,7 +40,25 @@ const Comment = () => {
   };
 
   const handleFilter = () => {
-    console.log("Filters applied:", filters);
+    const { description, dateFrom, dateTo } = filters;
+    const filtered = comments.filter((comment: any) => {
+      const matchesDescription = description
+        ? comment.content.toLowerCase().includes(description.toLowerCase())
+        : true;
+      const matchesDateFrom = dateFrom
+        ? new Date(comment.created_at) >= new Date(dateFrom)
+        : true;
+      const matchesDateTo = dateTo
+        ? new Date(comment.created_at) <= new Date(dateTo)
+        : true;
+
+      return matchesDescription && matchesDateFrom && matchesDateTo;
+    });
+    setFilteredComments(filtered);
+  };
+
+  const handleViewDetail = (gameId: any) => {
+    navigate(`/productgame/${gameId}`);
   };
 
   return (
@@ -27,17 +72,24 @@ const Comment = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-4">
         <input
           type="text"
+          name="description"
           placeholder="Nội dung"
+          value={filters.description}
+          onChange={handleInputChange}
           className="col-span-2 p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-200"
         />
         <input
           type="date"
-          placeholder="Từ ngày"
+          name="dateFrom"
+          value={filters.dateFrom}
+          onChange={handleInputChange}
           className="p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-200"
         />
         <input
           type="date"
-          placeholder="Đến ngày"
+          name="dateTo"
+          value={filters.dateTo}
+          onChange={handleInputChange}
           className="p-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-blue-200"
         />
         <button
@@ -67,6 +119,7 @@ const Comment = () => {
         </button>
       </div>
 
+      {/* Bảng hiển thị bình luận */}
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white border border-gray-200">
           <thead>
@@ -77,15 +130,46 @@ const Comment = () => {
               <th className="py-3 px-4 border-b text-left text-gray-700">
                 Nội dung
               </th>
+              <th className="py-3 px-4 border-b text-left text-gray-700 w-1/6">
+                Hành động
+              </th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td className="py-3 px-4 border-b text-gray-600">
-                Không có dữ liệu
-              </td>
-              <td className="py-3 px-4 border-b text-gray-600"></td>
-            </tr>
+            {loading ? (
+              <tr>
+                <td className="py-3 px-4 text-center">Đang tải dữ liệu...</td>
+              </tr>
+            ) : (
+              filteredComments.length > 0 ? (
+                filteredComments.map((comment: any) => (
+                  <tr key={comment._id}>
+                    <td className="py-3 px-4 border-b text-gray-600">
+                      {new Date(comment.created_at).toLocaleDateString()}
+                    </td>
+                    <td className="py-3 px-4 border-b text-gray-600">
+                      {comment.content}
+                    </td>
+                    <td className="py-3 px-4 border-b text-gray-600">
+                      {comment.game_id != null ? (
+                        <button
+                          onClick={() => handleViewDetail(comment.game_id)}
+                          className="text-blue-500 hover:underline"
+                        >
+                          Xem chi tiết
+                        </button>
+                      ) : (
+                        "Không xác định"
+                      )}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td className="py-3 px-4 text-center">Không có dữ liệu</td>
+                </tr>
+              )
+            )}
           </tbody>
         </table>
       </div>

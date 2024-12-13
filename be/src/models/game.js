@@ -55,7 +55,7 @@ const gameSchema = new mongoose.Schema({
       ref: "Description", // Tham chiếu đến model description
     },
   ],
-  configuration: { type: String, required: true }, 
+  configuration: { type: String}, 
   key_id: [
     {
       type: mongoose.Schema.Types.Number,

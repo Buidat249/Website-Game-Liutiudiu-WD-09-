@@ -4,6 +4,16 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useNavigate } from 'react-router-dom';
 
+
+interface Comment {
+  _id: string;
+  content: string;
+  user_id: number;
+  game_id: number;
+  rating: number;
+  created_at: string;
+}
+
 interface Game {
   key_id: number[];
   game_id?: number;
@@ -52,10 +62,107 @@ const ProductDetail = () => {
   const [platforms, setPlatforms] = useState<Platform[]>([]);
   const [messageApi, contextHolder] = message.useMessage();
   const [user, setUser] = useState<any>(null); // Lưu trữ thông tin user
+  console.log('use', user)
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
   const [isFavourite, setIsFavourite] = useState<boolean>(game?.favourite || false); // Ban đầu set giá trị từ game.favourite (nếu có)
   const [activeTab, setActiveTab] = useState('description'); // Trạng thái để xác định tab đang active
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [filteredComments, setFilteredComments] = useState<Comment[]>([]);
+  const [newComment, setNewComment] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [showMyComments, setShowMyComments] = useState(false);
+  const [user_id, setUserId] = useState<number | null>(null); // Lưu user_id
+  const [userAvt, setUserAvt] = useState<Record<number, any>>({});
+
+  useEffect(() => {
+    const fetchUserData = async (user_id: number) => {
+      if (user_id) {
+        try {
+          const response = await axios.get(`http://localhost:8080/users/${user_id}`);
+          setUserAvt((prevState: Record<number, any>) => ({
+            ...prevState,
+            [user_id]: response.data.data, // Cập nhật thông tin người dùng vào state
+          }));
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      }
+    };
+
+    // Duyệt qua các bình luận và lấy thông tin người dùng nếu chưa có trong state
+    comments.forEach(comment => {
+      if (!user[comment.user_id]) {  // Kiểm tra trong state 'user'
+        fetchUserData(comment.user_id); // Chỉ lấy thông tin người dùng nếu chưa có
+      }
+    });
+
+  }, [comments]);
+
+  // Lấy user_id từ localStorage
+  useEffect(() => {
+    const storedUserId = Number(localStorage.getItem("user_id"));
+    setUserId(storedUserId);
+  }, []);
+
+  // Fetch danh sách bình luận khi game_id thay đổi
+  useEffect(() => {
+    if (game_id) {
+      fetchComments();
+    }
+  }, [game_id]);
+
+  const fetchComments = async () => {
+    const gameIdNumber = Number(game_id);
+
+    if (isNaN(gameIdNumber)) {
+      console.error("Invalid game_id");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await axios.get(`http://localhost:8080/games/${gameIdNumber}/comments`);
+      setComments(response.data.data); // Giả sử API trả về mảng dữ liệu ở `response.data.data`
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAddComment = async () => {
+    if (!newComment.trim()) return;
+
+    try {
+      setLoading(true);
+
+      // Lấy user_id từ localStorage
+      const userIdFromStorage = Number(localStorage.getItem("user_id"));
+      const response = await axios.post(`http://localhost:8080/games/${game_id}/comments`, {
+        content: newComment,
+        user_id: userIdFromStorage,
+        rating: 5,
+      });
+
+      setComments([response.data.data, ...comments]); // Thêm bình luận mới vào đầu danh sách
+      setNewComment(""); // Reset lại input
+    } catch (error) {
+      console.error("Error adding comment:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Lọc bình luận chỉ của người dùng hiện tại
+  useEffect(() => {
+    if (showMyComments && user_id !== null) {
+      setFilteredComments(comments.filter(comment => comment.user_id === user_id));
+    } else {
+      setFilteredComments(comments);
+    }
+  }, [comments, showMyComments, user_id]);
+
 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
@@ -582,66 +689,99 @@ const ProductDetail = () => {
               {/* Nội dung hiển thị theo tab */}
               {activeTab === 'description' && description && description.length > 0 && (
 
-  <div>
-    <h2 className="text-3xl font-semibold text-gray-800 mb-4">Mô tả sản phẩm</h2>
-    {description.map((desc) => (
-      <div key={desc.description_id} className="bg-white shadow-lg rounded-lg p-6 mb-6">
-        {/* Kiểm tra xem descriptiondetail_id có phải là mảng hay không */}
-        {Array.isArray(desc.descriptiondetail_id) && desc.descriptiondetail_id.length > 0 && (
-          <div className="mt-4">
-            {descriptionDetail && descriptionDetail.length > 0 && (
-              <ul className="space-y-4">
-                {descriptionDetail
-                  .filter((detail) =>
-                    Array.isArray(desc.descriptiondetail_id) &&
-                    desc.descriptiondetail_id.includes(detail.descriptiondetail_id)
-                  )
-                  .map((detail) => (
-                    <li key={detail.descriptiondetail_id} className="border-t pt-4">
-                      <h5 className="text-xl font-medium text-gray-800"><strong>{detail.name}</strong></h5>
-                      <p className="text-gray-600">{detail.content}</p>
-                      {detail.image && (
-                        <img
-                          src={detail.image}
-                          alt={detail.name}
-                          className="mt-2 w-full h-auto rounded-md" // Đặt width là full và height tự động
-                        />
+                <div>
+                  <h2 className="text-3xl font-semibold text-gray-800 mb-4">Mô tả sản phẩm</h2>
+                  {description.map((desc) => (
+                    <div key={desc.description_id} className="bg-white shadow-lg rounded-lg p-6 mb-6">
+                      {/* Kiểm tra xem descriptiondetail_id có phải là mảng hay không */}
+                      {Array.isArray(desc.descriptiondetail_id) && desc.descriptiondetail_id.length > 0 && (
+                        <div className="mt-4">
+                          {descriptionDetail && descriptionDetail.length > 0 && (
+                            <ul className="space-y-4">
+                              {descriptionDetail
+                                .filter((detail) =>
+                                  Array.isArray(desc.descriptiondetail_id) &&
+                                  desc.descriptiondetail_id.includes(detail.descriptiondetail_id)
+                                )
+                                .map((detail) => (
+                                  <li key={detail.descriptiondetail_id} className="border-t pt-4">
+                                    <h5 className="text-xl font-medium text-gray-800"><strong>{detail.name}</strong></h5>
+                                    <p className="text-gray-600">{detail.content}</p>
+                                    {detail.image && (
+                                      <img
+                                        src={detail.image}
+                                        alt={detail.name}
+                                        className="mt-2 w-full h-auto rounded-md" // Đặt width là full và height tự động
+                                      />
+                                    )}
+                                  </li>
+                                ))}
+                            </ul>
+                          )}
+                        </div>
                       )}
-                    </li>
+                    </div>
                   ))}
-              </ul>
-            )}
-          </div>
-        )}
-      </div>
-    ))}
-  </div>
-)}
+                </div>
+              )}
               {/* Phần Bình luận */}
               {activeTab === 'comments' && (
                 <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
                   <h2 className="text-3xl font-semibold text-gray-800 mb-4">Bình luận</h2>
 
-                  {/* Giao diện bình luận */}
+                  {/* Nút "Bình luận của tôi" */}
+                  <button
+                    onClick={() => setShowMyComments(!showMyComments)}
+                    className="mb-4 text-blue-600 hover:underline"
+                  >
+                    {showMyComments ? "Xem tất cả bình luận" : "Xem bình luận của tôi"}
+                  </button>
+
+                  {/* Hiển thị danh sách bình luận */}
                   <div className="space-y-4">
-                    <div className="border-b pb-4">
-                      <h5 className="text-xl font-medium text-gray-800">User 1</h5>
-                      <p className="text-gray-600">Sản phẩm này rất tuyệt vời, tôi thích nó!</p>
-                    </div>
-                    <div className="border-b pb-4">
-                      <h5 className="text-xl font-medium text-gray-800">User 2</h5>
-                      <p className="text-gray-600">Tôi đã sử dụng sản phẩm này được một tuần, rất hài lòng với chất lượng.</p>
-                    </div>
+                    {loading && <p>Đang tải...</p>}
+                    {!loading && filteredComments.length === 0 && <p>Chưa có bình luận nào.</p>}
+
+                    {filteredComments.map((comment) => (
+                      <div key={comment._id} className="border-b pb-4">
+                        <div className="flex items-center space-x-4">
+                          {/* Avatar - Sử dụng ảnh người dùng */}
+                          <div className="w-10 h-10 rounded-full overflow-hidden">
+                            {/* Kiểm tra nếu ảnh người dùng có sẵn trong state */}
+                            <img
+                              src={userAvt[comment.user_id]?.avatar || "/path/to/default-avatar.png"} // Lấy ảnh từ userAvt nếu có, nếu không có thì dùng ảnh mặc định
+                              alt={`User ${comment.user_id}`}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <div>
+                            <h5 className="text-xl font-medium text-gray-800">Người dùng {comment.user_id}</h5>
+                            <p className="text-gray-600">{comment.content}</p>
+                            <p className="text-sm text-gray-500">Rating: {comment.rating || "Chưa đánh giá"}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+
                     {/* Form nhập bình luận */}
                     <div>
                       <textarea
                         placeholder="Viết bình luận của bạn..."
                         className="w-full h-20 border p-4 rounded-lg text-gray-700"
+                        value={newComment}
+                        onChange={(e) => setNewComment(e.target.value)}
                       />
-                      <button className="mt-2 bg-blue-600 text-white px-6 py-2 rounded-lg">Gửi bình luận</button>
+                      <button
+                        className="mt-2 bg-blue-600 text-white px-6 py-2 rounded-lg"
+                        onClick={handleAddComment}
+                        disabled={loading}
+                      >
+                        {loading ? "Đang gửi..." : "Gửi bình luận"}
+                      </button>
                     </div>
                   </div>
                 </div>
+
               )}
             </div>
 

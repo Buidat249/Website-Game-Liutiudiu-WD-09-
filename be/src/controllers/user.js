@@ -2,6 +2,7 @@ import User from "../models/user";
 import Game from "../models/game";
 import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
+import Comment from "../models/comment"; // Đường dẫn tới model Comment
 
 // GET / users
 export const getAllUsers = async (req, res) => {
@@ -64,7 +65,9 @@ export const Register = async (req, res) => {
       city: body.city || "", // Gán chuỗi rỗng nếu city không được điền
       district: body.district || "", // Gán chuỗi rỗng nếu district không được điền
       ward: body.ward || "", // Gán chuỗi rỗng nếu ward không được điền
-      avatar: body.avatar || "",
+      avatar:
+        body.avatar ||
+        "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBw8RDhAQEA8PEhAQEA0PDRAPEA8QDQ0PFREWFxYRExQYHSggGBolGxUVITEhJSkrLi4uGB8zODMsNygtLisBCgoKBQUFDgUFDisZExkrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrK//AABEIAOEA4QMBIgACEQEDEQH/xAAaAAEAAwEBAQAAAAAAAAAAAAAAAQQFAgMH/8QAMhABAAEBBAgEBQQDAAAAAAAAAAECAwQRIQUSMUFRYXGRMoGhsSJCwdHwIzNy8VJigv/EABQBAQAAAAAAAAAAAAAAAAAAAAD/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwD6iAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKt6vcU5RnV6R1Z9pa1VeKZn27A1pt6I+anvBF4o/wA6e8MYBuROOzPolh0VzGcTMdFuxv8AMeKMecZSDRHFla01RjTOPvDsAAAAAAAAAAAAAAAAAAAAB43q21Kcd85U9XF4vlNOUZz6R5s+3t6q5jHDLZEbIB5zIAAAAAJormJxiZieS/dr9E5V5Tx3T14M8BujLut7mnKc6fWno06aomMYzidgJAAAAAAAAAAAAAAAAUr/AHnD4KdvzTw5LldWETPCJliVVYzMztmcZBAAAAAAAAAACzcbxqzqz4Z9J4qwDdHjdbTWoid+yesPYAAAAAAAAAAAAAAHje5/Tq6Mhs3inGiqOUsYAAAAAAAAAAAAGpo+P045zVPrh9Fl43OMLOnpj3nF7AAAAAAAAAAAAAAAMW3s9WqY4Tl03NpT0jY4xrRuynoDOAAAAAAAAAAQl3YUa1URzjsDYs6cIiOERHo6AAAAAAAAAAAAAAABVvV7imdXVxy+LPCMJ3LTJv37lXl7QDxriMctm7ogQCQAAAAIACfzYALmj6qInOfiqyiOSm9LvTjXTH+0emYNkAAAAAAAAAAAAAAABn6Ss84q45T1aDwvtONnVyz7AyBKABICEJAD7CQQAAs6NztOkTP53Vl7RdOdU8ojv/QNAAAAAAAAAAAAAAAABFUYxMcYmJSAybW6VU0zM8YjLhx9ng2rajWpmOMZddzFAAAAAAAAB3YUa1URxnPpva9lZU0xhTH3lQ0bRjVM8I9Z/JaQAAAAAAAAAAAAAAAAAADJv1lq1zwqzj6tZ4Xyx1qecZx9gZIhIAAAAALmjrKJmap+XDCOfEFq6WOrRhO2c5+z3AAAAAAAAAAAAAAAAAAAAkcV2tMbaojzzBiQkAAAAAF7Rc+KP4z7qKzcLSKapxnCJjDzxgGoOaa4nZMT0nF0AAAAAAAAAAAAAAAAAACrpGrCjrMR9foy17SdWdMcIme/9KQAAAAAAAADbs6saYnjET6MRqXCvGzjlMx+dwWQAAAAAAAAAAAAAARVVEbZiOs4AkVrW+0Rs+KeWzuo296qqynKOEbPMHN5tNauZ8o6Q8wAAAAAAAAAW9HWuFU0zsq2dYVAG6MeyvNdOycuE5wt2ekI+aJjnGcAujiztaavDMT79nYAAAAAAAAAKF8vfy0+c/SAdXq+4fDTt3zujooVVTM4zMzPNAAAAAAAAAAAAAAAAABErl3v0xlXnHHfHXipgNymqJjGJxid6WPd7eaJy2b43S1qK4mImNkg6AAAAABxb+Cr+NXsxEgAAAAAAAAAAAAAAAAAAAADVuH7cf8AXuALAAAAP//Z",
       ...body, // Các trường khác từ frontend
     };
 
@@ -266,5 +269,32 @@ export const getFavouriteGames = async (req, res) => {
   } catch (error) {
     console.error("Error fetching favourite games:", error);
     return res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const getCommentsByUser = async (req, res) => {
+  try {
+    const userId = parseInt(req.params.userId, 10);
+    if (isNaN(userId)) {
+      return res.status(400).json({ message: "ID người dùng không hợp lệ" });
+    }
+
+    // Lấy danh sách bình luận của người dùng
+    const comments = await Comment.find({ user_id: userId }).sort({
+      created_at: -1,
+    });
+
+    if (!comments.length) {
+      return res.status(404).json({
+        message: "Người dùng chưa có bình luận nào",
+      });
+    }
+
+    return res.status(200).json({
+      message: "Lấy danh sách bình luận thành công",
+      data: comments,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
   }
 };
