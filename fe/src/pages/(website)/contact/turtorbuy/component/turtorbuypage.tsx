@@ -2,7 +2,7 @@ import React from "react";
 
 const Shopping = () => {
   return (
-    <div className="flex-1 pt-6 pb-6 pr-0 pl-6 bg-gray-100 h-screen overflow-y-auto">
+    <div className="flex-1 ml-6   pl-6 bg-white ">
       {/* Main Content */}
       <main className="flex-1 p-6 overflow-y-auto">
         <h1 className="text-2xl font-semibold mb-4">

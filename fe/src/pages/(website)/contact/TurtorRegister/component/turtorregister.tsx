@@ -2,7 +2,7 @@ import React from "react";
 
 const TurtorRegister = () => {
   return (
-    <div className="flex-1 pt-6 pb-6 pr-0 pl-6 bg-gray-100 h-screen ">
+    <div className="flex-1 pb-6 pr-0 pl-6 bg-gray-100  ">
       <main className="flex-1 bg-white p-6">    
         <h2 className="text-xl font-bold mb-4">Hướng dẫn tạo tài khoản</h2>
 

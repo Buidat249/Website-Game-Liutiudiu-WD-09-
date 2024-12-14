@@ -574,20 +574,25 @@ body {
 }
 
 .main-nav a {
-  display: grid;
+  display: inline-block; /* Đổi từ grid sang inline-block */
   color: white;
-  margin: 0 58px;
+  margin: 0 15px; /* Điều chỉnh khoảng cách giữa các liên kết */
+  padding: 8px 15px; /* Thêm khoảng cách bên trong nút */
   text-decoration: none;
-  font-size: 12px;
+  font-size: 14px; /* Tăng kích thước chữ */
   font-weight: bold;
-}
+  text-align: center;
+  border-radius: 5px; /* Thêm bo góc nhẹ */
+  transition: all 0.3s ease; /* Hiệu ứng mượt */
+  
+} 
 
 .main-nav a:hover {
-  background-color: red;
-  border-radius: 7px;
-  transition: all .5s ease;
-  bottom: 0;
-  left: 0;
+  background: white; // Khi hover giữ nền trắng
+  color: #02132E; // Chữ đen khi hover
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); // Thêm bóng nhẹ
+  transform: scale(1.1); // Phóng to nhẹ khi hover
+  border-radius: 10px;
 }
 .banner {
   display: grid;

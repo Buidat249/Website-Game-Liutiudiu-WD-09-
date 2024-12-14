@@ -2,7 +2,7 @@ import React from "react";
 
 const Recharge = () => {
   return (
-    <div className="flex-1 p-6 bg-white ">
+    <div className="flex-1 p-6 bg-white ml-6 ">
       <h1 className="text-2xl font-bold mb-4">Hướng dẫn nạp tiền</h1>
       <p className="text-gray-700 mb-4">
         Bài viết sẽ hướng dẫn cách thức nạp tiền từ các hình thức thanh toán
