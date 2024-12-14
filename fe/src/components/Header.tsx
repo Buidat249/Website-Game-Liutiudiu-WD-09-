@@ -125,9 +125,9 @@ const Header = (props: Props) => {
               <span>Liutiudiu Shop</span>
             </div>
             <div className="search-bar">
-              <input type="text" placeholder="Tìm kiếm sản phẩm" />
+              <input type="text" className=" text-black " placeholder="Tìm kiếm sản phẩm" />
               <button type="submit">
-                <img src={searchIcon} alt="Search Icon" />
+                <img src={searchIcon} alt="Search Icon" className="w-6 h-6" />
               </button>
             </div>
             <div className="user-cart">
@@ -141,12 +141,16 @@ const Header = (props: Props) => {
                   </div>
                 ) : (
                   <>
-                    <Link to="/register" style={{ marginRight: "15px" }}>
-                      <span>Đăng kí</span>
+                    <Link 
+                      to="/register" 
+                      className="mr-3  text-gray-500 font-semibold hover:text-white hover:underline hover:scale-125 transition-all duration-300">
+                      Đăng kí
                     </Link>
                     /
-                    <Link to="/login" style={{ marginLeft: "15px" }}>
-                      <span>Đăng nhập</span>
+                    <Link 
+                      to="/login" 
+                      className="ml-3 text-gray-500 font-semibold hover:text-white hover:underline hover:scale-125 transition-all duration-300">
+                      Đăng nhập
                     </Link>
                   </>
                 )}
