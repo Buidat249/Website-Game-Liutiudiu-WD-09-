@@ -206,26 +206,7 @@ const GamePage = () => {
         <Image src={game.image} width={100} height={100} />
       ),
     },
-    // Thêm cột keys
-    {
-      key: "key_id",
-      title: "Keys",
-      dataIndex: "key_id",
-      render: (key_id: any) => {
-        if (isLoading || !keys.length) {
-          return "Đang tải keys..."; // Nếu dữ liệu chưa có
-        }
-
-        // Nếu `key_id` là mảng, đếm tổng số lượng keys
-        if (Array.isArray(key_id)) {
-          return `Tổng số keys: ${key_id.length}`;
-        } else {
-          // Nếu là một key duy nhất, hiển thị số 1
-          return `Tổng số keys: 1`;
-        }
-      },
-      ellipsis: true,
-    },
+    
 
     {
       key: "action",

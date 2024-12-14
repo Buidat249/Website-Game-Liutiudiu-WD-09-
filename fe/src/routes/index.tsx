@@ -149,7 +149,7 @@ const Router = () => {
         <Route path="/user/comments" element={<Mycomment />} />
         <Route path="/user/favorites" element={<Wishlist />} />
         <Route path="/user/affiliate" element={<PageAffiliate />} />
-        <Route path="/contact" element={<PageContactHelp />} />
+        <Route path="/contact" element={<PageIntroduce />} />
         <Route path="/contact/contacthelp" element={<PageContactHelp />} />
         <Route path="/contact/fanpage" element={<PageFanpage />} />
         <Route path="/contact/introduce" element={<PageIntroduce />} />
