@@ -24,7 +24,6 @@ interface Game {
 const CheckoutBoxRight = ({ totalPrice, totalQuantity }: any) => {
   const [games, setGames] = useState<Game[]>([]);
   const { selectedGames } = useCartContext(); // Sử dụng CartContext
-  const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
   const [user, setUser] = useState<any>(null);  // Thêm state user
   const [money, setMoney] = useState<number>(0); // Thêm state money
   const navigate = useNavigate();

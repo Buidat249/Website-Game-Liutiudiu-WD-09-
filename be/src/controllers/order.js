@@ -2,6 +2,7 @@ import Order from "../models/order";
 import Transaction from "../models/transaction";
 import User from "../models/user";
 import Key from "../models/key";
+import Cart from "../models/cart";
 
 // GET / orders
 export const getAllOrders = async (req, res) => {
@@ -94,7 +95,13 @@ export const addOrder = async (req, res) => {
       const keysToUpdate = availableKeys.slice(0, game.quantity);
       await Key.updateMany(
         { _id: { $in: keysToUpdate.map((key) => key._id) } },
-        { $set: { is_used: true, user_id: user_id, used_at: orderStatus == "completed" ? new Date() : undefined } }
+        {
+          $set: {
+            is_used: true,
+            user_id: user_id,
+            used_at: orderStatus == "completed" ? new Date() : undefined,
+          },
+        }
       );
 
       // Cập nhật thông tin game đã mua cùng keys
@@ -121,14 +128,28 @@ export const addOrder = async (req, res) => {
     });
 
     // Cập nhật ví tiền khách hàng
-    if (orderStatus == "completed") {
+    if (orderStatus === "completed") {
+      // Cập nhật ví tiền khách hàng
       const userCur = await User.findOne({ user_id });
-      // Cập nhật thông tin người dùng
-      const user = await User.findOneAndUpdate(
+      await User.findOneAndUpdate(
         { user_id },
         {
-          money: Number.parseInt(userCur.money ?? 0) - Number.parseInt(total_price),
-        });
+          money:
+            Number.parseInt(userCur.money ?? 0) - Number.parseInt(total_price),
+        }
+      );
+
+      // Xóa các game đã mua khỏi giỏ hàng
+      await Cart.updateOne(
+        { user_id },
+        {
+          $pull: {
+            games: {
+              game_id: { $in: games.map((game) => game.game_id) }, // Xóa những game_id có trong danh sách đã mua
+            },
+          },
+        }
+      );
     }
 
     // Trả về thông tin đơn hàng mới đã tạo
@@ -193,7 +214,7 @@ export const removeOrder = async (req, res) => {
 
 export const confirmVnPay = async (req, res) => {
   if (req.query.vnp_TxnRef.startsWith("naptienthucong")) {
-    if (req.query.vnp_TransactionStatus !== '00') {
+    if (req.query.vnp_TransactionStatus !== "00") {
       return res.redirect(
         `http://localhost:5173/vnpay/fall?order_id=${req.query.vnp_TxnRef}&amount=${req.query.vnp_Amount}`
       );
@@ -206,14 +227,20 @@ export const confirmVnPay = async (req, res) => {
         return res.status(400).json({ message: "ID người dùng không hợp lệ" });
       }
 
-      const lastTransaction = await Transaction.findOne({}, {}, { sort: { transaction_id: -1 } });
-      const newTransactionId = lastTransaction ? lastTransaction.transaction_id + 1 : 1;
+      const lastTransaction = await Transaction.findOne(
+        {},
+        {},
+        { sort: { transaction_id: -1 } }
+      );
+      const newTransactionId = lastTransaction
+        ? lastTransaction.transaction_id + 1
+        : 1;
 
       const transactionData = {
-          transaction_id: newTransactionId,
-          user_id: userId,
-          total_price: Math.floor(Number.parseInt(req.query.vnp_Amount) / 100),
-          status: 'completed'
+        transaction_id: newTransactionId,
+        user_id: userId,
+        total_price: Math.floor(Number.parseInt(req.query.vnp_Amount) / 100),
+        status: "completed",
       };
 
       const transaction = await Transaction.create(transactionData);
@@ -223,8 +250,10 @@ export const confirmVnPay = async (req, res) => {
         { user_id: userId },
         {
           money:
-            Math.floor(Number.parseInt(req.query.vnp_Amount) / 100) + Number.parseInt(userCur.money ?? 0),
-        });
+            Math.floor(Number.parseInt(req.query.vnp_Amount) / 100) +
+            Number.parseInt(userCur.money ?? 0),
+        }
+      );
 
       if (!user) {
         return res.status(404).json({
@@ -238,20 +267,18 @@ export const confirmVnPay = async (req, res) => {
     }
   } else {
     try {
-      const order = await Order.findOne(
-        { order_id: req.query.vnp_TxnRef });
+      const order = await Order.findOne({ order_id: req.query.vnp_TxnRef });
       if (!order) {
         return res.status(404).json({
           message: "Order Not Found",
         });
       }
-      
+
       const keys = order.games.reduce((acc, game) => {
-        return acc.concat(game.key_ids.map(key => key.key_id));
+        return acc.concat(game.key_ids.map((key) => key.key_id));
       }, []);
 
-      if (req.query.vnp_TransactionStatus !== '00') {
-        
+      if (req.query.vnp_TransactionStatus !== "00") {
         await Order.findOneAndUpdate(
           { order_id: req.query.vnp_TxnRef },
           {
@@ -285,7 +312,7 @@ export const confirmVnPay = async (req, res) => {
           { key_id: key },
           {
             is_used: true,
-            used_at: new Date()
+            used_at: new Date(),
           }
         );
       }

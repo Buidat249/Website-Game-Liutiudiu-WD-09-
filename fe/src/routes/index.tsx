@@ -101,6 +101,7 @@ import PageTurtorBuy from "@/pages/(website)/contact/turtorbuy/page";
 import PaymentSuccess from "@/pages/(website)/payvnpay/_components/success";
 import PaymentFall from "@/pages/(website)/payvnpay/_components/fall";
 import ProtectedRoute from "./ProtectedRoute"; // Import ProtectedRoute
+import Chatbox from "@/components/chatbox";
 
 const Router = () => {
   return (
@@ -110,6 +111,8 @@ const Router = () => {
         <Route path="register" element={<RegisterPage />} />
         <Route path="login" element={<LoginPage />} />
         <Route path="productgame/:game_id" element={<ProductDetail />} />
+        <Route path="/chatbox" element={<Chatbox />} />
+
         <Route path="/tintucs" element={<NewsPage />} />
         <Route path="/tintucs/:tintuc_id" element={<NewsDetailPage />} />
 

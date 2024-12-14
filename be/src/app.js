@@ -25,6 +25,7 @@ import key from "./routers/key";
 import transaction from "./routers/transaction";
 import statistical from "./routers/statistical";
 import comment from "./routers/comment";
+import forum from "./routers/forum";
 
 const app = express();
 // middleware
@@ -65,9 +66,10 @@ app.use("", key);
 app.use("", transaction);
 app.use("", statistical);
 app.use("", comment);
-
-export const viteNodeApp = app;
+app.use("", forum);
 
 app.listen(PORT, () => {
   console.log(`Backend server running on http://localhost:${PORT}`);
 });
+
+export const viteNodeApp = app;

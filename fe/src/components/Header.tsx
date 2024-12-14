@@ -104,14 +104,15 @@ const Header = (props: Props) => {
           <div className="top-bar-content">
             <span>Kết nối yêu thương cùng Liutiudiu Shop</span>
             <nav>
-              <a href="/contact/turtorbuy">Hướng dẫn mua hàng</a>
+              <Link to="/chatbox">Chat</Link>
+              <Link to="/contact/turtorbuy">Hướng dẫn mua hàng</Link>
               {user.role_id === 0 && (
-                <a href="/admin">Chuyển đến admin</a>
+                <Link to="/admin">Chuyển đến admin</Link>
               )}
               {user.username && (
-                <a onClick={handleLogout} href="#">
+                <button onClick={handleLogout} className="logout-button">
                   Đăng xuất
-                </a>
+                </button>
               )}
             </nav>
           </div>
@@ -141,14 +142,14 @@ const Header = (props: Props) => {
                   </div>
                 ) : (
                   <>
-                    <Link 
-                      to="/register" 
+                    <Link
+                      to="/register"
                       className="mr-3  text-gray-500 font-semibold hover:text-white hover:underline hover:scale-125 transition-all duration-300">
                       Đăng kí
                     </Link>
                     /
-                    <Link 
-                      to="/login" 
+                    <Link
+                      to="/login"
                       className="ml-3 text-gray-500 font-semibold hover:text-white hover:underline hover:scale-125 transition-all duration-300">
                       Đăng nhập
                     </Link>

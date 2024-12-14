@@ -5871,6 +5871,15 @@ body {
   margin-left: auto; /* Đẩy icon sang bên phải */
 }
 
+/* style.scss */
+.flex-row-reverse {
+  flex-direction: row-reverse;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
 
 
 
