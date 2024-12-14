@@ -164,7 +164,7 @@ const ProductPage = () => {
   };
 
   return (
-    <div className="main">
+    <div className="main bg-white mt-6 p-6 mx-auto rounded-lg  shadow-lg ">
       <div className="filter">
         <div className="filter-small">
           <div className="filter-options">

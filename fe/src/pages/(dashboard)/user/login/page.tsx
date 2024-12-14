@@ -80,8 +80,8 @@ const LoginPage: React.FC = () => {
     <>
       {contextHolder}
 
-      <div className="main">
-        <div className="banner">
+      <div className="">
+        <div className="">
           <div className="login-form">
             <Form
               name="basic"

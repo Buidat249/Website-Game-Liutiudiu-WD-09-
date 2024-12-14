@@ -76,8 +76,8 @@ const RegisterPage: React.FC = () => {
   return (
     <>
       {contextHolder}
-      <div className="main">
-        <div className="banner">
+      <div className="">
+        <div className="">
           <div className="register-form">
             <Form
               name="basic"
