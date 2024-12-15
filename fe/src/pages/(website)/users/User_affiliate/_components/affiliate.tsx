@@ -30,7 +30,7 @@ const Referral = () => {
           <div className="flex items-center mt-1">
             <input
               type="text"
-              value="https://divineshop.vn/?ru=ngodat2004"
+              value="https://liutiudiu.vn/?name=ngodat2004"
               readOnly
               className="flex-1 p-1 border rounded-l-lg border-gray-300 text-sm"
             />
@@ -44,7 +44,7 @@ const Referral = () => {
           <div className="flex items-center mt-1">
             <input
               type="text"
-              value="https://divineshop.vn/?ri=1216912"
+              value="https://liutiudiu.vn/?name=vannhat187"
               readOnly
               className="flex-1 p-1 border rounded-l-lg border-gray-300 text-sm"
             />
@@ -55,81 +55,8 @@ const Referral = () => {
         </div>
       </div>
 
-      {/* Thông tin tổng hợp */}
-      <div className="bg-gray-100 p-3 rounded-lg mb-6">
-        <div className="grid grid-cols-3 gap-2 text-center">
-          <div>
-            <h3 className="text-md font-bold">Tổng tiền nhận được</h3>
-            <p className="text-blue-500 text-lg font-bold">0 ACoin</p>
-          </div>
-          <div>
-            <h3 className="text-md font-bold">Tổng số người giới thiệu</h3>
-            <p className="text-gray-700 text-lg font-bold">0 người</p>
-          </div>
-          <div>
-            <h3 className="text-md font-bold">Số tiền còn lại</h3>
-            <p className="text-gray-700 text-lg font-bold">0 ACoin</p>
-          </div>
-        </div>
-        <button className="mt-3 bg-green-500 text-white w-full py-1 rounded-lg text-sm">
-          Quy đổi
-        </button>
-      </div>
+      
 
-      {/* Phần Lịch sử giao dịch */}
-      <div>
-        <h2 className="text-md font-bold mb-3">Lịch sử giao dịch</h2>
-        <div className="grid grid-cols-5 gap-2 mb-3">
-          {/* Các trường nhập cho bộ lọc */}
-          <input
-            type="text"
-            placeholder="Mô tả"
-            className="p-1 border border-gray-300 rounded-lg text-sm"
-          />
-          <input
-            type="number"
-            placeholder="Số tiền từ"
-            className="p-1 border border-gray-300 rounded-lg text-sm"
-          />
-          <input
-            type="number"
-            placeholder="Số tiền đến"
-            className="p-1 border border-gray-300 rounded-lg text-sm"
-          />
-          <input
-            type="date"
-            placeholder="Từ ngày"
-            className="p-1 border border-gray-300 rounded-lg text-sm"
-          />
-          <input
-            type="date"
-            placeholder="Đến ngày"
-            className="p-1 border border-gray-300 rounded-lg text-sm"
-          />
-        </div>
-        <button className="bg-blue-500 text-white px-4 py-1 rounded-lg text-sm mb-3">
-          Lọc
-        </button>
-        {/* Bảng lịch sử */}
-        <table className="w-full border-collapse border border-gray-300 text-left text-sm">
-          <thead>
-            <tr className="bg-gray-200">
-              <th className="border border-gray-300 p-1">Thời gian</th>
-              <th className="border border-gray-300 p-1">Mô tả</th>
-              <th className="border border-gray-300 p-1">Số tiền</th>
-              <th className="border border-gray-300 p-1">Số dư</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td className="border border-gray-300 p-1">--</td>
-              <td className="border border-gray-300 p-1">--</td>
-              <td className="border border-gray-300 p-1">--</td>
-              <td className="border border-gray-300 p-1">--</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
     </div>
   );
 };

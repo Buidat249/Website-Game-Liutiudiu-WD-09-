@@ -96,6 +96,7 @@ const Profile = () => {
         setFormData((prev) => ({ ...prev, avatar: data.secure_url }));
         setImageUrl(data.secure_url);
         alert("Cập nhật ảnh đại diện thành công!");
+
       } else {
         alert("Tải ảnh lên thất bại!");
       }
@@ -122,6 +123,7 @@ const Profile = () => {
 
       if (response.ok) {
         alert("Cập nhật thông tin thành công!");
+        window.location.reload();
       } else {
         alert("Cập nhật thất bại!");
       }

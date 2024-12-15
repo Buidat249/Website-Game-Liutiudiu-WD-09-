@@ -63,6 +63,7 @@ const orderSchema = new mongoose.Schema(
       enum: ["pending", "completed", "canceled", "payment_failed"], // Các trạng thái có thể
       default: "pending",
     },
+    payment_url: { type: String, default: "" }, // Thêm trường này để lưu URL thanh toán
   },
   { timestamps: true }
 );

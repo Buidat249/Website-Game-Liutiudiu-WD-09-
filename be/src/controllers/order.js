@@ -3,6 +3,7 @@ import Transaction from "../models/transaction";
 import User from "../models/user";
 import Key from "../models/key";
 import Cart from "../models/cart";
+import { VNPay, dateFormat } from "vnpay";
 
 // GET / orders
 export const getAllOrders = async (req, res) => {
@@ -127,37 +128,26 @@ export const addOrder = async (req, res) => {
       status: orderStatus, // Sửa thành 'completed'
     });
 
-    // Cập nhật ví tiền khách hàng
-    if (orderStatus === "completed") {
-      // Cập nhật ví tiền khách hàng
+    if (orderStatus == "completed") {
       const userCur = await User.findOne({ user_id });
-      await User.findOneAndUpdate(
+      // Cập nhật thông tin người dùng
+      const user = await User.findOneAndUpdate(
         { user_id },
         {
           money:
             Number.parseInt(userCur.money ?? 0) - Number.parseInt(total_price),
         }
       );
-
-      // Xóa các game đã mua khỏi giỏ hàng
-      await Cart.updateOne(
-        { user_id },
-        {
-          $pull: {
-            games: {
-              game_id: { $in: games.map((game) => game.game_id) }, // Xóa những game_id có trong danh sách đã mua
-            },
-          },
-        }
-      );
     }
 
-    // Trả về thông tin đơn hàng mới đã tạo
+    // Trả về URL thanh toán đầy đủ
+    const paymentUrl = `/carts/create-pay/vnpay?amount=${total_price}&ref=${newOrderId}`;
+
     res.status(201).json({
       message: "Order created successfully",
       data: {
         order,
-        urlPay: `/carts/create-pay/vnpay?amount=${total_price}&ref=${newOrderId}`,
+        urlPay: paymentUrl, // Trả về URL đầy đủ
       },
     });
   } catch (error) {
@@ -197,14 +187,37 @@ export const updateOrder = async (req, res) => {
 
 export const removeOrder = async (req, res) => {
   try {
-    const order = await Order.findOneAndDelete({ order_id: req.params.id });
+    // Tìm đơn hàng cần xoá
+    const order = await Order.findOne({ order_id: req.params.id });
+
     if (!order) {
       return res.status(404).json({
         message: "Order Not Found",
       });
     }
+
+    // Lấy danh sách các key của game trong đơn hàng
+    const keys = order.games.reduce((acc, game) => {
+      return acc.concat(game.key_ids.map((key) => key.key_id));
+    }, []);
+
+    // Cập nhật lại trạng thái của các key, đánh dấu là chưa sử dụng
+    for (const key of keys) {
+      await Key.findOneAndUpdate(
+        { key_id: key },
+        {
+          is_used: false,
+          used_at: undefined,
+          user_id: "",
+        }
+      );
+    }
+
+    // Xoá đơn hàng
+    await Order.findOneAndDelete({ order_id: req.params.id });
+
     return res.status(200).json({
-      message: "Delete Order Done",
+      message: "Delete Order Done and Keys Reset",
       data: order,
     });
   } catch (error) {
@@ -214,14 +227,18 @@ export const removeOrder = async (req, res) => {
 
 export const confirmVnPay = async (req, res) => {
   if (req.query.vnp_TxnRef.startsWith("naptienthucong")) {
+    // Trường hợp thanh toán qua VNPay
+    console.log("VNPay Transaction Ref: ", req.query.vnp_TxnRef);
+    console.log("VNPay Transaction Status: ", req.query.vnp_TransactionStatus);
+
     if (req.query.vnp_TransactionStatus !== "00") {
       return res.redirect(
         `http://localhost:5173/vnpay/fall?order_id=${req.query.vnp_TxnRef}&amount=${req.query.vnp_Amount}`
       );
     }
+
     const user_id = req.query.vnp_TxnRef.split("_")[1];
     try {
-      // Chuyển đổi user_id sang kiểu số
       const userId = parseInt(user_id, 10);
       if (isNaN(userId)) {
         return res.status(400).json({ message: "ID người dùng không hợp lệ" });
@@ -245,7 +262,7 @@ export const confirmVnPay = async (req, res) => {
 
       const transaction = await Transaction.create(transactionData);
       const userCur = await User.findOne({ user_id: userId });
-      // Cập nhật thông tin người dùng
+
       const user = await User.findOneAndUpdate(
         { user_id: userId },
         {
@@ -263,20 +280,28 @@ export const confirmVnPay = async (req, res) => {
 
       res.redirect("http://localhost:5173/user/profile");
     } catch (error) {
+      console.error("Error in VNPay payment: ", error);
       return res.status(500).json({ message: error.message });
     }
   } else {
     try {
+      // Trường hợp thanh toán bằng tiền người dùng
       const order = await Order.findOne({ order_id: req.query.vnp_TxnRef });
+
       if (!order) {
+        console.log("Order not found: ", req.query.vnp_TxnRef);
         return res.status(404).json({
           message: "Order Not Found",
         });
       }
 
+      console.log("Order found: ", order);
+
       const keys = order.games.reduce((acc, game) => {
         return acc.concat(game.key_ids.map((key) => key.key_id));
       }, []);
+
+      console.log("Keys from order: ", keys);
 
       if (req.query.vnp_TransactionStatus !== "00") {
         await Order.findOneAndUpdate(
@@ -296,10 +321,13 @@ export const confirmVnPay = async (req, res) => {
             }
           );
         }
+
         return res.redirect(
           `http://localhost:5173/vnpay/fall?order_id=${req.query.vnp_TxnRef}&amount=${req.query.vnp_Amount}`
         );
       }
+
+      // Cập nhật trạng thái đơn hàng thành "completed"
       await Order.findOneAndUpdate(
         { order_id: req.query.vnp_TxnRef },
         {
@@ -307,6 +335,7 @@ export const confirmVnPay = async (req, res) => {
         }
       );
 
+      // Đánh dấu key là đã sử dụng
       for (const key of keys) {
         await Key.findOneAndUpdate(
           { key_id: key },
@@ -317,11 +346,78 @@ export const confirmVnPay = async (req, res) => {
         );
       }
 
+      console.log("Reducing user's money...");
+      // Giảm tiền người dùng khi thanh toán bằng tiền của người dùng
+      const totalAmount = Math.floor(
+        Number.parseInt(req.query.vnp_Amount) / 100
+      );
+      const user = await User.findOne({ user_id: order.user_id });
+
+      if (user && user.money >= totalAmount) {
+        const updatedUser = await User.findOneAndUpdate(
+          { user_id: order.user_id },
+          { money: user.money - totalAmount }
+        );
+
+        console.log("User money updated: ", updatedUser);
+
+        // Xoá game khỏi giỏ hàng của người dùng sau khi thanh toán thành công
+        console.log("Removing games from cart...");
+        await Cart.updateOne(
+          { user_id: order.user_id },
+          {
+            $pull: {
+              games: {
+                game_id: { $in: order.games.map((game) => game.game_id) }, // Sử dụng order.games để lấy game_id
+              },
+            },
+          }
+        );
+        console.log("Games removed from cart.");
+      } else {
+        console.log(
+          "Not enough money in user's account: ",
+          user ? user.money : "User not found"
+        );
+        return res.status(400).json({ message: "Số dư người dùng không đủ" });
+      }
+
       res.redirect(
         `http://localhost:5173/vnpay/success?order_id=${req.query.vnp_TxnRef}&amount=${req.query.vnp_Amount}`
       );
     } catch (error) {
+      console.error("Error in payment process: ", error);
       return res.status(500).json({ message: error.message });
     }
+  }
+};
+
+// Express.js example for cancel order
+export const cancelOrder = async (req, res) => {
+  const { order_id } = req.body; // Chắc chắn `order_id` nằm trong `req.body`
+
+  if (!order_id) {
+    return res.status(400).json({ message: "Missing order_id" });
+  }
+
+  try {
+    // Kiểm tra sự tồn tại của đơn hàng
+    const order = await Order.findOne({ order_id }); // Thay vì `findById`, dùng `findOne` với `order_id` vì bạn sử dụng `order_id` là một field
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    // Kiểm tra trạng thái đơn hàng
+    if (order.status !== "pending") {
+      return res.status(400).json({ message: "Order cannot be canceled" });
+    }
+
+    // Cập nhật trạng thái đơn hàng thành "canceled"
+    order.status = "canceled";
+    await order.save();
+
+    return res.status(200).json({ message: "Order canceled successfully" });
+  } catch (error) {
+    return res.status(500).json({ message: "Error canceling order", error });
   }
 };

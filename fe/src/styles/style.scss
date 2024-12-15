@@ -5880,7 +5880,16 @@ body {
   flex-direction: row;
 }
 
+.text-gray-600 {
+  word-wrap: break-word; /* Tự động xuống dòng cho các từ quá dài */
+  overflow-wrap: break-word; /* Tương tự như trên, hỗ trợ thêm trình duyệt */
+  white-space: pre-wrap; /* Giữ nguyên khoảng trắng và xuống dòng */
+}
 
+.comment-content {
+  max-width: 100%; /* Đảm bảo bình luận không vượt quá chiều rộng container */
+  word-break: break-word; /* Tự động xuống dòng khi từ quá dài */
+}
 
 
 

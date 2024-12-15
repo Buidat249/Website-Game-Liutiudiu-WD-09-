@@ -91,7 +91,7 @@ export const addCart = async (req, res) => {
   }
 };
 
-// PUT /carts/:id
+
 // PUT /carts/:user_id
 export const updateCart = async (req, res) => {
   const { user_id } = req.params;
@@ -220,36 +220,36 @@ export const removeGameFromCart = async (req, res) => {
   }
 };
 
-export const createPayQrVnPay = async (req, res) => {
-  const vnpay = new VNPay({
-    tmnCode: "FKYQKRXQ",
-    secureSecret: "8K03P3S8NFR8WVJL1PNLFZ5IQIDKIVRB",
-    vnpayHost: "https://sandbox.vnpayment.vn",
-    testMode: true, 
-    hashAlgorithm: "SHA512", 
-    enableLog: true, 
-    loggerFn: () => {}, 
-  });
+  export const createPayQrVnPay = async (req, res) => {
+    const vnpay = new VNPay({
+      tmnCode: "FKYQKRXQ",
+      secureSecret: "8K03P3S8NFR8WVJL1PNLFZ5IQIDKIVRB",
+      vnpayHost: "https://sandbox.vnpayment.vn",
+      testMode: true, 
+      hashAlgorithm: "SHA512", 
+      enableLog: true, 
+      loggerFn: () => {}, 
+    });
 
-  var ipAddr = req.headers['x-forwarded-for'] ||
-      req.connection.remoteAddress ||
-      req.socket.remoteAddress ||
-      req.connection.socket.remoteAddress;
+    var ipAddr = req.headers['x-forwarded-for'] ||
+        req.connection.remoteAddress ||
+        req.socket.remoteAddress ||
+        req.connection.socket.remoteAddress;
 
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
 
-  const paymentUrl = vnpay.buildPaymentUrl({
-      vnp_Amount: req.query.amount,
-      vnp_IpAddr: ipAddr,
-      vnp_TxnRef: req.query.ref,
-      vnp_OrderInfo: 'Thanh toan don hang',
-      vnp_OrderType: ProductCode.Other,
-      vnp_ReturnUrl: 'http://localhost:8080/orders/confirm/vnpay',
-      vnp_Locale: VnpLocale.VN, // 'vn' hoặc 'en'
-      vnp_CreateDate: dateFormat(new Date()), 
-      vnp_ExpireDate: dateFormat(tomorrow), 
-  });
-  
-  res.redirect(paymentUrl)
-};
+    const paymentUrl = vnpay.buildPaymentUrl({
+        vnp_Amount: req.query.amount,
+        vnp_IpAddr: ipAddr,
+        vnp_TxnRef: req.query.ref,
+        vnp_OrderInfo: 'Thanh toan don hang',
+        vnp_OrderType: ProductCode.Other,
+        vnp_ReturnUrl: 'http://localhost:8080/orders/confirm/vnpay',
+        vnp_Locale: VnpLocale.VN, // 'vn' hoặc 'en'
+        vnp_CreateDate: dateFormat(new Date()), 
+        vnp_ExpireDate: dateFormat(tomorrow), 
+    });
+    
+    res.redirect(paymentUrl)
+  };

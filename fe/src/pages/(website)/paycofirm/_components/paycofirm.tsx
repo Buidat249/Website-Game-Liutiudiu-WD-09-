@@ -92,9 +92,25 @@ const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({ games }) => {
         const updatedUser = { ...user, money: newBalance };
         localStorage.setItem("user", JSON.stringify(updatedUser));
 
-        setPaymentSuccess(true);
-        setTimeout(() => navigate("/"), 2000);
-        message.success("Thanh toán thành công!");
+        // Gửi yêu cầu xóa game khỏi giỏ hàng
+        const removeFromCartResponse = await fetch(`http://localhost:8080/carts/${user.user_id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            games: [], // Cập nhật giỏ hàng thành mảng rỗng hoặc bỏ qua các game đã thanh toán
+          }),
+        });
+
+        if (removeFromCartResponse.ok) {
+          // Cập nhật lại giỏ hàng trong state frontend (hoặc làm gì đó khác nếu cần)
+          message.success("Thanh toán Thành công!");
+          setPaymentSuccess(true);
+          setTimeout(() => navigate("/"), 2000); // Chuyển hướng về trang chủ
+        } else {
+          message.error("Xóa game khỏi giỏ hàng thất bại!");
+        }
       } else {
         message.error("Thanh toán thất bại!");
       }

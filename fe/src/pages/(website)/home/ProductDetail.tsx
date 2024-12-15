@@ -74,6 +74,8 @@ const ProductDetail = () => {
   const [showMyComments, setShowMyComments] = useState(false);
   const [user_id, setUserId] = useState<number | null>(null); // Lưu user_id
   const [userAvt, setUserAvt] = useState<Record<number, any>>({});
+  console.log('u', userAvt);
+
 
   useEffect(() => {
     const fetchUserData = async (user_id: number) => {
@@ -690,7 +692,7 @@ const ProductDetail = () => {
               {activeTab === 'description' && description && description.length > 0 && (
 
                 <div>
-                  <h2 className="text-3xl font-semibold text-gray-800 mb-4">Mô tả sản phẩm</h2>
+                  <h2 className="text-2xl font-semibold text-gray-800 mb-4">Mô tả về game</h2>
                   {description.map((desc) => (
                     <div key={desc.description_id} className="bg-white shadow-lg rounded-lg p-6 mb-6">
                       {/* Kiểm tra xem descriptiondetail_id có phải là mảng hay không */}
@@ -722,66 +724,90 @@ const ProductDetail = () => {
                       )}
                     </div>
                   ))}
-                </div>
-              )}
-              {/* Phần Bình luận */}
-              {activeTab === 'comments' && (
-                <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
-                  <h2 className="text-3xl font-semibold text-gray-800 mb-4">Bình luận</h2>
-
-                  {/* Nút "Bình luận của tôi" */}
-                  <button
-                    onClick={() => setShowMyComments(!showMyComments)}
-                    className="mb-4 text-blue-600 hover:underline"
-                  >
-                    {showMyComments ? "Xem tất cả bình luận" : "Xem bình luận của tôi"}
-                  </button>
-
-                  {/* Hiển thị danh sách bình luận */}
-                  <div className="space-y-4">
-                    {loading && <p>Đang tải...</p>}
-                    {!loading && filteredComments.length === 0 && <p>Chưa có bình luận nào.</p>}
-
-                    {filteredComments.map((comment) => (
-                      <div key={comment._id} className="border-b pb-4">
-                        <div className="flex items-center space-x-4">
-                          {/* Avatar - Sử dụng ảnh người dùng */}
-                          <div className="w-10 h-10 rounded-full overflow-hidden">
-                            {/* Kiểm tra nếu ảnh người dùng có sẵn trong state */}
-                            <img
-                              src={userAvt[comment.user_id]?.avatar || "/path/to/default-avatar.png"} // Lấy ảnh từ userAvt nếu có, nếu không có thì dùng ảnh mặc định
-                              alt={`User ${comment.user_id}`}
-                              className="w-full h-full object-cover"
-                            />
-                          </div>
-                          <div>
-                            <h5 className="text-xl font-medium text-gray-800">Người dùng {comment.user_id}</h5>
-                            <p className="text-gray-600">{comment.content}</p>
-                            <p className="text-sm text-gray-500">Rating: {comment.rating || "Chưa đánh giá"}</p>
-                          </div>
+                  {game && (
+                    <div>
+                      <h2 className="text-2xl font-semibold text-gray-800 mb-4">Cấu hình</h2>
+                      <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
+                        <div className="mt-6">
+                          <p className="text-lg font-medium text-gray-800">
+                            <span className="text-black-600">${game.configuration}</span>
+                          </p>
                         </div>
                       </div>
-                    ))}
+                    </div>
+                  )}
 
-                    {/* Form nhập bình luận */}
-                    <div>
-                      <textarea
-                        placeholder="Viết bình luận của bạn..."
-                        className="w-full h-20 border p-4 rounded-lg text-gray-700"
-                        value={newComment}
-                        onChange={(e) => setNewComment(e.target.value)}
-                      />
-                      <button
-                        className="mt-2 bg-blue-600 text-white px-6 py-2 rounded-lg"
-                        onClick={handleAddComment}
-                        disabled={loading}
-                      >
-                        {loading ? "Đang gửi..." : "Gửi bình luận"}
-                      </button>
+
+                </div>
+
+              )}
+              {/* Phần Bình luận */}
+
+              {activeTab === 'comments' && (
+                <div>
+                  <h2 className="text-2xl font-semibold text-gray-800 mb-4">Bình luận</h2>
+                  <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
+
+
+                    {/* Nút "Bình luận của tôi" */}
+                    <button
+                      onClick={() => setShowMyComments(!showMyComments)}
+                      className="mb-4 text-blue-600 hover:underline"
+                    >
+                      {showMyComments ? "Xem tất cả bình luận" : "Xem bình luận của tôi"}
+                    </button>
+
+                    {/* Hiển thị danh sách bình luận */}
+                    <div className="space-y-4">
+                      {/* Hiển thị trạng thái tải hoặc thông báo khi không có bình luận */}
+                      {loading && <p>Đang tải...</p>}
+                      {!loading && filteredComments.length === 0 && <p>Chưa có bình luận nào.</p>}
+
+                      {/* Hiển thị danh sách bình luận */}
+                      {filteredComments.map((comment) => (
+                        <div key={comment._id} className="border-b pb-4">
+                          <div className="flex items-center space-x-4">
+                            {/* Avatar - Sử dụng ảnh người dùng */}
+                            <div className="w-10 h-10 rounded-full overflow-hidden">
+                              <img
+                                src={userAvt[comment.user_id]?.avatar || "/path/to/default-avatar.png"}
+                                alt={`User ${comment.user_id}`}
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+
+                            {/* Thông tin người dùng và nội dung bình luận */}
+                            <div className="flex-1">
+                              <h5 className="text-xl font-bold text-gray-800">
+                                {userAvt[comment.user_id]?.username || "Người dùng ẩn danh"}
+                              </h5>
+                              <p className="text-gray-600 break-words max-w-full">
+                                {comment.content}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+
+                      {/* Form nhập bình luận */}
+                      <div>
+                        <textarea
+                          placeholder="Viết bình luận của bạn..."
+                          className="w-full h-20 border p-4 rounded-lg text-gray-700 resize-none focus:outline-none focus:ring-2 focus:ring-blue-600"
+                          value={newComment}
+                          onChange={(e) => setNewComment(e.target.value)}
+                        />
+                        <button
+                          className="mt-2 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 disabled:bg-gray-400"
+                          onClick={handleAddComment}
+                          disabled={loading}
+                        >
+                          {loading ? "Đang gửi..." : "Gửi bình luận"}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-
               )}
             </div>
 
@@ -790,12 +816,14 @@ const ProductDetail = () => {
               <section className="games">
                 <h1
                   style={{
+                    marginTop: "40px",
+                    marginBottom: "30px",
                     fontSize: "32px",
                     fontWeight: "bold",
                     color: "black",
                   }}
                 >
-                  Game đề xuất
+                  Game liên quan
                 </h1>
                 <div className="game-grid">
                   {relatedGames.length > 0 ? (
