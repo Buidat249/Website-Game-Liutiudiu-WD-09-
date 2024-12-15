@@ -120,8 +120,8 @@ const Transactions = () => {
   };
 
   return (
-    <div>
-      <table className="min-w-full">
+    <div className="p-6 bg-white rounded-lg shadow-md max-w-4xl w-[800px] my-6 mx-auto">
+      <table className="min-w-full border-collapse">
         <thead>
           <tr>
             <th className="py-4 px-6 border-b">Thời gian</th>

@@ -22,7 +22,7 @@ const Sidebar = () => {
     { icon: <FaLock />, label: "Mật khẩu và bảo mật", path: "/user/security" },
     { icon: <FaCommentDots />, label: "Bình luận của tôi", path: "/user/comments" },
     { icon: <FaHeart />, label: "Sản phẩm yêu thích", path: "/user/favorites" },
-    { icon: <FaShareAlt />, label: "Giới thiệu bạn bè", path: "/user/referrals" },
+    { icon: <FaShareAlt />, label: "Giới thiệu bạn bè", path: "/user/affiliate" },
   ];
 
   // Cập nhật activeIndex dựa trên đường dẫn hiện tại
