@@ -60,7 +60,7 @@ const Footer = (props: Props) => {
         </div>
       </div>
       <footer>
-        <p>&copy; 2024 Luutuidiu Store</p>
+        <p>&copy; 2024 Liutiudiu Shop</p>
       </footer>
     </div>
   );

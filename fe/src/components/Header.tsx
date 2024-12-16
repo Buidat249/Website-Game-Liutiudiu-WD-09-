@@ -27,7 +27,15 @@ const Header = (props: Props) => {
   const [gameCount, setGameCount] = useState(0);
   const [user, setUser] = useState<User | null>(null); // State lưu thông tin user
   const navigate = useNavigate();
-  
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearch = (e: any) => {
+    e.preventDefault();
+    if (searchQuery) {
+      navigate(`/games?search=${searchQuery}`);
+    }
+  };
+
 
   // Cập nhật số lượng game trong giỏ hàng
   const updateGameCount = () => {
@@ -116,7 +124,7 @@ const Header = (props: Props) => {
               )}
 
               {user?.username && (
-                <button style={{marginLeft: '15px'}} onClick={handleLogout} className="logout-button">
+                <button style={{ marginLeft: '15px' }} onClick={handleLogout} className="logout-button">
                   Đăng xuất
                 </button>
               )}
@@ -135,8 +143,10 @@ const Header = (props: Props) => {
                 type="text"
                 className="text-black"
                 placeholder="Tìm kiếm sản phẩm"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
-              <button type="submit">
+              <button type="submit" onClick={handleSearch}>
                 <img src={searchIcon} alt="Search Icon" className="w-6 h-6" />
               </button>
             </div>

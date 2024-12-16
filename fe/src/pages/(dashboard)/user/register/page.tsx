@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button, Form, FormProps, Input, message } from "antd";
-import axios from "axios";
+import { Button, Form, FormProps, Input, message, Modal } from "antd";
+import axios, { AxiosError } from "axios"; // Import AxiosError
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 
@@ -33,21 +33,49 @@ const RegisterPage: React.FC = () => {
       queryClient.invalidateQueries({
         queryKey: ["users"],
       });
-      messageApi.success("Đăng ký thành công");
-      
-  
-      // Giờ chúng ta không cần tạo giỏ hàng ở đây nữa
-      form.resetFields();
-      navigate("/login"); // Chuyển hướng sang trang đăng nhập
-    },
-    onError: (error) => {
-      messageApi.open({
-        type: "error",
-        content: error.message,
+
+      // Hiển thị modal confirm sau khi đăng ký thành công
+      Modal.confirm({
+        title: "Đăng ký thành công",
+        content: "Bạn có muốn đăng nhập ngay?",
+        okText: "Đồng ý",
+        cancelText: "Hủy",
+        onOk: () => {
+          navigate("/login"); // Chuyển hướng sang trang đăng nhập khi nhấn Đồng ý
+        },
+        onCancel: () => {
+          // Nếu nhấn Hủy, không làm gì cả
+        },
       });
+
+      form.resetFields();
+    },
+    onError: (error: unknown) => {  // Sử dụng unknown để xử lý kiểu dữ liệu an toàn
+      if (axios.isAxiosError(error)) { // Kiểm tra xem error có phải là AxiosError không
+        // Xử lý khi error là AxiosError
+        const response = error.response?.data;
+        const errorMessage = response?.message || "Đăng ký thất bại, vui lòng thử lại!";
+
+        if (errorMessage.includes("duplicate key error")) {
+          messageApi.open({
+            type: "error",
+            content: "Email này đã được sử dụng. Vui lòng chọn email khác.",
+          });
+        } else {
+          messageApi.open({
+            type: "error",
+            content: errorMessage,
+          });
+        }
+      } else {
+        // Nếu không phải lỗi AxiosError, hiển thị thông báo lỗi chung
+        messageApi.open({
+          type: "error",
+          content: "Có lỗi xảy ra, vui lòng thử lại.",
+        });
+      }
     },
   });
-  
 
   const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
     // Kiểm tra và chuyển đổi các giá trị số (phone, user_id, v.v.)
@@ -71,6 +99,7 @@ const RegisterPage: React.FC = () => {
     errorInfo
   ) => {
     console.log("Thất bại", errorInfo);
+    messageApi.error("Vui lòng kiểm tra lại thông tin và thử lại.");
   };
 
   return (
@@ -93,21 +122,21 @@ const RegisterPage: React.FC = () => {
               <Form.Item<FieldType>
                 label="Tên"
                 name="username"
-                rules={[{ required: true, message: "Không được bỏ trống" }]}>
+                rules={[{ required: true, message: "Không được bỏ trống" }]} >
                 <Input placeholder="Nhập tên của bạn" />
               </Form.Item>
 
               <Form.Item<FieldType>
                 label="Email"
                 name="email"
-                rules={[{ required: true, message: "Không được bỏ trống" }, { type: "email", message: "Email không đúng định dạng" }]}>
+                rules={[{ required: true, message: "Không được bỏ trống" }, { type: "email", message: "Email không đúng định dạng" }]} >
                 <Input placeholder="Nhập email của bạn" />
               </Form.Item>
 
               <Form.Item<FieldType>
                 label="Password"
                 name="password"
-                rules={[{ required: true, message: "Không được bỏ trống" }, { min: 6, message: "Mật khẩu tối thiểu phải có 6 kí tự" }]}>
+                rules={[{ required: true, message: "Không được bỏ trống" }, { min: 6, message: "Mật khẩu tối thiểu phải có 6 kí tự" }]} >
                 <Input
                   type={showPassword ? "text" : "password"} // Đổi giữa 'text' và 'password' dựa trên trạng thái showPassword
                   style={{ width: "100%" }}
@@ -116,7 +145,7 @@ const RegisterPage: React.FC = () => {
                     <Button
                       type="link"
                       onClick={togglePasswordVisibility}
-                      style={{ padding: 0 }}>
+                      style={{ padding: 0 }} >
                       {showPassword ? <p style={{ color: "red" }}>Ẩn</p> : <p style={{ color: "blue" }}>Hiện</p>}
                     </Button>
                   }
@@ -141,4 +170,3 @@ const RegisterPage: React.FC = () => {
 };
 
 export default RegisterPage;
-

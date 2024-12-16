@@ -745,7 +745,7 @@ footer {
   /* Always at the bottom */
   text-align: center;
   padding: 10px;
-  background-color: #333;
+  background-color: #000B1D;
   color: white;
   z-index: 1000;
   /* Make sure the footer stays on top of other content */
@@ -5889,6 +5889,70 @@ body {
 .comment-content {
   max-width: 100%; /* Đảm bảo bình luận không vượt quá chiều rộng container */
   word-break: break-word; /* Tự động xuống dòng khi từ quá dài */
+}
+
+.load-more-button {
+  margin-top: 20px;
+  background-color: #02132E; /* Màu nền xanh dương */
+  color: white; /* Màu chữ trắng */
+  font-size: 12px; /* Cỡ chữ */
+  padding: 10px 20px; /* Khoảng cách bên trong */
+  
+  border: none; /* Bỏ viền */
+  cursor: pointer; /* Con trỏ chuột khi hover */
+  transition: all 0.3s ease; /* Hiệu ứng chuyển động mượt mà */
+  display: inline-block;
+  text-align: center;
+}
+
+.load-more-button:hover {
+  background-color: #02132E; /* Màu nền khi hover */
+  transform: translateY(-3px); /* Di chuyển lên khi hover */
+}
+
+.load-more-button:active {
+  background-color: #02132E; /* Màu nền khi click */
+  transform: translateY(1px); /* Di chuyển xuống khi click */
+}
+
+.load-more-button:focus {
+  outline: none; /* Bỏ outline khi nhấn vào */
+  box-shadow: 0 0 5px #02132E; /* Thêm hiệu ứng bóng đổ */
+}
+
+.load-more-button.disabled {
+  background-color: #cccccc; /* Màu nền khi vô hiệu */
+  cursor: not-allowed; /* Con trỏ chuột khi nút bị vô hiệu */
+}
+
+.search-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.search-table th, .search-table td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.search-table th {
+  background-color: #f4f4f4;
+}
+
+.search-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.btn-view {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.btn-view:hover {
+  text-decoration: underline;
 }
 
 

@@ -134,15 +134,10 @@ const LayoutAdmin: React.FC = () => {
             {
               key: "15",
               icon: <TagsOutlined />,
-              label: <NavLink to="/admin">Quản lý tài khoản</NavLink>,
-            },
-            {
-              key: "16",
-              icon: <TagsOutlined />,
               label: <NavLink to="/admin/tintucs">Quản lý tin tuc</NavLink>,
             },
             {
-              key: "17",
+              key: "16",
               icon: <TagsOutlined />,
               label: <NavLink to="/admin/categorynews">Quản lý danh mục tin tức</NavLink>,
             },

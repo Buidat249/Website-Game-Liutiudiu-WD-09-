@@ -37,14 +37,23 @@ const Chatbox = (props: Props) => {
   };
 
   const sendMessage = async () => {
+    const userId = localStorage.getItem("user_id"); // Lấy user_id từ localStorage
+
+    if (!userId) {
+      // Hiển thị thông báo nếu chưa đăng nhập
+      alert("Bạn cần đăng nhập để gửi tin nhắn!");
+      return;
+    }
+
     if (!inputValue.trim()) return; // Không gửi tin nhắn rỗng
+
     const currentOption = options.find((o) => o.content === currentChat);
     if (!currentOption) return;
 
     try {
       await axios.post("http://localhost:8080/forum-conversition", {
         room_code: currentOption.room_code,
-        user_id: localStorage.getItem("user_id"), // Thay bằng `user_id` thực tế
+        user_id: userId, // Sử dụng user_id từ localStorage
         content: inputValue,
       });
       setInputValue(""); // Xóa nội dung input
@@ -52,6 +61,7 @@ const Chatbox = (props: Props) => {
       console.error("Error sending message:", error);
     }
   };
+
 
   useEffect(() => {
     const socket = io("http://localhost:8080");
@@ -120,29 +130,37 @@ const Chatbox = (props: Props) => {
             <div
               key={index}
               className={`flex items-start space-x-2 ${chat.user_id.user_id === parseInt(localStorage.getItem("user_id") || "")
-                  ? "flex-row-reverse"
-                  : "flex-row"
+                ? "flex-row-reverse"
+                : "flex-row"
                 }`}
             >
               {/* Avatar */}
               <div
-                className={`h-8 w-8 ${chat.bgColor || "bg-gray-500"
+                className={`h-8 w-8 ${chat.user_id.avatar ? '' : chat.bgColor || "bg-gray-500"
                   } rounded-full flex items-center justify-center text-sm font-semibold`}
               >
-                {chat.user_id.username.substring(0, 2).toUpperCase()}
+                {chat.user_id.avatar ? (
+                  <img
+                    src={chat.user_id.avatar} // Đường dẫn đến ảnh avatar
+                    alt={`${chat.user_id.username}'s avatar`}
+                    className="w-full h-full rounded-full object-cover"
+                  />
+                ) : (
+                  chat.user_id.username.substring(0, 2).toUpperCase() // Chữ viết tắt nếu không có avatar
+                )}
               </div>
 
               <div
                 className={`flex flex-col space-y-1 ${chat.user_id.user_id === parseInt(localStorage.getItem("user_id") || "")
-                    ? "items-end"
-                    : "items-start"
+                  ? "items-end"
+                  : "items-start"
                   }`}
               >
                 {/* Username and Date */}
                 <div
                   className={`flex ${chat.user_id.user_id === parseInt(localStorage.getItem("user_id") || "")
-                      ? "flex-row-reverse"
-                      : "flex-row"
+                    ? "flex-row-reverse"
+                    : "flex-row"
                     } space-x-1`}
                 >
                   <span style={{ margin: "5px" }} className="font-semibold">
@@ -168,12 +186,30 @@ const Chatbox = (props: Props) => {
               onChange={(e) => setInputValue(e.target.value)}
               placeholder={`Nhắn #${currentChat}`}
               className="flex-1 bg-transparent outline-none text-white placeholder-gray-400"
+              disabled={!localStorage.getItem("user_id")} // Vô hiệu hóa input nếu chưa đăng nhập
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault(); // Ngừng hành động mặc định của phím Enter (thêm dòng mới)
+                  sendMessage(); // Gọi hàm gửi tin nhắn khi nhấn Enter
+                }
+              }}
             />
-            <button onClick={sendMessage} className="text-gray-400 hover:text-gray-300">
-              Gửi
-            </button>
+            {localStorage.getItem("user_id") ? (
+              <button onClick={sendMessage} className="text-gray-400 hover:text-gray-300">
+                Gửi
+              </button>
+            ) : (
+              <button
+                onClick={() => alert("Bạn cần đăng nhập để sử dụng chức năng chat!")}
+                className="text-gray-500 cursor-not-allowed"
+                disabled
+              >
+                Đăng nhập để gửi
+              </button>
+            )}
           </div>
         </div>
+
       </div>
       <div style={{ width: "3px" }} className="bg-[#02132E] "></div>
     </div>

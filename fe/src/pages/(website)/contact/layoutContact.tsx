@@ -20,14 +20,9 @@ const LayouContact = () => {
     const menuItems = [
         { icon: <FaUser />, label: "Giới thiệu Liutiudiu Store", path: "/contact/introduce" },
         { icon: <FaShoppingCart />, label: "Hệ thống fanpage chính thức", path: "/contact/fanpage" },
-        { icon: <FaHistory />, label: "Tổng quan website", path: "/contact/overview" },
-        { icon: <FaLock />, label: "Điều khoản dịch vụ", path: "/contact/service" },
-        { icon: <FaCommentDots />, label: "Chính sách bảo mật", path: "/contact/policy" },
         { icon: <FaHeart />, label: "Hướng dẫn tạo tài khoản", path: "/contact/turtorregister" },
         { icon: <FaShareAlt />, label: "Hướng dẫn nạp tiền", path: "/contact/turtorrecharge" },
         { icon: <FaShareAlt />, label: "Hướng dẫn mua hàng", path: "/contact/turtorbuy" },
-        { icon: <FaShareAlt />, label: "Hướng dẫn cài đặt", path: "/contact/turtorsetting" },
-        { icon: <FaShareAlt />, label: "Thông tin bảo hành", path: "/contact/guarantee" },
         { icon: <FaShareAlt />, label: "Liên hệ hỗ trợ", path: "/contact/contacthelp" },
     ];
 
@@ -58,7 +53,7 @@ const LayouContact = () => {
             {/* GIỚI THIỆU */}
             <h3 className="text-lg font-bold mb-4">GIỚI THIỆU</h3>
             <ul className="space-y-2">
-                {menuItems.slice(0, 5).map((item, index) => (
+                {menuItems.slice(0, 2).map((item, index) => (
                     <li
                         key={index}
                         className={`flex items-center p-3 rounded-lg cursor-pointer ${
@@ -77,7 +72,7 @@ const LayouContact = () => {
             {/* HƯỚNG DẪN MUA HÀNG */}
             <h3 className="text-lg font-bold mt-8 mb-4">HƯỚNG DẪN MUA HÀNG</h3>
             <ul className="space-y-2">
-                {menuItems.slice(5, 9).map((item, index) => (
+                {menuItems.slice(2, 5).map((item, index) => (
                     <li
                         key={index}
                         className={`flex items-center p-3 rounded-lg cursor-pointer ${
@@ -96,7 +91,7 @@ const LayouContact = () => {
             {/* BẢO HÀNH */}
             <h3 className="text-lg font-bold mt-8 mb-4">BẢO HÀNH</h3>
             <ul className="space-y-2">
-                {menuItems.slice(9, 11).map((item, index) => (
+                {menuItems.slice(5, 6).map((item, index) => (
                     <li
                         key={index}
                         className={`flex items-center p-3 rounded-lg cursor-pointer ${

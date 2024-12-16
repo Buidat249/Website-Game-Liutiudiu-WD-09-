@@ -80,44 +80,6 @@ const Profile = () => {
     });
   };
 
-  const validateInputs = () => {
-    const newErrors: { [key: string]: string } = {};
-
-    if (!formData.username.trim()) {
-      newErrors.username = "Tên đăng nhập không được để trống.";
-    }
-
-    if (!formData.email.trim() || !/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Email không hợp lệ.";
-    }
-
-    if (formData.phone && !/^\d{10,11}$/.test(formData.phone)) {
-      newErrors.phone = "Số điện thoại không hợp lệ.";
-    }
-
-    if (!formData.fullname.trim()) {
-      newErrors.fullname = "Họ và tên không được để trống.";
-    }
-
-    if (formData.idCard && !/^\d{9,12}$/.test(formData.idCard)) {
-      newErrors.idCard = "Chứng minh nhân dân không hợp lệ.";
-    }
-
-    if (!formData.city.trim()) {
-      newErrors.city = "Tỉnh/Thành phố không được để trống.";
-    }
-
-    if (!formData.district.trim()) {
-      newErrors.district = "Quận/Huyện không được để trống.";
-    }
-
-    if (!formData.ward.trim()) {
-      newErrors.ward = "Xã/Phường không được để trống.";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
 
   // Cloudinary avatar upload handler
   const handleAvatarChange = async (file: any) => {
@@ -150,8 +112,7 @@ const Profile = () => {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    setErrors({});
-    if (!validateInputs()) return;
+    setErrors({})
 
     if (!userId) {
       toast.error("Vui lòng đăng nhập để xem thông tin cá nhân!");

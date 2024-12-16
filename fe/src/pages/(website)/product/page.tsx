@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "../../../styles/style.scss";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 interface Game {
   game_id: number;
@@ -52,8 +52,38 @@ const ProductPage = () => {
   const [priceFrom, setPriceFrom] = useState<number | string>("");
   const [priceTo, setPriceTo] = useState<number | string>("");
   const [sortOrder, setSortOrder] = useState<string>("");
+  const location = useLocation();
+
 
   console.log("hi", selectedCategory);
+
+  useEffect(() => {
+    // Lấy dữ liệu game
+    axios
+      .get("http://localhost:8080/games")
+      .then((response) => {
+        setGames(response.data.data);
+        setFilteredGames(response.data.data);
+      })
+      .catch((error) => console.error("Error fetching games:", error));
+  }, []);
+
+  useEffect(() => {
+    // Lọc game theo từ khóa tìm kiếm từ URL
+    const queryParams = new URLSearchParams(location.search);
+    const searchQuery = queryParams.get("search");
+
+    if (searchQuery) {
+      const filtered = games.filter((game) =>
+        game.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredGames(filtered);
+    } else {
+      setFilteredGames(games);
+    }
+  }, [location.search, games]);
+
+
 
   useEffect(() => {
     axios
@@ -95,14 +125,16 @@ const ProductPage = () => {
       );
     }
     // loc hang phat trien
+
     if (selectedBrand) {
       const brandId = Number(selectedBrand);
-      filtered = filtered.filter((game) => game.brand_id === brandId);
       filtered = filtered.filter(
         (game) =>
-          Array.isArray(game.brand_id) && game.brand_id.includes(brandId)
+          Array.isArray(game.brand_id) &&
+          game.brand_id.includes(brandId)
       );
     }
+
 
     // loc danh muc 
     if (selectedFilter) {
@@ -268,7 +300,9 @@ const ProductPage = () => {
                 <div key={game.game_id} className="game">
                   <Link to={`/productgame/${game.game_id}`}>
                     <img src={game.image} alt={game.name} />
-                    <p style={{ marginTop: "8px", fontSize: "13px" }}>{game.name}</p>
+                    <p style={{ marginTop: "8px", fontSize: "13px" }}>
+                      {game.name}
+                    </p>
                     <div className="flex gap-2 final_price-price-discount-container">
                       {game.final_price === 0 ? (
                         <>
@@ -293,11 +327,10 @@ const ProductPage = () => {
                 </div>
               ))
             ) : (
-              <p>Không có sản phẩm nổi bật nào.</p>
+              <p>Không có sản phẩm phù hợp.</p>
             )}
           </div>
         </section>
-
       </div>
     </div>
   );
