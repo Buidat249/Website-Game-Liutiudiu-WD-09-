@@ -100,7 +100,7 @@ const PayMoMOForm: React.FC = () => {
           <li>Chọn "Thanh Toán" và quét mã QR tại hướng dẫn này</li>
           <li>
             Hoàn thành các bước thanh toán theo hướng dẫn và đợi Divine Shop xử
-            lý trong giây lát
+            lý trong giây lát, vui lòng chờ.
           </li>
         </ol>
       </Modal>
