@@ -42,21 +42,25 @@ const DashboardPage = (props: Props) => {
       const chartResponse = await axios.get(`http://localhost:8080/chart-data`, {
         params: { startDate, endDate },
       });
+      console.log("Chart Data: ", chartResponse.data); // Kiểm tra dữ liệu trả về
       setChartData(chartResponse.data);
 
       const bestSellingResponse = await axios.get(`http://localhost:8080/best-selling-game`, {
-        params: { startDate, endDate, limit: 5 },
+        params: { startDate, endDate, limit: 10 },
       });
+      console.log("Best Selling Games: ", bestSellingResponse.data);
       setBestSellingGame(Array.isArray(bestSellingResponse.data) ? bestSellingResponse.data : []);
 
       const highestGrossingResponse = await axios.get(`http://localhost:8080/highest-grossing-game`, {
-        params: { startDate, endDate, limit: 5 },
+        params: { startDate, endDate, limit: 10 },
       });
+      console.log("Highest Grossing Games: ", highestGrossingResponse.data);
       setHighestGrossingGame(Array.isArray(highestGrossingResponse.data) ? highestGrossingResponse.data : []);
     } catch (error) {
       console.error("Error fetching data", error);
     }
   };
+
 
   // Call fetchData when startDate, endDate, or statType change
   useEffect(() => {
@@ -72,6 +76,29 @@ const DashboardPage = (props: Props) => {
       });
     }
 
+    // Khi chọn lọc theo năm, cần phân chia doanh thu theo tháng
+    if (statType === "doanhThu" && timeFilter === "năm") {
+      // Giả sử backend trả về doanh thu tổng thể, ta cần tách thành 12 tháng
+      const monthlyRevenue = new Array(12).fill(0);
+      data?.datasets?.[0]?.data?.forEach((item: any) => {
+        const month = new Date(item.date).getMonth(); // Giả sử mỗi item có trường `date`
+        monthlyRevenue[month] += item.revenue; // Tổng hợp doanh thu theo tháng
+      });
+
+      return {
+        labels: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
+        datasets: [
+          {
+            label: label,
+            data: monthlyRevenue,
+            backgroundColor: isBestSelling ? colors : "rgba(75, 192, 192, 0.2)",
+            borderColor: isBestSelling ? colors : "rgba(75, 192, 192, 1)",
+            borderWidth: 1,
+          },
+        ],
+      };
+    }
+
     return {
       labels: data?.labels || [],
       datasets: [
@@ -85,6 +112,7 @@ const DashboardPage = (props: Props) => {
       ],
     };
   };
+
   const calculateTimeRange = (filter: "tuần" | "tháng" | "năm") => {
     const today = new Date();
     let newStartDate: string = ""; // Giá trị mặc định là chuỗi rỗng
@@ -109,10 +137,6 @@ const DashboardPage = (props: Props) => {
     setEndDate(newEndDate);
     setTimeFilter(filter);
   };
-
-
-
-
 
   const handleTimeFilterChange = () => {
     fetchData(); // Gọi lại API để lấy dữ liệu mới theo thời gian đã chọn
@@ -186,32 +210,33 @@ const DashboardPage = (props: Props) => {
 
       {/* Hiển thị biểu đồ thống kê */}
       <div className="flex justify-between gap-6 mb-6">
+        {/* Biểu đồ thống kê doanh thu theo tháng khi lọc theo năm */}
         <div className="bg-white p-4 shadow-lg rounded-lg w-1/2">
           {chartData ? (
             chartType === "bar" ? (
               <Bar
-                data={prepareChartData(chartData, statType === "mua" ? "Doanh thu" : statType === "doanhThu" ? "Doanh Thu" : "Game Bán Chạy", false)}
+                data={prepareChartData(chartData, "Doanh thu", false)} // Tự động phân chia doanh thu theo tháng nếu lọc theo năm
                 options={{
                   responsive: true,
                   plugins: {
                     legend: { display: true, position: "top" },
                     title: {
                       display: true,
-                      text: `Thống kê ${statType === "mua" ? "Doanh thu" : statType === "doanhThu" ? "Doanh Thu" : "Game Bán Chạy"} theo ${timeFilter.charAt(0).toUpperCase() + timeFilter.slice(1)}`,
+                      text: `Thống kê Doanh thu theo ${timeFilter.charAt(0).toUpperCase() + timeFilter.slice(1)}`,
                     },
                   },
                 }}
               />
             ) : (
               <Line
-                data={prepareChartData(chartData, statType === "mua" ? "Doanh thu" : statType === "doanhThu" ? "Doanh Thu" : "Game Bán Chạy", false)}
+                data={prepareChartData(chartData, "Doanh thu", false)}
                 options={{
                   responsive: true,
                   plugins: {
                     legend: { display: true, position: "top" },
                     title: {
                       display: true,
-                      text: `Thống kê ${statType === "mua" ? "Doanh thu" : statType === "doanhThu" ? "Doanh Thu" : "Game Bán Chạy"} theo ${timeFilter.charAt(0).toUpperCase() + timeFilter.slice(1)}`,
+                      text: `Thống kê Doanh thu theo ${timeFilter.charAt(0).toUpperCase() + timeFilter.slice(1)}`,
                     },
                   },
                 }}
@@ -220,6 +245,7 @@ const DashboardPage = (props: Props) => {
           ) : (
             <div className="text-center text-gray-600">Loading chart...</div>
           )}
+
         </div>
 
         {/* Hiển thị biểu đồ Top Selling Games */}
@@ -241,6 +267,12 @@ const DashboardPage = (props: Props) => {
                       },
                     },
                   },
+                  scales: {
+                    x: {
+                      ticks: { display: false }, // Ẩn tên bên dưới các thanh
+                      grid: { drawTicks: false }, // Tùy chọn: Ẩn cả dấu tick dưới trục hoành
+                    },
+                  },
                 }}
               />
             ) : (
@@ -259,6 +291,12 @@ const DashboardPage = (props: Props) => {
                       },
                     },
                   },
+                  scales: {
+                    x: {
+                      ticks: { display: false }, // Ẩn tên bên dưới các đường
+                      grid: { drawTicks: false }, // Tùy chọn: Ẩn cả dấu tick dưới trục hoành
+                    },
+                  },
                 }}
               />
             )
@@ -266,6 +304,7 @@ const DashboardPage = (props: Props) => {
             <div className="text-center text-gray-600">Loading Best Selling Games...</div>
           )}
         </div>
+
       </div>
 
       {/* Tables for highest grossing and best-selling games */}

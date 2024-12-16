@@ -321,7 +321,10 @@ const ProductDetail = () => {
     if (storedUser) {
       setIsLoggedIn(true);
     }
+    console.log('gido',storedUser);
   }, []);
+
+  
 
   useEffect(() => {
     const fetchDescriptions = async () => {

@@ -107,7 +107,7 @@ const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({ games }) => {
           // Cập nhật lại giỏ hàng trong state frontend (hoặc làm gì đó khác nếu cần)
           message.success("Thanh toán Thành công!");
           setPaymentSuccess(true);
-          setTimeout(() => navigate("/"), 2000); // Chuyển hướng về trang chủ
+          setTimeout(() => navigate("/user/orders"), 1000); // Chuyển hướng về trang chủ
         } else {
           message.error("Xóa game khỏi giỏ hàng thất bại!");
         }
@@ -155,7 +155,7 @@ const CheckoutSummary: React.FC<CheckoutSummaryProps> = ({ games }) => {
       </button>
       {paymentSuccess && (
         <div className="mt-4 text-center text-green-500 font-semibold">
-          Thanh toán thành công! Bạn sẽ được chuyển hướng về trang chủ...
+          Thanh toán thành công! Bạn sẽ được chuyển hướng về trang quản lí đơn hàng...
         </div>
       )}
     </div>

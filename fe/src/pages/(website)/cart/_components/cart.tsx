@@ -117,7 +117,8 @@ const CartBoxLeft = ({ setTotalPrice, setTotalQuantity }: any) => {
   const handleQuantityChange = (
     cart_id: number,
     game_id: number,
-    action: "increase" | "decrease"
+    action: "increase" | "decrease" | "manual", // Thêm "manual" để xử lý nhập số lượng trực tiếp
+    newQuantity?: number // Thêm tham số newQuantity khi người dùng nhập trực tiếp số lượng
   ) => {
     const cart = carts.find((cart) => cart.cart_id === cart_id);
     if (cart) {
@@ -127,30 +128,39 @@ const CartBoxLeft = ({ setTotalPrice, setTotalQuantity }: any) => {
         if (gameData) {
           const availableKeys = gameData.availableKeysCount || 0; // Lấy số lượng keys khả dụng từ API
 
-          const newQuantity =
-            action === "increase" ? game.quantity + 1 : Math.max(1, game.quantity - 1);
+          // Quyết định số lượng mới tùy theo action
+          let updatedQuantity = game.quantity;
+
+          if (action === "increase") {
+            updatedQuantity = game.quantity + 1;
+          } else if (action === "decrease") {
+            updatedQuantity = Math.max(1, game.quantity - 1);
+          } else if (action === "manual" && newQuantity !== undefined) {
+            updatedQuantity = Math.max(1, newQuantity); // Đảm bảo số lượng không nhỏ hơn 1
+          }
 
           // Kiểm tra số lượng mới có vượt quá số lượng keys khả dụng không
-          if (newQuantity > availableKeys) {
+          if (updatedQuantity > availableKeys) {
             message.error(`Số lượng bạn muốn mua vượt quá số lượng keys còn lại (${availableKeys} keys)`);
             return;
           }
 
           // Cập nhật số lượng nếu hợp lệ
-          updateQuantity(cart_id, game_id, newQuantity);
+          updateQuantity(cart_id, game_id, updatedQuantity);
 
           // Cập nhật selectedGames với số lượng mới và trạng thái đã chọn
           setSelectedGames((prevSelected) => ({
             ...prevSelected,
             [game_id]: {
               selected: true,
-              quantity: newQuantity,
+              quantity: updatedQuantity,
             },
           }));
         }
       }
     }
   };
+
 
 
   // Hàm xử lý chọn/deselect game
@@ -350,11 +360,18 @@ const CartBoxLeft = ({ setTotalPrice, setTotalQuantity }: any) => {
                       -
                     </Button>
                     <input
-                      type="text"
+                      type="number"
                       value={gameItem.quantity}
                       className="w-12 text-center border mx-2"
-                      readOnly
+                      min="1" // Chỉ cho phép nhập số lớn hơn hoặc bằng 1
+                      onChange={(e) => {
+                        const newQuantity = Math.max(1, parseInt(e.target.value)); // Đảm bảo số lượng không nhỏ hơn 1
+                        if (!isNaN(newQuantity)) {
+                          handleQuantityChange(cart.cart_id, gameItem.game_id, "manual", newQuantity);
+                        }
+                      }}
                     />
+
                     <Button
                       className="px-2 py-1 bg-gray-200 rounded"
                       onClick={() =>
@@ -368,6 +385,7 @@ const CartBoxLeft = ({ setTotalPrice, setTotalQuantity }: any) => {
                       +
                     </Button>
                   </div>
+
                   <div className="text-right pl-4">
                     <p className="text-lg font-semibold text-red-500">
                       {(

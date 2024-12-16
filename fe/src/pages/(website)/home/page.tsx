@@ -116,7 +116,7 @@ const HomePage = () => {
           return (
             <section key={filter.filter_id} className="games" style={{ position: "relative" }}>
               <h1 style={{ fontSize: "27px", fontWeight: "bold", color: "black" }}>
-                <p style={{ fontSize: "20px" }}>{filter.name}</p>
+                <p style={{ fontSize: "25px", padding: '10px' }}>{filter.name}</p>
               </h1>
 
               <div

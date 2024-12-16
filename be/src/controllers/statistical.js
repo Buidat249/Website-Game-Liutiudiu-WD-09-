@@ -6,14 +6,10 @@ export async function chartData(req, res) {
 
     const now = new Date();
     if (!startDate) {
-      startDate = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+      startDate = new Date(now.getFullYear(), 0, 1).toISOString(); // Dùng 1 tháng 1 của năm hiện tại nếu không có startDate
     }
     if (!endDate) {
-      endDate = new Date(
-        now.getFullYear(),
-        now.getMonth() + 1,
-        0
-      ).toISOString();
+      endDate = new Date(now.getFullYear(), 11, 31).toISOString(); // Dùng 31 tháng 12 của năm hiện tại nếu không có endDate
     }
 
     const start = new Date(startDate);
@@ -32,7 +28,7 @@ export async function chartData(req, res) {
     const dataMap = {};
 
     orders.forEach((order) => {
-      const date = order.createdAt.toISOString().split("T")[0];
+      const date = order.createdAt.toISOString().split("T")[0]; // Lấy ngày
       if (!dataMap[date]) {
         dataMap[date] = 0;
       }
@@ -42,20 +38,54 @@ export async function chartData(req, res) {
     const labels = Object.keys(dataMap).sort();
     const dataPoints = labels.map((label) => dataMap[label]);
 
-    const chartData = {
+    if (start.getFullYear() !== end.getFullYear()) {
+      // Phân chia dữ liệu theo tháng khi lọc theo năm
+      const monthlyData = new Array(12).fill(0); // Khởi tạo mảng doanh thu cho 12 tháng
+      labels.forEach((date) => {
+        const month = new Date(date).getMonth(); // Lấy tháng từ date
+        monthlyData[month] += dataMap[date]; // Cộng doanh thu vào tháng tương ứng
+      });
+
+      return res.json({
+        labels: [
+          "Tháng 1",
+          "Tháng 2",
+          "Tháng 3",
+          "Tháng 4",
+          "Tháng 5",
+          "Tháng 6",
+          "Tháng 7",
+          "Tháng 8",
+          "Tháng 9",
+          "Tháng 10",
+          "Tháng 11",
+          "Tháng 12",
+        ],
+        datasets: [
+          {
+            label: "Doanh thu theo tháng",
+            data: monthlyData,
+            backgroundColor: "rgba(75, 192, 192, 0.2)",
+            borderColor: "rgba(75, 192, 192, 1)",
+            borderWidth: 1,
+          },
+        ],
+      });
+    }
+
+    // Trả về doanh thu cho từng ngày nếu không phải lọc theo năm
+    return res.json({
       labels,
       datasets: [
         {
-          label: "Total Sales",
+          label: "Doanh thu",
           data: dataPoints,
           backgroundColor: "rgba(75, 192, 192, 0.2)",
           borderColor: "rgba(75, 192, 192, 1)",
           borderWidth: 1,
         },
       ],
-    };
-
-    res.json(chartData);
+    });
   } catch (error) {
     console.error("Error generating chart data:", error);
     res.status(500).json({ message: "Internal server error", error });

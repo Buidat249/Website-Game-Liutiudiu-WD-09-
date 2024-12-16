@@ -44,6 +44,12 @@ export const addKeys = async (req, res) => {
       return res.status(400).json({ message: "Name is required" });
     }
 
+    // Kiểm tra nếu 'name' đã tồn tại trong cơ sở dữ liệu
+    const existingKey = await Key.findOne({ name: req.body.name });
+    if (existingKey) {
+      return res.status(400).json({ message: "Name already exists" });
+    }
+
     // Tìm khóa có key_id lớn nhất
     const lastKey = await Key.findOne({}, {}, { sort: { key_id: -1 } });
     const newKeyId = lastKey ? lastKey.key_id + 1 : 1;
@@ -54,7 +60,7 @@ export const addKeys = async (req, res) => {
       name: req.body.name, // Đảm bảo rằng 'name' không null hoặc undefined
       is_used: req.body.is_used || false,
       used_at: req.body.is_used ? new Date() : null, // Nếu is_used là true, gán ngày giờ hiện tại, nếu false thì để null
-      game_id:  req.body.game_id,
+      game_id: req.body.game_id,
     };
 
     // Thêm khóa mới vào cơ sở dữ liệu
