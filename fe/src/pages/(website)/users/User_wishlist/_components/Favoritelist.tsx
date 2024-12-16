@@ -90,7 +90,7 @@ const Favoritelist = () => {
                     className="object-cover w-full h-48 rounded-md mb-4"
                   />
                   <h3 className="text-xl font-semibold">{game.name}</h3>
-                  <p className="text-gray-600 mb-2">Giá: {game.price} VND</p>
+                  <p className="text-gray-600 mb-2">Giá:  {game.price ? Number(game.price).toLocaleString('vi-VN') : "0"}VND</p>
                   <Link
                     to={`/productgame/${game.game_id}`} // Chuyển hướng đến trang chi tiết game
                     className="text-blue-500 hover:text-blue-700"

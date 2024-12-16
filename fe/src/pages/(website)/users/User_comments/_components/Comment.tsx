@@ -138,7 +138,7 @@ const Comment = () => {
           <tbody>
             {loading ? (
               <tr>
-                <td className="py-3 px-4 text-center">Đang tải dữ liệu...</td>
+                <td colSpan={3} className="py-3 px-4 text-center">Đang tải dữ liệu...</td>
               </tr>
             ) : (
               filteredComments.length > 0 ? (
@@ -147,7 +147,7 @@ const Comment = () => {
                     <td className="py-3 px-4 border-b text-gray-600">
                       {new Date(comment.created_at).toLocaleDateString()}
                     </td>
-                    <td className="py-3 px-4 border-b text-gray-600">
+                    <td className="py-3 px-4 border-b text-gray-600 break-words max-w-xs">
                       {comment.content}
                     </td>
                     <td className="py-3 px-4 border-b text-gray-600">
@@ -166,11 +166,12 @@ const Comment = () => {
                 ))
               ) : (
                 <tr>
-                  <td className="py-3 px-4 text-center">Không có dữ liệu</td>
+                  <td colSpan={3} className="py-3 px-4 text-center">Không có dữ liệu</td>
                 </tr>
               )
             )}
           </tbody>
+
         </table>
       </div>
     </div>

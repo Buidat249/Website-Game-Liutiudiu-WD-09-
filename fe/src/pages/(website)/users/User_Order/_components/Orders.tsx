@@ -31,8 +31,9 @@ const Orders = () => {
       const response = await axios.get(
         `http://localhost:8080/orders/${user.user_id}`
       );
-      setOrders(response.data.data);
-      setFilteredOrders(response.data.data);
+      const sortedOrders = response.data.data.sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+      setOrders(sortedOrders);
+      setFilteredOrders(sortedOrders);
     } catch (error) {
       setError("Có lỗi xảy ra khi tải dữ liệu.");
       setOrders([]);
@@ -159,7 +160,7 @@ const Orders = () => {
                 {new Date(order.createdAt).toLocaleString()}
               </td>
               <td className="py-4 px-6 border-b">{order.order_id}</td>
-              <td className="py-4 px-6 border-b">{order.total_price}₫</td>
+              <td className="py-4 px-6 border-b"> {order.total_price ? Number(order.total_price).toLocaleString('vi-VN') : "0"}₫</td>
               <td className={`py-4 px-6 border-b ${getStatusClass(order.status)}`}>
                 {getStatusLabel(order.status)}
               </td>
@@ -210,7 +211,7 @@ const Orders = () => {
             </div>
           )}
 
-          {selectedOrder?.status === "completed" && "" ? (
+          {selectedOrder?.status === "completed" ? (
             selectedOrder?.games.map((game: any, index: number) => (
               <div key={index}>
                 <p><strong>Tên game:</strong> {game.name}</p>
@@ -223,6 +224,7 @@ const Orders = () => {
           ) : (
             <p className="text-red-500">Thanh toán để nhận key game.</p>
           )}
+
         </div>
       </Modal>
 

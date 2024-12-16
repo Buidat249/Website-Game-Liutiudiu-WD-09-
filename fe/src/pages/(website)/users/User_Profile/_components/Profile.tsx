@@ -1,6 +1,8 @@
 import { PlusOutlined } from "@ant-design/icons";
 import { Button, Upload } from "antd";
-import React, { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Profile = () => {
   const [formData, setFormData] = useState({
@@ -22,7 +24,9 @@ const Profile = () => {
     displayName: true,
   });
 
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [imageUrl, setImageUrl] = useState<string>("");
+
 
   const userId = localStorage.getItem("user_id");
   const user = localStorage.getItem("user");
@@ -76,6 +80,45 @@ const Profile = () => {
     });
   };
 
+  const validateInputs = () => {
+    const newErrors: { [key: string]: string } = {};
+
+    if (!formData.username.trim()) {
+      newErrors.username = "Tên đăng nhập không được để trống.";
+    }
+
+    if (!formData.email.trim() || !/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Email không hợp lệ.";
+    }
+
+    if (formData.phone && !/^\d{10,11}$/.test(formData.phone)) {
+      newErrors.phone = "Số điện thoại không hợp lệ.";
+    }
+
+    if (!formData.fullname.trim()) {
+      newErrors.fullname = "Họ và tên không được để trống.";
+    }
+
+    if (formData.idCard && !/^\d{9,12}$/.test(formData.idCard)) {
+      newErrors.idCard = "Chứng minh nhân dân không hợp lệ.";
+    }
+
+    if (!formData.city.trim()) {
+      newErrors.city = "Tỉnh/Thành phố không được để trống.";
+    }
+
+    if (!formData.district.trim()) {
+      newErrors.district = "Quận/Huyện không được để trống.";
+    }
+
+    if (!formData.ward.trim()) {
+      newErrors.ward = "Xã/Phường không được để trống.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   // Cloudinary avatar upload handler
   const handleAvatarChange = async (file: any) => {
     const formData = new FormData();
@@ -84,7 +127,7 @@ const Profile = () => {
 
     try {
       const response = await fetch(
-        `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, // Cloudinary upload URL
+        `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
         {
           method: "POST",
           body: formData,
@@ -95,22 +138,23 @@ const Profile = () => {
         const data = await response.json();
         setFormData((prev) => ({ ...prev, avatar: data.secure_url }));
         setImageUrl(data.secure_url);
-        alert("Cập nhật ảnh đại diện thành công!");
-
+        toast.success("Cập nhật ảnh đại diện thành công!");
       } else {
-        alert("Tải ảnh lên thất bại!");
+        toast.error("Tải ảnh lên thất bại!");
       }
     } catch (error) {
       console.error("Lỗi khi tải ảnh lên:", error);
-      alert("Đã có lỗi xảy ra, vui lòng thử lại!");
+      toast.error("Đã có lỗi xảy ra, vui lòng thử lại!");
     }
   };
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    const userId = localStorage.getItem("user_id");
+    setErrors({});
+    if (!validateInputs()) return;
+
     if (!userId) {
-      alert("Vui lòng đăng nhập để xem thông tin cá nhân !");
+      toast.error("Vui lòng đăng nhập để xem thông tin cá nhân!");
       return;
     }
 
@@ -122,14 +166,14 @@ const Profile = () => {
       });
 
       if (response.ok) {
-        alert("Cập nhật thông tin thành công!");
-        window.location.reload();
+        toast.success("Cập nhật thông tin thành công!");
+        setTimeout(() => window.location.reload(), 1500); // Reload sau 1.5 giây
       } else {
-        alert("Cập nhật thất bại!");
+        toast.error("Cập nhật thất bại!");
       }
     } catch (error) {
       console.error("Lỗi khi gửi PUT request:", error);
-      alert("Đã có lỗi xảy ra, vui lòng thử lại!");
+      toast.error("Đã có lỗi xảy ra, vui lòng thử lại!");
     }
   };
 
@@ -148,7 +192,7 @@ const Profile = () => {
         </div>
         <div>
           <p className="text-gray-600">Họ và tên</p>
-          <p className="font-semibold">{formData.fullname}</p>
+          <p className="font-semibold">{formData.fullname || "Chưa có họ và tên"}</p>
         </div>
         <div>
           <p className="text-gray-600">Số điện thoại</p>
@@ -156,7 +200,7 @@ const Profile = () => {
         </div>
         <div>
           <p className="text-gray-600">Số dư</p>
-          <p className="font-semibold"> {formData.money ? Number(formData.money).toLocaleString('vi-VN') : "0"}đ</p>
+          <p className="font-semibold">{formData.money ? Number(formData.money).toLocaleString('vi-VN') : "0"}đ</p>
         </div>
         <div>
           <p className="text-gray-600">Ngày tham gia</p>
@@ -201,6 +245,9 @@ const Profile = () => {
               placeholder="Tên đăng nhập"
               className="w-full p-2 border border-gray-300 rounded"
             />
+            {errors.username && (
+              <p className="text-red-500 text-sm mt-1">{errors.username}</p>
+            )}
           </div>
           <div>
             <label className="block text-gray-600">Họ và tên</label>
@@ -209,8 +256,12 @@ const Profile = () => {
               name="fullname"
               value={formData.fullname}
               onChange={handleChange}
+              placeholder="Họ và tên"
               className="w-full p-2 border border-gray-300 rounded"
             />
+            {errors.fullname && (
+              <p className="text-red-500 text-sm mt-1">{errors.fullname}</p>
+            )}
           </div>
           <div>
             <label className="block text-gray-600">Số điện thoại</label>
@@ -222,6 +273,9 @@ const Profile = () => {
               placeholder="Số điện thoại"
               className="w-full p-2 border border-gray-300 rounded"
             />
+            {errors.phone && (
+              <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
+            )}
           </div>
           <div>
             <label className="block text-gray-600">Chứng minh nhân dân</label>
@@ -233,6 +287,9 @@ const Profile = () => {
               placeholder="Chứng minh nhân dân"
               className="w-full p-2 border border-gray-300 rounded"
             />
+            {errors.idCard && (
+              <p className="text-red-500 text-sm mt-1">{errors.idCard}</p>
+            )}
           </div>
           <div>
             <label className="block text-gray-600">Giới tính</label>
@@ -257,6 +314,9 @@ const Profile = () => {
               placeholder="Tỉnh / Thành phố"
               className="w-full p-2 border border-gray-300 rounded"
             />
+            {errors.city && (
+              <p className="text-red-500 text-sm mt-1">{errors.city}</p>
+            )}
           </div>
           <div>
             <label className="block text-gray-600">Quận / Huyện</label>
@@ -268,6 +328,9 @@ const Profile = () => {
               placeholder="Quận / Huyện"
               className="w-full p-2 border border-gray-300 rounded"
             />
+            {errors.district && (
+              <p className="text-red-500 text-sm mt-1">{errors.district}</p>
+            )}
           </div>
           <div>
             <label className="block text-gray-600">Xã / Phường</label>
@@ -279,6 +342,9 @@ const Profile = () => {
               placeholder="Xã / Phường"
               className="w-full p-2 border border-gray-300 rounded"
             />
+            {errors.ward && (
+              <p className="text-red-500 text-sm mt-1">{errors.ward}</p>
+            )}
           </div>
           <div>
             <label className="block text-gray-600">Số nhà / Đường</label>
@@ -305,12 +371,17 @@ const Profile = () => {
           </label>
         </div>
 
-        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-6 hover:bg-blue-600">
+        <button
+          type="submit"
+          className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-6 hover:bg-blue-600"
+        >
           Lưu thay đổi
         </button>
       </form>
+      <ToastContainer />
     </div>
   );
+
 };
 
 export default Profile;

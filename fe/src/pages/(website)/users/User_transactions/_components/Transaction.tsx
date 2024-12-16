@@ -140,7 +140,7 @@ const Transactions = () => {
               <td className="py-4 px-6 border-b">
                 {transaction.transaction_id}
               </td>
-              <td className="py-4 px-6 border-b">{transaction.total_price}₫</td>
+              <td className="py-4 px-6 border-b"> {transaction.total_price ? Number(transaction.total_price).toLocaleString('vi-VN') : "0"}₫</td>
               <td className={`py-4 px-6 border-b ${getTransactionClass(transaction.status)}`}>
                 {getTransactionLabel(transaction.status)}
               </td>

@@ -141,27 +141,44 @@ export const updateUser = async (req, res) => {
       return res.status(400).json({ message: "ID người dùng không hợp lệ" });
     }
 
-    // Kiểm tra nếu mật khẩu được cập nhật trong yêu cầu
-    if (req.body.password) {
-      // Chỉ băm mật khẩu nếu nó chưa được băm
-      if (
-        req.body.password.length !== 60 ||
-        !req.body.password.startsWith("$2b$")
-      ) {
-        req.body.password = await bcryptjs.hash(req.body.password, 6);
-      }
-    }
+    // Lấy dữ liệu từ request
+    const { currentPassword, password, ...otherUpdates } = req.body;
 
-    // Cập nhật thông tin người dùng
-    const user = await User.findOneAndUpdate({ user_id: userId }, req.body, {
-      new: true, // Trả về bản ghi đã cập nhật
-    });
-
+    // Tìm người dùng
+    const user = await User.findOne({ user_id: userId });
     if (!user) {
       return res.status(404).json({
         message: "Không tìm thấy người dùng",
       });
     }
+
+    // Nếu yêu cầu cập nhật mật khẩu
+    if (password) {
+      // Kiểm tra nếu mật khẩu hiện tại được cung cấp
+      if (!currentPassword) {
+        return res.status(400).json({
+          message: "Vui lòng cung cấp mật khẩu hiện tại để đổi mật khẩu",
+        });
+      }
+
+      // Xác minh mật khẩu hiện tại
+      const isMatch = await bcryptjs.compare(currentPassword, user.password);
+      if (!isMatch) {
+        return res.status(401).json({
+          message: "Mật khẩu hiện tại không đúng",
+        });
+      }
+
+      // Băm mật khẩu mới
+      const hashedPassword = await bcryptjs.hash(password, 6);
+      user.password = hashedPassword;
+    }
+
+    // Cập nhật các thông tin khác (ngoại trừ password đã xử lý ở trên)
+    Object.assign(user, otherUpdates);
+
+    // Lưu thay đổi vào database
+    await user.save();
 
     return res.status(200).json({
       message: "Cập nhật người dùng thành công",

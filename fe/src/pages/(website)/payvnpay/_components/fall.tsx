@@ -7,16 +7,16 @@ const PaymentFall = () => {
     // Lấy dữ liệu từ query params
     const queryParams = new URLSearchParams(location.search);
     const orderId = queryParams.get("order_id") || "N/A";
-    const totalAmount = queryParams.get("amount") || "0";
+    const errorMessage = queryParams.get("error") || "Đã có lỗi xảy ra trong quá trình thanh toán.";
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
             {/* Container */}
             <div className="bg-white shadow-lg rounded-2xl p-12 w-[48rem] text-center">
                 {/* Icon */}
-                <div className="flex items-center justify-center w-32 h-32 mx-auto mb-8 bg-green-100 rounded-full">
+                <div className="flex items-center justify-center w-32 h-32 mx-auto mb-8 bg-red-100 rounded-full">
                     <svg
-                        className="w-16 h-16 text-green-600"
+                        className="w-16 h-16 text-red-600"
                         fill="none"
                         stroke="currentColor"
                         strokeWidth="2"
@@ -26,33 +26,30 @@ const PaymentFall = () => {
                         <path
                             strokeLinecap="round"
                             strokeLinejoin="round"
-                            d="M5 13l4 4L19 7"
+                            d="M6 18L18 6M6 6l12 12"
                         ></path>
                     </svg>
                 </div>
 
                 {/* Title */}
                 <h2 className="text-4xl font-bold text-gray-800">
-                    Thanh toán 7 bai
+                    Thanh toán thất bại
                 </h2>
 
-                {/* Order ID */}
+                {/* Error Message */}
                 <p className="mt-6 text-xl text-gray-600">
-                    Mã số đơn hàng của bạn là{" "}
-                    <span className="font-bold text-green-600">{orderId}</span>.
+                    {errorMessage}
                 </p>
 
-                {/* Total Amount */}
+                {/* Order ID */}
                 <p className="mt-4 text-lg text-gray-600">
-                    Tổng số tiền thanh toán là{" "}
-                    <span className="font-bold text-green-600">
-                        {parseInt(totalAmount).toLocaleString()}đ
-                    </span>.
+                    Nếu bạn có mã số đơn hàng, vui lòng kiểm tra lại đơn hàng của bạn:
+                    <span className="font-bold text-red-600"> {orderId}</span>.
                 </p>
 
                 {/* Link */}
                 <p className="mt-4 text-lg text-gray-500">
-                    Bạn có thể xem chi tiết trong{" "}
+                    Bạn có xem lại đơn hàng trong
                     <a
                         href="/user/orders"
                         className="text-blue-600 hover:underline font-medium"
@@ -61,21 +58,15 @@ const PaymentFall = () => {
                     </a>
                 </p>
 
-                {/* Delivery time (optional text) */}
-                <p className="mt-4 text-lg text-gray-500">
-                    Thời gian dự kiến giao hàng là ...
-                </p>
-
                 {/* Button */}
                 <button
                     onClick={() => window.location.href = "/"}
-                    className="mt-8 bg-blue-600 text-white text-xl px-8 py-4 rounded-xl hover:bg-blue-700 transition"
+                    className="mt-8 bg-red-600 text-white text-xl px-8 py-4 rounded-xl hover:bg-red-700 transition"
                 >
-                    Tiếp tục mua hàng
+                    Quay về trang chủ
                 </button>
             </div>
         </div>
     );
 };
-
 export default PaymentFall;
