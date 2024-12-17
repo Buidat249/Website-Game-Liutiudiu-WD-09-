@@ -74,6 +74,17 @@ const ProductDetail = () => {
   const [showMyComments, setShowMyComments] = useState(false);
   const [user_id, setUserId] = useState<number | null>(null); // Lưu user_id
   const [userAvt, setUserAvt] = useState<Record<number, any>>({});
+  // State để theo dõi số lượng game liên quan hiển thị
+  const [gamesToShow, setGamesToShow] = useState<number>(6); // Mặc định hiển thị 6 game liên quan
+
+  // Hàm xử lý khi nhấn nút "Xem thêm"
+  const handleLoadMore = () => {
+    setGamesToShow((prev) => prev + 6); // Tăng thêm 6 game mỗi lần nhấn
+  };
+
+  // Các game liên quan cần hiển thị
+  const gamesToDisplay = relatedGames.slice(0, gamesToShow);
+
   console.log('u', userAvt);
 
 
@@ -321,10 +332,10 @@ const ProductDetail = () => {
     if (storedUser) {
       setIsLoggedIn(true);
     }
-    console.log('gido',storedUser);
+    console.log('gido', storedUser);
   }, []);
 
-  
+
 
   useEffect(() => {
     const fetchDescriptions = async () => {
@@ -492,7 +503,7 @@ const ProductDetail = () => {
                                   >
                                     Mã sản phẩm:{" "}
                                     <span className="font-medium">
-                                      {/* {productCode} */}
+                                      #00000{game.game_id || 0}
                                     </span>
                                   </div>
                                 </div>
@@ -733,7 +744,7 @@ const ProductDetail = () => {
                       <div className="bg-white shadow-lg rounded-lg p-6 mb-6">
                         <div className="mt-6">
                           <p className="text-lg font-medium text-gray-800">
-                            <span className="text-black-600">${game.configuration}</span>
+                            <span className="text-black-600">{game.configuration}</span>
                           </p>
                         </div>
                       </div>
@@ -829,24 +840,20 @@ const ProductDetail = () => {
                   Game liên quan
                 </h1>
                 <div className="game-grid">
-                  {relatedGames.length > 0 ? (
-                    relatedGames.map((game) => (
+                  {gamesToDisplay.length > 0 ? (
+                    gamesToDisplay.map((game) => (
                       <div key={game.game_id} className="game">
                         <Link to={`/productgame/${game.game_id}`}>
                           <img src={game.image} alt={game.name} />
-                          <p style={{ fontWeight: "bold", fontSize: "17px" }}>
-                            {game.name}
-                          </p>
+                          <p style={{ fontWeight: "bold", fontSize: "17px" }}>{game.name}</p>
                           <div className="flex gap-2 final_price-price-discount-container">
                             <p className="final_price">
                               {new Intl.NumberFormat("vi-VN").format(game.final_price ?? 0)}
                             </p>
-
                             <p className="price">
                               {game.price !== undefined
                                 ? new Intl.NumberFormat("vi-VN").format(game.price) + "đ"
                                 : "Giá không có sẵn"}
-                              đ
                             </p>
                             <p className="discount">-{game.discount}%</p>
                           </div>
@@ -857,6 +864,13 @@ const ProductDetail = () => {
                     <p>Không có sản phẩm nổi bật nào.</p>
                   )}
                 </div>
+
+                {/* Nút "Xem thêm" */}
+                {relatedGames.length > gamesToDisplay.length && (
+                  <button onClick={handleLoadMore} className="load-more-button">
+                    Xem thêm
+                  </button>
+                )}
               </section>
             </div>
           </div>
