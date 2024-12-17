@@ -86,30 +86,38 @@ const NewsDetailPage = () => {
   useEffect(() => {
     const fetchRelatedPosts = async () => {
       try {
-        // Lấy chi tiết bài viết
+        // Lấy chi tiết bài viết hiện tại
         const response = await axios.get<{ data: any }>(`http://localhost:8080/tintucs/${tintuc_id}`);
         const articleData = response.data.data;
 
-        console.log('id', articleData)
+        console.log('articleData', articleData);
 
-        // Lấy các bài viết liên quan
+        // Kiểm tra categorynew_id và chuyển thành mảng nếu không phải mảng
+        const articleCategories = Array.isArray(articleData.categorynew_id)
+          ? articleData.categorynew_id
+          : [articleData.categorynew_id]; // Nếu không phải mảng, chuyển thành mảng
+
+        // Lấy các bài viết liên quan dựa trên categorynew_id của bài viết hiện tại
         const relatedResponse = await axios.get<{ data: any[] }>(
-          `http://localhost:8080/tintucs?categorynew_id=${articleData.categorynew_id.join(",")}`
+          `http://localhost:8080/tintucs?categorynew_id=${articleCategories.join(",")}`
         );
         console.log('relatedResponse', relatedResponse.data.data);
 
-
-        // Lọc bài viết liên quan
+        // Lọc các bài viết liên quan
         const relatedPostsList = relatedResponse.data.data.filter((relatedPost) => {
+          // Kiểm tra nếu bài viết liên quan có categorynew_id và không phải bài viết hiện tại
+          const relatedCategories = Array.isArray(relatedPost.categorynew_id)
+            ? relatedPost.categorynew_id
+            : [relatedPost.categorynew_id]; // Nếu không phải mảng, chuyển thành mảng
 
-          console.log('Checking post', relatedPost);  // Kiểm tra bài viết đang được kiểm tra
-          console.log('Related categories', relatedPost.categorynew_id);  // Kiểm tra categorynew_id của bài viết liên quan
-          console.log('Article categories', articleData.categorynew_id);  // Kiểm tra categorynew_id của bài viết hiện tại
+          // In ra giá trị của relatedCategories và articleCategories để kiểm tra
+          console.log('Related Categories:', relatedCategories);
+          console.log('Article Categories:', articleCategories);
 
+          // Kiểm tra sự trùng lặp giữa danh mục của bài viết hiện tại và bài viết liên quan
           return (
             relatedPost.tintuc_id !== articleData.tintuc_id &&
-            Array.isArray(relatedPost.categorynew_id) &&  // Đảm bảo categorynew_id là mảng
-            relatedPost.categorynew_id.some((catId: any) => articleData.categorynew_id.includes(catId)) // Kiểm tra trùng category
+            relatedCategories.some((catId: any) => articleCategories.includes(catId))
           );
         });
 
@@ -125,8 +133,6 @@ const NewsDetailPage = () => {
       fetchRelatedPosts();
     }
   }, [tintuc_id]);
-
-
 
 
   if (isLoading) {
@@ -154,40 +160,40 @@ const NewsDetailPage = () => {
           {/* Hiển thị mô tả sản phẩm */}
           {description && description.length > 0 && (
 
-  <div className="mt-8">
-    {description.map((desc) => (
-      <div key={desc.description_id ? desc.description_id[0] : "default-key"} className="bg-white shadow-lg rounded-lg p-6 mb-6">
-        {/* Kiểm tra xem descriptiondetail_id có phải là mảng và có chứa descriptiondetail_id không */}
-        {Array.isArray(desc.descriptiondetail_id) && desc.descriptiondetail_id.length > 0 && (
-          <div className="mt-4">
-            {descriptionDetail && descriptionDetail.length > 0 && (
-              <ul className="space-y-4">
-                {descriptionDetail
-                  .filter((detail) =>
-                    Array.isArray(desc.descriptiondetail_id) &&
-                    desc.descriptiondetail_id.includes(detail.descriptiondetail_id)
-                  )
-                  .map((detail) => (
-                    <li key={detail.descriptiondetail_id} className="border-t pt-4">
-                      <h5 className="text-xl font-medium text-gray-800"><strong>{detail.name}</strong></h5>
-                      <p className="text-gray-600">{detail.content}</p>
-                      {detail.image && (
-                        <img
-                          src={detail.image}
-                          alt={detail.name}
-                          className="mt-2 w-full h-auto rounded-md" // Đặt width là full và height tự động
-                        />
+            <div className="mt-8">
+              {description.map((desc) => (
+                <div key={desc.description_id ? desc.description_id[0] : "default-key"} className="bg-white shadow-lg rounded-lg p-6 mb-6">
+                  {/* Kiểm tra xem descriptiondetail_id có phải là mảng và có chứa descriptiondetail_id không */}
+                  {Array.isArray(desc.descriptiondetail_id) && desc.descriptiondetail_id.length > 0 && (
+                    <div className="mt-4">
+                      {descriptionDetail && descriptionDetail.length > 0 && (
+                        <ul className="space-y-4">
+                          {descriptionDetail
+                            .filter((detail) =>
+                              Array.isArray(desc.descriptiondetail_id) &&
+                              desc.descriptiondetail_id.includes(detail.descriptiondetail_id)
+                            )
+                            .map((detail) => (
+                              <li key={detail.descriptiondetail_id} className="border-t pt-4">
+                                <h5 className="text-xl font-medium text-gray-800"><strong>{detail.name}</strong></h5>
+                                <p className="text-gray-600">{detail.content}</p>
+                                {detail.image && (
+                                  <img
+                                    src={detail.image}
+                                    alt={detail.name}
+                                    className="mt-2 w-full h-auto rounded-md" // Đặt width là full và height tự động
+                                  />
+                                )}
+                              </li>
+                            ))}
+                        </ul>
                       )}
-                    </li>
-                  ))}
-              </ul>
-            )}
-          </div>
-        )}
-      </div>
-    ))}
-  </div>
-)}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="right-column">
@@ -196,7 +202,7 @@ const NewsDetailPage = () => {
           </div>
 
           <div className="popular-posts1">
-            <h2>Bài viết phổ biến</h2>
+            <h2>Bài viết liên quan</h2>
             <ul>
               {relatedPosts.length > 0 ? (
                 relatedPosts.map((post) => (
@@ -215,8 +221,6 @@ const NewsDetailPage = () => {
               )}
             </ul>
           </div>
-
-
 
         </div>
       </div>
